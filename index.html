@@ -37,7 +37,7 @@
 </head>
 <body>
   <h1>Welcome to My Website!</h1>
-  <p>This is a sample HTML page that demonstrates Natively library integration. !!!</p>
+  <p>This is a sample HTML page that demonstrates Natively library integration.</p>
 
   <button id="link-customer-btn">Link Customer</button>
 
@@ -48,9 +48,13 @@
 
     // Function to handle login callback (replace with your actual user ID retrieval logic)
     const login_callback = function(resp) {
-      console.log(resp.status); // SUCCESS or FAILED
-      console.log(resp.customerId); // Customer Id
-      console.log(resp.error); // Error (if any)
+      alert(`Status: ${resp.status}`);  // Alert status (SUCCESS or FAILED)
+      if (resp.customerId) {
+        alert(`Customer ID: ${resp.customerId}`);  // Alert customer ID (if successful)
+      }
+      if (resp.error) {
+        alert(`Error: ${resp.error}`);  // Alert error message (if any)
+      }
     };
 
     // Link Customer Button Click Event Handler
@@ -65,9 +69,13 @@
     purchasePackageButton.addEventListener("click", function() {
       const packageId = "$rc_monthly"; // Replace with your actual package ID
       const purchases_package_callback = function(resp) {
-        console.log(resp.status); // SUCCESS / FAILED
-        console.log(resp.transactionId); // Transaction ID (if successful)
-        console.log(resp.error); // Error object (if failed)
+        alert(`Status: ${resp.status}`);  // Alert purchase status (SUCCESS or FAILED)
+        if (resp.transactionId) {
+          alert(`Transaction ID: ${resp.transactionId}`);  // Alert transaction ID (if successful)
+        }
+        if (resp.error) {
+          alert(`Error: ${resp.error}`);  // Alert error message (if any)
+        }
       };
       purchases.purchasePackage(packageId, purchases_package_callback);
     });
