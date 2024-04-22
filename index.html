@@ -49,6 +49,8 @@
 
 
   <script>
+   
+   const info = new NativelyInfo(); // Assuming NativelyInfo exists
   
     // Show Toast Button Click Event Handler (already defined)
     const showToastButton = document.getElementById('show-toast-btn');
@@ -58,20 +60,23 @@
       window.natively.showAppToast(type, text);
     });
 
-    // Check Native App Button Click Event Handler
+     // Function to check for native app and display toast message
     function checkNativeApp(info) {
-  const browserInfo = info.browserInfo();
-  if (browserInfo.isNativeApp) {
-    const type = "SUCCESS"; // Use SUCCESS toast type for positive message
-    const text = "It is a native app";
-    window.natively.showAppToast(type, text);
-  } else {
-    console.log("It's not a native app"); // Log to console for non-native app
-  }
-}
-checkNativeAppButton.addEventListener('click', function() {
-  checkNativeApp(info); // Pass the info object
-});
+      const browserInfo = info.browserInfo();
+      if (browserInfo.isNativeApp) {
+        const type = "SUCCESS"; // Use SUCCESS toast type for positive message
+        const text = "It is a native app";
+        window.natively.showAppToast(type, text);
+      } else {
+        console.log("It's not a native app"); // Log to console for non-native app
+      }
+    }
+
+    // Check Native App Button Click Event Handler
+    const checkNativeAppButton = document.getElementById('check-native-app-btn');
+    checkNativeAppButton.addEventListener('click', function() {
+      checkNativeApp(info); // Pass the info object as an argument
+    });
     
   </script>
 </body>
