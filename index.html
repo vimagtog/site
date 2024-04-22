@@ -66,6 +66,18 @@
     checkNativeAppButton.addEventListener('click', function() {
       checkNativeApp(info); // Pass the info object as an argument
     });
+   
+   function handleCheckNativeApp() {
+  if (info) { // Check if info exists (assuming NativelyInfo might load asynchronously)
+    checkNativeApp(info);
+  } else {
+    console.log("NativelyInfo object not yet available");
+  }
+}
+
+const checkNativeAppButton = document.getElementById('check-native-app-btn');
+checkNativeAppButton.addEventListener('click', handleCheckNativeApp);
+
 
     // Function to check for native app using info object
     function checkNativeApp(info) {
