@@ -44,8 +44,8 @@
   <p>This is a sample HTML page that demonstrates Natively library integration.</p>
 
   <button id="show-toast-btn">Show Toast</button>
-  <button id="check-native-app-btn">Check if Native App</button>
   <button id="open-external-url-btn">Open External URL</button>
+  <button id="open-camera-btn">Open Camera</button>
 
 
 
@@ -67,6 +67,27 @@
       const url = "https://buildnatively.com/";
       const external = false; // Open inside the app (if it's a native app)
       window.natively.openExternalURL(url, external);
+    });
+
+   const openCameraButton = document.getElementById('open-camera-btn');
+    openCameraButton.addEventListener('click', function() {
+      const camera = new NativelyCamera();
+      const type = "photo"; // "photo"/"video"
+      const quality = "high"; // "high"/"medium"/"low"
+      const cameraType = "FRONT"; // "FRONT"/"BACK"
+      const open_camera_callback = function (resp) {
+        if (resp.error) {
+          console.error("Error capturing image/video:", resp.error);
+          const message = "Error capturing image/video";
+          const type = "ERROR"; // Use ERROR toast type for error message
+          window.natively.showAppToast(type, message);
+        } else {
+          const message = "Captured a " + (type === "photo" ? "photo" : "video");
+          const type = "SUCCESS"; // Use SUCCESS toast type for success message
+          window.natively.showAppToast(type, message);
+        }
+      };
+      camera.showCamera(type, quality, cameraType, open_camera_callback);
     });
     
   </script>
