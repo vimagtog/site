@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -61,7 +61,7 @@
     // Check Native App Button Click Event Handler
     const checkNativeAppButton = document.getElementById('check-native-app-btn');
     checkNativeAppButton.addEventListener('click', function() {
-      const browserInfo = info.browserInfo();
+      const browserInfo = new info.browserInfo();
       if (browserInfo.isNativeApp) {
         const type = "SUCCESS"; // Use SUCCESS toast type for positive message
         const text = "It is a native app";
