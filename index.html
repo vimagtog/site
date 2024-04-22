@@ -57,6 +57,24 @@
       const text = "This is a toast";
       window.natively.showAppToast(type, text);
     });
+
+   // Check Native App Button Click Event Handler
+    const checkNativeAppButton = document.getElementById('check-native-app-btn');
+    checkNativeAppButton.addEventListener('click', function() {
+      info.getAppInfo(app_info_callback); // Call getAppInfo with callback
+    });
+
+    // Callback function to handle app info response
+    function app_info_callback(resp) {
+      if (resp.osName) { // Check if osName exists
+        const osName = resp.osName;
+        const message = `This is a ${osName} app`; // Construct message with osName
+        const type = "SUCCESS"; // Use SUCCESS toast type
+        window.natively.showAppToast(type, message); // Display toast message
+      } else {
+        console.log("Unable to determine operating system"); // Handle potential error
+      }
+    }
     
   </script>
 </body>
