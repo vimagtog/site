@@ -122,8 +122,16 @@
       const scanner = new NativelyScanner();
       const open_scanner_callback = function (resp) {
         if (resp.result) {
-          scannedTextElement.textContent = resp.result;
-          scannerResult.style.display = 'block'; // Show the result container
+          const scannedText = resp.result;
+          const isLink = isUrl(scannedText); // Check if it's a link
+
+          scannedTextElement.textContent = scannedText;
+          scannerResult.style.display = 'block';
+
+          if (isLink) {
+            // You can display a message or create a link element for the user to click
+            scannedTextElement.innerHTML = `<a href="${scannedText}" target="_blank">Visit Link</a>`;
+          }
         } else {
           scannedTextElement.textContent = "No scan result";
           scannerResult.style.display = 'block'; // Show the result container even for error
@@ -131,6 +139,12 @@
       };
       scanner.showScanner(open_scanner_callback);
     });
+
+    function isUrl(text) {
+      // Basic URL regular expression (can be improved for more complex validation)
+      const urlRegex = /^(http|https):\/\/[^\s]+/i;
+      return urlRegex.test(text);
+    }
    
   </script>
 </body>
