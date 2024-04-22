@@ -32,6 +32,10 @@
       cursor: pointer;
       margin: 10px;
     }
+    .app-message {
+      font-weight: bold;
+      margin-top: 20px;
+    }
   </style>
   <script async onload="nativelyOnLoad()" src="https://cdn.jsdelivr.net/npm/natively@2.13.3/natively-frontend.min.js"></script>
 </head>
@@ -42,6 +46,8 @@
   <button id="link-customer-btn">Link Customer</button>
 
   <button id="purchase-package-btn">Purchase Monthly Package</button>
+
+  <p class="app-message"></p>
 
   <script>
     const purchases = new NativelyPurchases();
@@ -79,6 +85,14 @@
       };
       purchases.purchasePackage(packageId, purchases_package_callback);
     });
+    // Check for native app on page load
+    const appMessage = document.querySelector('.app-message'); // Get the message element
+    const browserInfo = info.browserInfo();  // Assuming info is a Natively object
+    if (browserInfo.isNativeApp) {
+      appMessage.textContent = 'This is a native app';
+    } else {
+      appMessage.textContent = 'This is not a native app';
+    }
   </script>
 </body>
 </html>
