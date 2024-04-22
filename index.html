@@ -64,6 +64,10 @@
     <h2>QR Scanner Result</h2>
     <p id="scanned-text"></p>
   </div>
+ <button id="check-native-app-btn">Check Native App</button>
+  <div id="is-native-app" class="is-native-app">
+    Is native app: <span id="native-app-status"></span>
+  </div>
 
 
 
@@ -145,6 +149,24 @@
       const urlRegex = /^(http|https):\/\/[^\s]+/i;
       return urlRegex.test(text);
     }
+
+   // BrowserInfo
+    const checkNativeAppButton = document.getElementById('check-native-app-btn');
+    const isNativeAppElement = document.getElementById('native-app-status');
+    const isNativeAppContainer = document.getElementById('is-native-app');
+
+    checkNativeAppButton.addEventListener('click', function() {
+      const info = new NativelyInfo();
+      const browserInfo = info.browserInfo();
+
+      if (browserInfo.isNativeApp) {
+        isNativeAppElement.textContent = 'Yes';
+        isNativeAppContainer.style.display = 'block';
+      } else {
+        isNativeAppElement.textContent = 'No';
+        isNativeAppContainer.style.display = 'block';
+      }
+    });
    
   </script>
 </body>
