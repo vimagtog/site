@@ -41,6 +41,13 @@
       max-width: 280px; /* Adjust max-width as needed */
       margin: 10px auto;
     }
+   .scanner-result {
+      display: none; /* Initially hide the result container */
+      margin-top: 20px;
+    }
+    .scanner-result h2 {
+      margin-bottom: 5px;
+    }
   </style>
   <script async onload="nativelyOnLoad = function(){}" src="https://cdn.jsdelivr.net/npm/natively@2.13.3/natively-frontend.min.js"></script>
 </head>
@@ -52,6 +59,11 @@
   <button id="open-external-url-btn">Open External URL</button>
   <button id="open-camera-btn">Open Camera</button>
   <div id="captured-image-container"></div>
+ <button id="open-scanner-btn">Open QR Scanner</button>
+  <div id="scanner-result" class="scanner-result">
+    <h2>QR Scanner Result</h2>
+    <p id="scanned-text"></p>
+  </div>
 
 
 
@@ -99,7 +111,27 @@
       };
       camera.showCamera(type, quality, cameraType, open_camera_callback);
     });
-    
+
+   // Open QR scanner
+
+    const openScannerButton = document.getElementById('open-scanner-btn');
+    const scannerResult = document.getElementById('scanner-result');
+    const scannedTextElement = document.getElementById('scanned-text');
+
+    openScannerButton.addEventListener('click', function() {
+      const scanner = new NativelyScanner();
+      const open_scanner_callback = function (resp) {
+        if (resp.result) {
+          scannedTextElement.textContent = resp.result;
+          scannerResult.style.display = 'block'; // Show the result container
+        } else {
+          scannedTextElement.textContent = "No scan result";
+          scannerResult.style.display = 'block'; // Show the result container even for error
+        }
+      };
+      scanner.showScanner(open_scanner_callback);
+    });
+   
   </script>
 </body>
 </html>
