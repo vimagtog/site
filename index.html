@@ -59,17 +59,19 @@
     });
 
     // Check Native App Button Click Event Handler
-    const checkNativeAppButton = document.getElementById('check-native-app-btn');
-    checkNativeAppButton.addEventListener('click', function() {
-      const browserInfo = new info.browserInfo();
-      if (browserInfo.isNativeApp) {
-        const type = "SUCCESS"; // Use SUCCESS toast type for positive message
-        const text = "It is a native app";
-        window.natively.showAppToast(type, text);
-      } else {
-        console.log("It's not a native app"); // Log to console for non-native app
-      }
-    });
+    function checkNativeApp(info) {
+  const browserInfo = info.browserInfo();
+  if (browserInfo.isNativeApp) {
+    const type = "SUCCESS"; // Use SUCCESS toast type for positive message
+    const text = "It is a native app";
+    window.natively.showAppToast(type, text);
+  } else {
+    console.log("It's not a native app"); // Log to console for non-native app
+  }
+}
+checkNativeAppButton.addEventListener('click', function() {
+  checkNativeApp(info); // Pass the info object
+});
     
   </script>
 </body>
