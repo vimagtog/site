@@ -49,6 +49,8 @@
 
   <p class="app-message"></p>
 
+  <button id="show-toast-btn">Show Toast</button>
+
   <script>
     const purchases = new NativelyPurchases();
 
@@ -93,6 +95,13 @@
     } else {
       appMessage.textContent = 'This is not a native app';
     }
+    // Show Toast Button Click Event Handler
+    const showToastButton = document.getElementById('show-toast-btn');
+    showToastButton.addEventListener('click', function() {
+      const type = "DEFAULT"; // You can change this to desired toast type (DEFAULT, DARK, ERROR, SUCCESS, WARNING, or MATRIX)
+      const text = "Test text";
+      window.natively.showAppToast(type, text);
+    });
   </script>
 </body>
 </html>
