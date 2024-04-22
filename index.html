@@ -44,6 +44,8 @@
   <p>This is a sample HTML page that demonstrates Natively library integration.</p>
 
   <button id="show-toast-btn">Show Toast</button>
+  <button id="check-native-app-btn">Check if Native App</button>
+
 
 
   <script>
@@ -54,6 +56,19 @@
       const type = "DEFAULT"; // You can change this to desired toast type (DEFAULT, DARK, ERROR, SUCCESS, WARNING, or MATRIX)
       const text = "This is a toast";
       window.natively.showAppToast(type, text);
+    });
+
+    // Check Native App Button Click Event Handler
+    const checkNativeAppButton = document.getElementById('check-native-app-btn');
+    checkNativeAppButton.addEventListener('click', function() {
+      const browserInfo = info.browserInfo();
+      if (browserInfo.isNativeApp) {
+        const type = "SUCCESS"; // Use SUCCESS toast type for positive message
+        const text = "It is a native app";
+        window.natively.showAppToast(type, text);
+      } else {
+        console.log("It's not a native app"); // Log to console for non-native app
+      }
     });
     
   </script>
