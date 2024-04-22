@@ -49,6 +49,9 @@
 
 
   <script>
+
+   // Create a NativelyInfo object (assuming NativelyInfo exists)
+    const info = new NativelyInfo();
   
     // Show Toast Button Click Event Handler (already defined)
     const showToastButton = document.getElementById('show-toast-btn');
@@ -61,8 +64,13 @@
    // Check Native App Button Click Event Handler
     const checkNativeAppButton = document.getElementById('check-native-app-btn');
     checkNativeAppButton.addEventListener('click', function() {
-      info.getAppInfo(app_info_callback); // Call getAppInfo with callback
+      checkNativeApp(info); // Pass the info object as an argument
     });
+
+    // Function to check for native app using info object
+    function checkNativeApp(info) {
+      info.getAppInfo(app_info_callback); // Call getAppInfo with callback
+    }
 
     // Callback function to handle app info response
     function app_info_callback(resp) {
