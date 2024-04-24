@@ -52,6 +52,15 @@
       display: none; /* Initially hide the text element */
       font-weight: bold;
     }
+   #datepicker-title,
+   #selected-date {
+  display: none; /* Initially hide both elements */
+}
+
+   #selected-date.has-date {
+  display: inline-block; /* Show only when there's a date */
+}
+
   </style>
   <script async onload="nativelyOnLoad = function(){}" src="https://cdn.jsdelivr.net/npm/natively@2.13.3/natively-frontend.min.js"></script>
 </head>
@@ -213,17 +222,12 @@
   openDatePickerButton.addEventListener('click', function() {
     const picker = new NativelyDatePicker();
     const selectedDateSpan = document.getElementById('selected-date');
-    const datepickerTitle = document.getElementById('datepicker-title');
 
     const datepicker_callback = function (resp) {
-      if (resp.date) { // Check if datepicker_callback has a value
-        const milliseconds = Number(resp.date);
-        const selectedDate = new Date(milliseconds);
-        selectedDateSpan.textContent = selectedDate.toLocaleDateString();
-        datepickerTitle.style.display = 'block'; // Show title when there's a date
+      if (resp.date) {
+        selectedDateSpan.textContent = new Date(Number(resp.date)).toLocaleDateString();
       } else {
         selectedDateSpan.textContent = '';
-        datepickerTitle.style.display = 'none'; // Hide title when there's no date
       }
     };
 
