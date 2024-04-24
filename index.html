@@ -74,6 +74,7 @@
   </div>
 
  <button id="send-email-btn">Send Email</button>
+ <button id="open-email-btn">Open Email to Support</button>
 
 
 
@@ -189,7 +190,13 @@
       message.sendEmail(subject, body, recipient, send_email_callback);
     });
 
-   
+   // Open Email Button Click Event Handler
+  const openEmailButton = document.getElementById('open-email-btn');
+  openEmailButton.addEventListener('click', function() {
+    const emailAddress = "help@buildnatively.com";
+    window.open(`mailto:${emailAddress}`);
+  });
+
   </script>
 </body>
 </html>
