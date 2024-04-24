@@ -75,6 +75,8 @@
 
  <button id="send-email-btn">Send Email</button>
  <button id="send-sms-btn">Send SMS</button>
+ <button id="open-date-picker-btn">Open Date Picker</button>
+
 
 
 
@@ -202,6 +204,20 @@
     message.sendSMS(body, recipient, send_sms_callback);
   });
 
+   // Open Date Picker Button Click Event Handler
+  const openDatePickerButton = document.getElementById('open-date-picker-btn');
+  openDatePickerButton.addEventListener('click', function() {
+    const picker = new NativelyDatePicker();
+    const datepicker_callback = function (resp) {
+      const milliseconds = Number(resp.date);
+      console.log(new Date(milliseconds));
+    };
+    const title = "Select Date";
+    const description = ""; // Optional description for the date picker
+    const type = "DATE_AND_TIME"; // Choose desired type (DATE, TIME, DATE_AND_TIME)
+    const style = "LIGHT"; // Choose desired style (LIGHT, DARK)
+    picker.showDatePicker(title, description, type, style, datepicker_callback);
+  });
 
   </script>
 </body>
