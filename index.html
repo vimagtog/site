@@ -75,7 +75,11 @@
 
  <button id="send-email-btn">Send Email</button>
  <button id="send-sms-btn">Send SMS</button>
- <button id="open-date-picker-btn">Open Date Picker</button>
+<div id="datepicker-container">
+  <button id="open-date-picker-btn">Open Date Picker</button>
+  <span id="datepicker-title">Datepicker Value:</span>
+  <span id="selected-date"></span>
+</div>
 
 
 
@@ -204,14 +208,25 @@
     message.sendSMS(body, recipient, send_sms_callback);
   });
 
-   // Open Date Picker Button Click Event Handler
+  // Open Date Picker Button Click Event Handler
   const openDatePickerButton = document.getElementById('open-date-picker-btn');
   openDatePickerButton.addEventListener('click', function() {
     const picker = new NativelyDatePicker();
+    const selectedDateSpan = document.getElementById('selected-date');
+    const datepickerTitle = document.getElementById('datepicker-title');
+
     const datepicker_callback = function (resp) {
-      const milliseconds = Number(resp.date);
-      console.log(new Date(milliseconds));
+      if (resp.date) { // Check if datepicker_callback has a value
+        const milliseconds = Number(resp.date);
+        const selectedDate = new Date(milliseconds);
+        selectedDateSpan.textContent = selectedDate.toLocaleDateString();
+        datepickerTitle.style.display = 'block'; // Show title when there's a date
+      } else {
+        selectedDateSpan.textContent = '';
+        datepickerTitle.style.display = 'none'; // Hide title when there's no date
+      }
     };
+
     const title = "Select Date";
     const description = ""; // Optional description for the date picker
     const type = "DATE_AND_TIME"; // Choose desired type (DATE, TIME, DATE_AND_TIME)
