@@ -74,6 +74,8 @@
   </div>
 
  <button id="send-email-btn">Send Email</button>
+ <button id="send-sms-btn">Send SMS</button>
+
 
 
 
@@ -184,6 +186,21 @@
 
       message.sendEmail(subject, body, recipient);
     });
+
+   // Send SMS Button Click Event Handler
+  const sendSmsButton = document.getElementById('send-sms-btn');
+  sendSmsButton.addEventListener('click', function() {
+    const message = new NativelyMessage();
+    const recipient = "1234567890"; // Replace with the phone number
+    const body = "This is a sample SMS message.";
+
+    const send_sms_callback = function (resp) {
+      console.log(resp.status); // SENT/CANCELLED/FAILED/NOT_ALLOWED (Works only on iOS)
+      // You can display a message to the user based on the status (e.g., "SMS sent successfully" or "Failed to send SMS")
+    };
+
+    message.sendSMS(body, recipient, send_sms_callback);
+  });
 
 
   </script>
