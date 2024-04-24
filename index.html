@@ -74,7 +74,6 @@
   </div>
 
  <button id="send-email-btn">Send Email</button>
- <button id="open-email-btn">Open Email to Support</button>
 
 
 
@@ -182,20 +181,10 @@
       const subject = "Sample Email Subject";
       const body = "";
 
-      const send_email_callback = function (resp) {
-        console.log(resp.status); // SENT/CANCELLED/FAILED/NOT_ALLOWED/SAVED (Works only on iOS)
-        // You can display a message to the user based on the status (e.g., "Email sent successfully" or "Failed to send email")
-      };
 
-      message.sendEmail(subject, body, recipient, send_email_callback);
+      message.sendEmail(subject, body, recipient);
     });
 
-   // Open Email Button Click Event Handler
-  const openEmailButton = document.getElementById('open-email-btn');
-  openEmailButton.addEventListener('click', function() {
-    const emailAddress = "help@buildnatively.com";
-    window.open(`mailto:${emailAddress}`);
-  });
 
   </script>
 </body>
