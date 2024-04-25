@@ -291,9 +291,25 @@ copyTextButton.addEventListener('click', function() {
 
 
 //Push Notification
-   async function requestPermission() {
+   let notifications; // Declare notifications object globally for accessibility
+
+async function initNatively() {
   try {
-    const notifications = new NativelyNotifications();
+    notifications = new NativelyNotifications();
+    console.log("Natively library initialized successfully.");
+  } catch (error) {
+    console.error("Error initializing Natively:", error);
+    // Handle initialization error (e.g., disable buttons or display an error message)
+  }
+}
+
+async function requestPermission() {
+  if (!notifications) {
+    console.warn("Natively library not initialized yet. Waiting...");
+    return;
+  }
+
+  try {
     const response = await notifications.requestPermission(false); // Don't show alert on denial
     console.log("Permission Status:", response.status); // true or false
 
@@ -307,8 +323,12 @@ copyTextButton.addEventListener('click', function() {
 }
 
 async function getPlayerId() {
+  if (!notifications) {
+    console.warn("Natively library not initialized yet. Waiting...");
+    return;
+  }
+
   try {
-    const notifications = new NativelyNotifications();
     const response = await notifications.getOneSignalId();
     console.log("OneSignal Player ID:", response.playerId);
 
@@ -345,6 +365,10 @@ async function sendNotification() {
 document.getElementById("request-permission-btn").addEventListener("click", requestPermission);
 document.getElementById("get-playerid-btn").addEventListener("click", getPlayerId);
 document.getElementById("send-notification-btn").addEventListener("click", sendNotification);
+
+// Initialize Natively library (optional)
+initNatively(); // You can call this on page load or after a specific event
+   
   </script>
 </body>
 </html>
