@@ -99,6 +99,8 @@ p {
   <span id="datepicker-title">Datepicker Value:</span>
   <span id="selected-date"></span>
 </div>
+ <button id="copy-to-clipboard-btn">Copy to Clipboard</button>
+
 
 
 
@@ -247,6 +249,26 @@ p {
     const style = "LIGHT"; // Choose desired style (LIGHT, DARK)
     picker.showDatePicker(title, description, type, style, datepicker_callback);
   });
+
+   // Copy/paste functionality
+
+    const clipboard = new NativelyClipboard();
+
+    const textToCopy = "This is the text to be copied"; // Replace with your desired text
+
+    const copyToClipboard = function() {
+      if (clipboard) { // Check if NativelyClipboard is available (might not be in a web browser)
+        clipboard.copy(textToCopy);
+        window.natively.showAppToast("SUCCESS", "Text copied successfully!");
+        console.log("Text copied to clipboard (if in a native app)");
+      } else {
+        window.natively.showAppToast("ERROR", "Copying to clipboard not supported");
+        console.log("Copying to clipboard not supported (or not in a native app)");
+      }
+    };
+
+    const copyButton = document.getElementById('copy-to-clipboard-btn');
+    copyButton.addEventListener('click', copyToClipboard);
 
   </script>
 </body>
