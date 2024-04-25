@@ -99,7 +99,7 @@ p {
   <span id="datepicker-title">Datepicker Value:</span>
   <span id="selected-date"></span>
 </div>
- <button id="copy-paste-btn">Copy and Paste Text</button>
+ <button id="copy-btn">Copy Text</button>
 
 
 
@@ -250,55 +250,31 @@ p {
     const style = "LIGHT"; // Choose desired style (LIGHT, DARK)
     picker.showDatePicker(title, description, type, style, datepicker_callback);
   });
-
-   // Function to create a toast notification (using Natively toast)
-function createToast(message, type = 'light') { // Default to light style
-  if (typeof NativelyToast !== 'undefined') {
-    const toast = new NativelyToast();
-    const options = {
-      title: message,
-      style: type, // Use 'light' or 'dark' (optional)
-      duration: 2000, // Display duration in milliseconds (optional)
-    };
-    toast.show(options);
-  } else {
-    console.warn('NativelyToast library not available. Using console logs for feedback.');
-    console.log(message); // Fallback to console logs for non-native environments
-  }
-}
-
+   
 // Function to copy text to clipboard (using NativelyClipboard if available)
 function copyToClipboard(text) {
   if (typeof NativelyClipboard !== 'undefined') {
     const clipboard = new NativelyClipboard();
     clipboard.copy(text);
-    const callback = function (resp) {
-      if (resp.status === 'SUCCESS') {
-        createToast('Text copied successfully (Native)');
-      } else {
-        createToast('Failed to copy text (Native)', 'dark'); // Use dark style for error
-      }
-    };
-    clipboard.paste(callback); // Optional: Log pasted text (for debugging)
   } else {
     // Fallback for non-native apps (use browser's clipboard API)
     navigator.clipboard.writeText(text)
       .then(() => {
-        createToast('Text copied successfully (Browser)');
+        console.log('Text copied to clipboard (browser)');
       })
       .catch(err => {
         console.error('Failed to copy text to clipboard:', err);
-        createToast('Failed to copy text (Browser)', 'dark'); // Use dark style for error
       });
   }
 }
 
 // Example usage (triggered by button click)
-const copyPasteButton = document.getElementById('copy-paste-btn');
-copyPasteButton.addEventListener('click', function() {
-  const someText = "This is some text to copy or paste.";
+const copyTextButton = document.getElementById('copy-text-btn');
+copyTextButton.addEventListener('click', function() {
+  const someText = "This is some text to copy.";
   copyToClipboard(someText);
 });
+
    
   </script>
 </body>
