@@ -113,8 +113,6 @@ p {
  <p>One Signal Push Notification</p>
  <br>
 <button id="request-permission-btn">Request Permission</button>
-<button id="get-playerid-btn" disabled>Get Player ID</button>
-<button id="send-notification-btn" disabled>Send Notification</button>
 
 
 
@@ -299,7 +297,7 @@ async function initNatively() {
     console.log("Natively library initialized successfully.");
   } catch (error) {
     console.error("Error initializing Natively:", error);
-    // Handle initialization error (e.g., disable buttons or display an error message)
+    // Handle initialization error (e.g., disable button or display an error message)
   }
 }
 
@@ -313,58 +311,14 @@ async function requestPermission() {
     const response = await notifications.requestPermission(false); // Don't show alert on denial
     console.log("Permission Status:", response.status); // true or false
 
-    if (response.status) {
-      // Permission granted, enable "Get Player ID" button
-      document.getElementById("get-playerid-btn").disabled = false;
-    }
+    // Handle permission status (e.g., enable other buttons or display message)
   } catch (error) {
     console.error("Error requesting permission:", error);
   }
 }
 
-async function getPlayerId() {
-  if (!notifications) {
-    console.warn("Natively library not initialized yet. Waiting...");
-    return;
-  }
-
-  try {
-    const response = await notifications.getOneSignalId();
-    console.log("OneSignal Player ID:", response.playerId);
-
-    // Save the Player ID somewhere (e.g., database, user object)
-    // Replace with your logic for saving the Player ID
-    localStorage.setItem("playerId", response.playerId);
-
-    // Enable "Send Notification" button if Player ID is retrieved
-    document.getElementById("send-notification-btn").disabled = false;
-  } catch (error) {
-    console.error("Error getting Player ID:", error);
-  }
-}
-
-async function sendNotification() {
-  const payload = {
-    redirect_url: "https://example.com/", // Redirect URL after clicking notification
-    title: "Your Notification Title",
-    description: "Your Notification Description",
-  };
-  const appId = "YOUR_ONESIGNAL_APP_ID"; // Replace with your OneSignal App ID
-  const playerIds = [localStorage.getItem("playerId")]; // Use retrieved Player ID
-  const isPreview = false; // Set to true for Natively Preview testing
-
-  try {
-    const response = await window.natively.sendPushNotification(appId, payload, playerIds, isPreview);
-    console.log("Push Notification Response:", response);
-  } catch (error) {
-    console.error("Error sending notification:", error);
-  }
-}
-
-// Event Listeners for Buttons
+// Button Click Event Listener
 document.getElementById("request-permission-btn").addEventListener("click", requestPermission);
-document.getElementById("get-playerid-btn").addEventListener("click", getPlayerId);
-document.getElementById("send-notification-btn").addEventListener("click", sendNotification);
 
 // Initialize Natively library (optional)
 initNatively(); // You can call this on page load or after a specific event
