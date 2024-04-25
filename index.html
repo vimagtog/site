@@ -5,18 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sample HTML Page</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 20px;
-    }
+   body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    /* Add responsiveness */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Fills viewport height */
+}
+
     h1 {
-      text-align: center;
-      font-size: 2em;
-      margin-bottom: 20px;
-    }
-    p {
-      line-height: 1.5;
+    text-align: center;
+    font-size: 1.5em;  /* Adjust base font size for headings */
+    margin-bottom: 20px;
+}
+p {
+    line-height: 1.5;
+}
+
     }
     a {
       color: #007bff;
@@ -26,21 +33,24 @@
       text-decoration: underline;
     }
     button {
-      padding: 10px 20px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      cursor: pointer;
-      margin: 10px;
-    }
+    padding: 10px 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 10px auto; /* Center buttons horizontally on smaller screens */
+    /* Adjust width for smaller screens */
+    max-width: 200px;
+}
     .app-message {
       font-weight: bold;
       margin-top: 20px;
     }
    .captured-image {
-      display: block;
-      max-width: 280px; /* Adjust max-width as needed */
-      margin: 10px auto;
-    }
+    display: block;
+    max-width: 80%;  /* Adjust max-width for different screen sizes */
+    margin: 10px auto;
+}
+
    .scanner-result {
       display: none; /* Initially hide the result container */
       margin-top: 20px;
