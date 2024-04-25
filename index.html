@@ -251,14 +251,12 @@ p {
     picker.showDatePicker(title, description, type, style, datepicker_callback);
   });
    
-// Function to copy text to clipboard (using NativelyClipboard if available)
+
+  // Function to copy text to clipboard (using NativelyClipboard if available)
 function copyToClipboard(text) {
-  if (typeof NativelyToast !== 'undefined') { // Check for NativelyToast library
+  if (typeof NativelyClipboard !== 'undefined') {
     const clipboard = new NativelyClipboard();
     clipboard.copy(text);
-    clipboard.paste(function (resp) { // Optional: Debug pasted text
-      console.log(resp.text);
-    });
   } else {
     // Fallback for non-native apps (use browser's clipboard API)
     navigator.clipboard.writeText(text)
@@ -269,27 +267,14 @@ function copyToClipboard(text) {
         console.error('Failed to copy text to clipboard:', err);
       });
   }
-
-  // Show toast message after copy attempt (assuming success)
-  if (typeof NativelyToast !== 'undefined') {
-    const toast = new NativelyToast();
-    toast.show({
-      title: 'Text Copied!',
-      style: 'light',
-      duration: 2000, // Display duration (optional)
-    });
-  } else {
-    console.log('NativelyToast library not available. Consider console logs for feedback.');
-  }
 }
 
 // Example usage (triggered by button click)
-const copyTextButton = document.getElementById('copy-text-btn');
+const copyTextButton = document.getElementById('copy-btn');
 copyTextButton.addEventListener('click', function() {
   const someText = "This is some text to copy.";
   copyToClipboard(someText);
 });
-
    
   </script>
 </body>
