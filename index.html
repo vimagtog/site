@@ -291,37 +291,37 @@ copyTextButton.addEventListener('click', function() {
 //Push Notification
    let notifications; // Declare notifications object globally for accessibility
 
-async function initNatively() {
-  try {
-    notifications = new NativelyNotifications();
-    console.log("Natively library initialized successfully.");
-  } catch (error) {
-    console.error("Error initializing Natively:", error);
-    // Handle initialization error (e.g., disable button or display an error message)
-  }
-}
-
-async function requestPermission() {
-  if (!notifications) {
-    console.warn("Natively library not initialized yet. Waiting...");
-    return;
+  async function initNatively() {
+    try {
+      notifications = new NativelyNotifications();
+      console.log("Natively library initialized successfully.");
+    } catch (error) {
+      console.error("Error initializing Natively:", error);
+      // Handle initialization error (e.g., disable button or display an error message)
+    }
   }
 
-  try {
-    const response = await notifications.requestPermission(false); // Don't show alert on denial
-    console.log("Permission Status:", response.status); // true or false
+  async function requestPermission() {
+    if (!notifications) {
+      console.warn("Natively library not initialized yet. Waiting...");
+      return;
+    }
 
-    // Handle permission status (e.g., enable other buttons or display message)
-  } catch (error) {
-    console.error("Error requesting permission:", error);
+    try {
+      const response = await notifications.requestPermission(false); // Don't show alert on denial
+      console.log("Permission Status:", response.status); // true or false
+
+      // Handle permission status (e.g., enable other buttons or display message)
+    } catch (error) {
+      console.error("Error requesting permission:", error);
+    }
   }
-}
 
-// Button Click Event Listener
-document.getElementById("request-permission-btn").addEventListener("click", requestPermission);
+  // Button Click Event Listener
+  document.getElementById("request-permission-btn").addEventListener("click", requestPermission);
 
-// Initialize Natively library (optional)
-initNatively(); // You can call this on page load or after a specific event
+  // Optional: Call initNatively on page load (or after a specific event)
+  initNatively(); // You can uncomment this line
    
   </script>
 </body>
