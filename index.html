@@ -292,7 +292,7 @@ copyTextButton.addEventListener('click', function() {
 
   async function initNatively() {
   try {
-    notifications = new NativelyNotifications();
+    const notifications = new NativelyNotifications();
     console.log("Natively library initialized successfully.");
   } catch (error) {
     console.error("Error initializing Natively:", error);
