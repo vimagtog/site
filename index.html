@@ -290,16 +290,6 @@ copyTextButton.addEventListener('click', function() {
 
 //Push Notification Get permission
 
-  function requestPermission() {
-  const notifications = new NativelyNotifications(); // Assuming initialization happens here
-  const push_register_callback = function (resp) {
-        console.log(resp.status); // true/false
-}
-   const fallbacktosettings = false; // Show alert if permission is denied
-   const reqPermResp = notifications.requestPermission();
-
-// Button Click Event Listener
-document.getElementById("request-permission-btn").addEventListener("click", reqPermResp);
 
   </script>
 </body>
