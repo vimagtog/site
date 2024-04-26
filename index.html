@@ -290,14 +290,28 @@ copyTextButton.addEventListener('click', function() {
 
 //Push Notification
 
-  async function requestPermission() {
-    const notifications = new NativelyNotifications();
-   const response = notifications.requestPermission(false); // Don't show alert on denial
-  console.log("Permission Status:", response.status); // true or false
+  async function initNatively() {
+  try {
+    notifications = new NativelyNotifications();
+    console.log("Natively library initialized successfully.");
+  } catch (error) {
+    console.error("Error initializing Natively:", error);
   }
+}
 
-  // Button Click Event Listener
-  document.getElementById("request-permission-btn").addEventListener("click", requestPermission);
+async function requestPermission() {
+  // Wait for Natively library to be initialized (if not already)
+  await initNatively();
+
+  const response = notifications.requestPermission(false); // Don't show alert on denial
+  console.log("Permission Status:", response.status); // true or false
+}
+
+// Call initNatively on page load (or after a specific event)
+initNatively();
+
+// Button Click Event Listener
+document.getElementById("request-permission-btn").addEventListener("click", requestPermission);
 
 
   </script>
