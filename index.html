@@ -289,7 +289,7 @@ copyTextButton.addEventListener('click', function() {
 
 
 //Push Notification Get permission
-async function requestPermission() {
+async function requestPermissionFn() {
   const notifications = new NativelyNotifications(); // Assuming initialization happens here
   const fallbacktosettings = false; // Show alert if permission is denied
   const push_register_callback = function (resp) {
@@ -299,7 +299,7 @@ async function requestPermission() {
 }
 
 // Button Click Event Listener
-document.getElementById("request-permission-btn").addEventListener("click", requestPermission);
+document.getElementById("request-permission-btn").addEventListener("click", requestPermissionFn);
 
 
   </script>
