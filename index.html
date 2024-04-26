@@ -288,27 +288,18 @@ copyTextButton.addEventListener('click', function() {
 });
 
 
-//Push Notification
+//Push Notification Get permission
 
-  async function initNatively() {
-  try {
-    notifications = new NativelyNotifications();
-    console.log("Natively library initialized successfully.");
-  } catch (error) {
-    console.error("Error initializing Natively:", error);
-  }
+  async function requestPermission() {
+  const notifications = new NativelyNotifications(); // Assuming initialization happens here
+  const push_register_callback = function (resp) {
+        console.log(resp.status); // true/false
 }
+   const fallbacktosettings = false; // Show alert if permission is denied
+   const reqPermResp = notifications.requestPermission();
 
 // Button Click Event Listener
-document.getElementById("request-permission-btn").addEventListener("click", requestPermission);
-
-// Call initNatively on page load (or after a specific event)
-<script async defer src="https://cdn.jsdelivr.net/npm/natively@2.13.3/natively-frontend.min.js"></script>
-<script>
-// Your other JavaScript code goes here
-initNatively();
-</script>
-
+document.getElementById("request-permission-btn").addEventListener("click", reqPermResp);
 
   </script>
 </body>
