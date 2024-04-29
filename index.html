@@ -113,6 +113,7 @@ p {
  <p>One Signal Push Notification</p>
  <br>
 <button id="request-permission-btn">Request Permission</button>
+<button id="check-permission-btn">Check Push Notification Permission</button>
 <button id="get-onesignal-id-btn">Get OneSignal Player ID</button>
 
 
@@ -304,6 +305,23 @@ async function requestPermissionFn() {
 document.getElementById("request-permission-btn").addEventListener("click", requestPermissionFn);
 
 
+//Get notifications permission status
+
+function checkPushPermission() {
+  const notifications = new NativelyNotifications();
+  const push_permission_callback = function (resp) {
+    const permissionStatus = resp.status ? "GRANTED" : "DENIED";
+    window.natively.showAppToast("INFO", "Push Notification Permission: " + permissionStatus);
+  };
+
+  notifications.getPermissionStatus(push_permission_callback);
+}
+
+// Button Click Event Listener
+const checkPermissionButton = document.getElementById('check-permission-btn');
+checkPermissionButton.addEventListener('click', checkPushPermission);
+
+   
 //Get PlayerID
 
 function getOneSignalPlayerId() {
