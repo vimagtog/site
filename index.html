@@ -115,7 +115,7 @@ p {
 <button id="request-permission-btn">Request Permission</button>
 <button id="check-permission-btn">Check Push Notification Permission</button>
 <button id="get-onesignal-id-btn">Get OneSignal Player ID</button>
-<button id="send-push-btn" disabled>Send Push Notification</button>
+<button id="send-push-btn">Send Push Notification</button>
 
 
 
@@ -345,7 +345,34 @@ getOneSignalIdButton.addEventListener('click', getOneSignalPlayerId);
    
 //Send push notification
 
+function sendPushNotification() {
+  const notifications = new NativelyNotifications();
+  const onesignal_playerid_callback = function (resp) {
+    if (resp.playerId) {
+      window.natively.showAppToast("SUCCESS", "OneSignal Player ID retrieved: " + resp.playerId);
+    } else {
+      window.natively.showAppToast("ERROR", "Failed to retrieve OneSignal Player ID.");
+    }
+  };
 
+  notifications.getOneSignalId(onesignal_playerid_callback);
+}
+
+  const payload = {
+  redirect_url: "https://buildnatively.com/" // A URL where the user will be redirected after clicking the notification banner.
+  /// ------
+  title: "Title Text",
+  subtitle: "Subtitle Text", // Works only for iOS
+  description: "Description Text",
+  // title, subtitle, description or template_id
+  //template_id: "{YOUR TEMPLATE ID HERE}",
+  /// ----
+}
+const appId = "123...123" // Your OneSignal app id
+const isPreview = false // set it to true if you're testing the website in Natively Preview (It will replace appId with appId of Natively Preview app).
+const player_ids = [playerID] // Array of playerIds where you're sending push notification
+const resp = await window.natively.sendPushNotification(appId, payload, player_ids, isPreview)
+}
 
    
   </script>
