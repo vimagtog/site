@@ -113,6 +113,7 @@ p {
  <p>One Signal Push Notification</p>
  <br>
 <button id="request-permission-btn">Request Permission</button>
+<button id="get-onesignal-id-btn">Get OneSignal Player ID</button>
 
 
 
@@ -301,6 +302,27 @@ async function requestPermissionFn() {
 
 // Button Click Event Listener
 document.getElementById("request-permission-btn").addEventListener("click", requestPermissionFn);
+
+
+//Get PlayerID
+
+function getOneSignalPlayerId() {
+ const notifications = new NativelyNotifications();
+  const onesignal_playerid_callback = function (resp) {
+    if (resp.playerId) {
+      window.natively.showAppToast("SUCCESS", "OneSignal Player ID retrieved: " + resp.playerId);
+    } else {
+      window.natively.showAppToast("ERROR", "Failed to retrieve OneSignal Player ID.");
+    }
+  };
+
+  notifications.getOneSignalId(onesignal_playerid_callback);
+}
+
+// Button Click Event Listener
+const getOneSignalIdButton = document.getElementById('get-onesignal-id-btn');
+getOneSignalIdButton.addEventListener('click', getOneSignalPlayerId);
+
 
   </script>
 </body>
