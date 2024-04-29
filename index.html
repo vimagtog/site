@@ -115,6 +115,7 @@ p {
 <button id="request-permission-btn">Request Permission</button>
 <button id="check-permission-btn">Check Push Notification Permission</button>
 <button id="get-onesignal-id-btn">Get OneSignal Player ID</button>
+<button id="send-push-btn" disabled>Send Push Notification</button>
 
 
 
@@ -341,7 +342,79 @@ function getOneSignalPlayerId() {
 const getOneSignalIdButton = document.getElementById('get-onesignal-id-btn');
 getOneSignalIdButton.addEventListener('click', getOneSignalPlayerId);
 
+   
+//Send push notification
 
+
+
+async function checkPermissionAndPlayerId() {
+const notifications = new NativelyNotifications();
+
+let hasPermission = false;
+let playerId = null;
+  const permissionResponse = await notifications.requestPermission();
+  hasPermission = permissionResponse.status === 'GRANTED';
+
+  if (hasPermission) {
+    playerId = await notifications.getOneSignalId();
+  }
+
+  updateButtonState();
+}
+
+function updateButtonState() {
+  const sendPushButton = document.getElementById('send-push-btn');
+  sendPushButton.disabled = !hasPermission || !playerId;
+}
+
+function prepareAndSendPushNotification() {
+  // Define the payload object (replace with your notification content)
+  const payload = {
+    redirect_url: "https://buildnatively.com/", // Optional, URL to redirect after clicking notification
+    title: "Your Notification Title",
+    subtitle: "Optional subtitle (iOS only)",  // Optional, subtitle for iOS notifications
+    description: "Your notification description",
+    // title, subtitle, description or template_id
+    // Choose one of the above or use template_id for a pre-defined template
+    // template_id: "{YOUR TEMPLATE ID HERE}", // Optional, replace with your OneSignal template ID
+  };
+
+  // **Use the retrieved playerId to populate the player_ids array**
+  const player_ids = [playerId]; // Assuming you want to send to the current user only
+
+  // Replace with your OneSignal app ID
+  const appId = "{ONE_SIGNAL_APP_ID}";
+
+  if (hasPermission && playerId) {
+    sendPushNotification(appId, payload, player_ids);
+  } else {
+    window.natively.showAppToast("INFO", "Push notification permission not granted or player ID unavailable.");
+  }
+}
+
+async function sendPushNotification(appId, payload, player_ids, isPreview = false) {
+  try {
+    const resp = await window.natively.sendPushNotification(appId, payload, player_ids, isPreview);
+    window.natively.showAppToast("SUCCESS", "Push notification sent!");
+  } catch (error) {
+    window.natively.showAppToast("ERROR", "Failed to send push notification: " + error.message);
+  }
+}
+
+// Event Listeners
+document.getElementById("request-permission-btn").addEventListener("click", requestPermissionFn);
+const checkPermissionButton = document.getElementById('check-permission-btn');
+checkPermissionButton.addEventListener('click', checkPushPermission);
+const getOneSignalIdButton = document.getElementById('get-onesignal-id-btn');
+getOneSignalIdButton.addEventListener('click', getOneSignalPlayerId);
+const sendPushButton = document.getElementById('send-push-btn');
+sendPushButton.addEventListener('click', prepareAndSendPushNotification);
+
+// Check permission and player ID on page load
+checkPermissionAndPlayerId();
+
+
+   
   </script>
 </body>
 </html>
