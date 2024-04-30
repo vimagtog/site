@@ -116,8 +116,12 @@ p {
 <button id="check-permission-btn">Check Push Notification Permission</button>
 <button id="get-onesignal-id-btn">Get OneSignal Player ID</button>
 <button id="send-push-btn">Send Push Notification</button>
-
-
+<br>
+<hr class="dark-hr">
+<br>
+ <p>Location</p>
+<br>
+<button id="get-location-permission">Get location permission</button>
 
 
 
@@ -345,14 +349,14 @@ getOneSignalIdButton.addEventListener('click', getOneSignalPlayerId);
    
 //Send push notification
 
-async function sendPushNotification() {
+/* async function sendPushNotification() {
   const notifications = new NativelyNotifications();
   const onesignal_playerid_callback = function (resp) {
-    if (resp.playerId) {
+   if (resp.playerId) {
       window.natively.showAppToast("SUCCESS", "OneSignal Player ID retrieved: " + resp.playerId);
     } else {
       window.natively.showAppToast("ERROR", "Failed to retrieve OneSignal Player ID.");
-    }
+   }
   };
 
   notifications.getOneSignalId(onesignal_playerid_callback);
@@ -374,7 +378,31 @@ async function sendPushNotification() {
   const resp = await window.natively.sendPushNotification(appId, payload, player_ids, isPreview);
 }
 const sendPushButton = document.getElementById('send-push-btn');
-sendPushButton.addEventListener('click', sendPushNotification);
+sendPushButton.addEventListener('click', sendPushNotification); */
+
+   //FG location
+   function getLocation() {
+  const locationService = new NativelyLocation();
+  const location_callback = function (resp) {
+    console.log(resp.status); // "Success"/"Timeout"/"Error"
+    console.log(resp.longitude); // 50.1231231
+    console.log(resp.latitude); // 50.1231231
+  };
+  const minAccuracy = 50; // only available in 2.7.0 minAccuracy [iOS] - Radius in meters. All other values will be filtered!
+
+  const accuracyType = "Best"; // only available in 2.7.0 accuractType [iOS] - Affects on location accuracy and battery life. BestForNavigation,Best,NearestTenMeters,HundredMeters,Kilometer,ThreeKilometers. More details here https://developer.apple.com/documentation/corelocation/cllocationaccuracy
+
+  const priority_android = "BALANCED"; // "BALANCED" or "HIGH" [Android only]
+  const interval = 10000; // in milliseconds 
+  
+  // Foreground Location
+  locationService.current(minAccuracy, accuracyType, priority_android, location_callback);
+  locationService.start(interval, minAccuracy, accuracyType, priority_android, location_callback);
+}
+
+// Button click event listener
+const getLocationButton = document.getElementById('get-location-permission');
+getLocationButton.addEventListener('click', getLocation);
 
    
   </script>
