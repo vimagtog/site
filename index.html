@@ -345,7 +345,7 @@ getOneSignalIdButton.addEventListener('click', getOneSignalPlayerId);
    
 //Send push notification
 
-function sendPushNotification() {
+async function sendPushNotification() {
   const notifications = new NativelyNotifications();
   const onesignal_playerid_callback = function (resp) {
     if (resp.playerId) {
