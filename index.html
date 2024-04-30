@@ -370,7 +370,7 @@ async function sendPushNotification() {
   // Rest of your code using the payload object:
   const appId = "123...123"; // Your OneSignal app id
   const isPreview = false; // set it to true if you're testing the website in Natively Preview (It will replace appId with appId of Natively Preview app).
-  const player_ids = [playerID]; // Array of playerIds where you're sending push notification
+  const player_ids = [playerId]; // Array of playerIds where you're sending push notification
   const resp = await window.natively.sendPushNotification(appId, payload, player_ids, isPreview);
 }
 const sendPushButton = document.getElementById('send-push-btn');
