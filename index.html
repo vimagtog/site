@@ -127,6 +127,9 @@ p {
  <br>
  <p>In-app purchase</p>
  <button id="link-user-btn">Link User with RevenueCat</button>
+ <br>
+ <button id="open-logger-btn">Open RevenueCat Logger</button>
+ <br>
 
 
 
@@ -427,6 +430,13 @@ getLocationButton.addEventListener('click', getLocation);
 
   linkUserButton.addEventListener('click', function() {
     purchases.login(userId, login_callback);
+  });
+
+   // Open Logger Button Click Event Handler
+  const openLoggerButton = document.getElementById('open-logger-btn');
+
+  openLoggerButton.addEventListener('click', function() {
+    window.natively.openLogger();
   });
 
    
