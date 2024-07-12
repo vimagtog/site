@@ -126,7 +126,7 @@ p {
  <hr class="dark-hr">
  <br>
  <p>In-app purchase</p>
- <button id="link-user-btn">Link User with RevenueCat</button>
+ <button id="getCustomerIDButton">Get Customer ID</button>
  <br>
  <button id="openConsoleButton">Open Console</button>
  <br>
@@ -418,6 +418,28 @@ getLocationButton.addEventListener('click', getLocation);
   openConsoleButton.addEventListener('click', function() {
     window.natively.openConsole();
   });
+
+//Get customer ID
+    const purchases = new NativelyPurchases();
+
+  const getCustomerIDButton = document.getElementById('getCustomerIDButton');
+
+  getCustomerIDButton.addEventListener('click', () => {
+    purchases.customerId((resp) => {
+      if (resp.customerId) {
+        console.log('Customer ID:', resp.customerId);
+        showToast('SUCCESS', 'Customer ID: ' + resp.customerId);
+      } else {
+        console.error('Error getting customer ID:', resp.error);
+        showToast('ERROR', 'Failed to get customer ID');
+      }
+    });
+  });
+
+  function showToast(type, text) {
+    // Replace with your actual toast implementation
+    console.log(`Toast: ${type} - ${text}`);
+  }
    
   </script>
 </body>
