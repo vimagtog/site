@@ -437,9 +437,14 @@ getLocationButton.addEventListener('click', getLocation);
   });
 
   function showToast(type, text) {
-    // Replace with your actual toast implementation
-    console.log(`Toast: ${type} - ${text}`);
+  try {
+    // Assuming window.natively.showAppToast is available
+    window.natively.showAppToast(type, text);
+  } catch (error) {
+    console.error('Error showing toast:', error);
+    // Handle the error, e.g., display a fallback toast or log the error
   }
+}
    
   </script>
 </body>
