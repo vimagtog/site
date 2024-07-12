@@ -412,25 +412,6 @@ sendPushButton.addEventListener('click', sendPushNotification);
 const getLocationButton = document.getElementById('get-location-permission');
 getLocationButton.addEventListener('click', getLocation);
 
-//In-app purchase
-   
-  // RevenueCat Purchases Object and Login Callback
-  const purchases = new NativelyPurchases();
-  const login_callback = function(resp) {
-    console.log(resp.status); // SUCCESS or FAILED
-    console.log(resp.customerId); // Customer Id
-    
-    // Empty if no error (should contain an error if status === "FAILED"
-    console.log(resp.error); 
-  };
-
-  // Link User Button Click Event Handler
-  const linkUserButton = document.getElementById('link-user-btn');
-  const userId = "sdfdsr-2345-3rsd-fsd3432"; // Replace with your actual user ID
-
-  linkUserButton.addEventListener('click', function() {
-    purchases.login(userId, login_callback);
-  });
 
    // Open Logger Button Click Event Handler
   const openLoggerButton = document.getElementById('open-logger-btn');
