@@ -420,11 +420,12 @@ getLocationButton.addEventListener('click', getLocation);
   });
 
 //Get customer ID
-    const purchases = new NativelyPurchases();
+   
 
   const getCustomerIDButton = document.getElementById('getCustomerIDButton');
 
   getCustomerIDButton.addEventListener('click', () => {
+    const purchases = new NativelyPurchases();
     purchases.customerId((resp) => {
       if (resp.customerId) {
         console.log('Customer ID:', resp.customerId);
@@ -435,16 +436,6 @@ getLocationButton.addEventListener('click', getLocation);
       }
     });
   });
-
-  function showToast(type, text) {
-  try {
-    // Assuming window.natively.showAppToast is available
-    window.natively.showAppToast(type, text);
-  } catch (error) {
-    console.error('Error showing toast:', error);
-    // Handle the error, e.g., display a fallback toast or log the error
-  }
-}
    
   </script>
 </body>
