@@ -148,7 +148,7 @@ p {
     const openExternalUrlButton = document.getElementById('open-external-url-btn');
     openExternalUrlButton.addEventListener('click', function() {
       const url = "https://buildnatively.com/";
-      const external = false; // Open inside the app (if it's a native app)
+      const external = true; // Open inside the app (if it's a native app)
       window.natively.openExternalURL(url, external);
     });
 
