@@ -85,6 +85,7 @@ p {
   <h1>Welcome to Natively JS SDK</h1>
   <p>This is a sample HTML page that demonstrates Natively library integration.</p>
 
+  <button onclick="redirectToSite()">Go to No-SDK</button>
   <button id="show-toast-btn">Show Toast</button>
   <button id="open-external-url-btn">Open External URL</button>
   <button id="open-camera-btn">Open Camera</button>
@@ -134,6 +135,12 @@ p {
 
 
   <script>
+
+   //Go to No-SDK page
+function redirectToSite() {
+  window.location.href = "https://vimagtog.github.io/site/";
+}
+
   
     // Show Toast Button Click Event Handler (already defined)
     const showToastButton = document.getElementById('show-toast-btn');
