@@ -1,1 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sample HTML Page</title>
+</head>
+<body>
+<button id="show-toast-btn">Show Toast</button>
+<script>
+  let nativelyLoaded = false;
 
+  function loadNativelyIfNeeded() {
+    if (!nativelyLoaded && window.natively === undefined) {
+      const script = document.createElement('script');
+      script.async = true;
+      script.onload = function() {
+        nativelyLoaded = true;
+      };
+      script.src = "https://cdn.jsdelivr.net/npm/natively@2.14.0/natively-frontend.min.js";
+      document.body.appendChild(script);
+    }
+  }
+
+  // Show Toast Button Click Event Handler (already defined)
+  const showToastButton = document.getElementById('show-toast-btn');
+  showToastButton.addEventListener('click', function() {
+    // Load the library if needed before showing the toast
+    loadNativelyIfNeeded();
+
+    const type = "DEFAULT"; // You can change this to desired toast type
+    const text = "This is a toast";
+
+    // Only call showAppToast if the library is loaded
+    if (window.natively) {
+      window.natively.showAppToast(type, text);
+    }
+  });
+</script>
+</body>
+</html>
