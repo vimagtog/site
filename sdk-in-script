@@ -6,3 +6,5 @@
   <title>Sample HTML Page</title>
 </head>
 <body>
+<button id="show-toast-btn">Show Toast</button>
+
