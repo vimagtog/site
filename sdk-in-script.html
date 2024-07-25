@@ -11,6 +11,7 @@
   <br>
   <br>
 <button id="show-toast-btn">Show Toast</button>
+  <script>
 let nativelyLoaded = false;
 
 function loadNativelyIfNeeded() {
@@ -38,5 +39,6 @@ showToastButton.addEventListener('click', function() {
     window.natively.showAppToast(type, text);
   }
 });
+  </script>
 </body>
 </html>
