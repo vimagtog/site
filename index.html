@@ -122,7 +122,7 @@ p {
 <br>
  <p>Location</p>
 <br>
-<button id="get-location-permission">Get location permission</button>
+<button id="get-location-btn">Get current location</button>
  <br>
  <hr class="dark-hr">
  <br>
@@ -395,29 +395,32 @@ getOneSignalIdButton.addEventListener('click', getOneSignalPlayerId);
 const sendPushButton = document.getElementById('send-push-btn');
 sendPushButton.addEventListener('click', sendPushNotification);
 
-   //FG location
-   function getLocation() {
+   // Get Location
+function getCurrentLocation() {
   const locationService = new NativelyLocation();
   const location_callback = function (resp) {
-    console.log(resp.status); // "Success"/"Timeout"/"Error"
-    console.log(resp.longitude); // 50.1231231
-    console.log(resp.latitude); // 50.1231231
+    let toastMessage = "";
+    if (resp.status === "Success") {
+      toastMessage = "Location retrieved successfully: \nLongitude: " + resp.longitude + "\nLatitude: " + resp.latitude;
+      window.natively.showAppToast("SUCCESS", toastMessage);
+    } else {
+      toastMessage = "Failed to retrieve location: " + resp.status;
+      window.natively.showAppToast("ERROR", toastMessage);
+    }
   };
-  const minAccuracy = 50; // only available in 2.7.0 minAccuracy [iOS] - Radius in meters. All other values will be filtered!
-
-  const accuracyType = "Best"; // only available in 2.7.0 accuractType [iOS] - Affects on location accuracy and battery life. BestForNavigation,Best,NearestTenMeters,HundredMeters,Kilometer,ThreeKilometers. More details here https://developer.apple.com/documentation/corelocation/cllocationaccuracy
-
-  const priority_android = "BALANCED"; // "BALANCED" or "HIGH" [Android only]
-  const interval = 10000; // in milliseconds 
   
+  const priority_android = "BALANCED"; // "BALANCED" or "HIGH" [Android only]
+  const interval = 10000; // in milliseconds
+  const minAccuracy = 10; // Customize based on your requirements
+  const accuracyType = "BALANCED"; // Customize based on your requirements
+
   // Foreground Location
   locationService.current(minAccuracy, accuracyType, priority_android, location_callback);
-  locationService.start(interval, minAccuracy, accuracyType, priority_android, location_callback);
 }
 
-// Button click event listener
-const getLocationButton = document.getElementById('get-location-permission');
-getLocationButton.addEventListener('click', getLocation);
+// Button Click Event Listener for Location
+const getLocationButton = document.getElementById('get-location-btn');
+getLocationButton.addEventListener('click', getCurrentLocation);
 
    //Open Console
    const openConsoleButton = document.getElementById('openConsoleButton');
