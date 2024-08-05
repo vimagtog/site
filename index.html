@@ -411,8 +411,8 @@ function getCurrentLocation() {
   
   const priority_android = "BALANCED"; // "BALANCED" or "HIGH" [Android only]
   const interval = 10000; // in milliseconds
-  const minAccuracy = 10; // Customize based on your requirements
-  const accuracyType = "BALANCED"; // Customize based on your requirements
+  const minAccuracy = 50; // Customize based on your requirements
+  const accuracyType = "Best"; // Customize based on your requirements
 
   // Foreground Location
   locationService.start(interval, minAccuracy, accuracyType, priority_android, location_callback);
