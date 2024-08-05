@@ -415,7 +415,7 @@ function getCurrentLocation() {
   const accuracyType = "Best"; // Customize based on your requirements
 
   // Foreground Location
-  locationService.start(interval, minAccuracy, accuracyType, priority_android, location_callback);
+  locationService.current(minAccuracy, accuracyType, priority_android, location_callback);
 }
 
 // Button Click Event Listener for Location
