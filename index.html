@@ -698,7 +698,8 @@ document.addEventListener('DOMContentLoaded', function() {
   const verifyCustomerIdButton = document.getElementById('verify-customer-id-btn');
   verifyCustomerIdButton.addEventListener('click', verifyCustomerId);
 
-   function purchasePackage() {
+   // Purchase Package
+      function purchasePackage() {
         const purchases = new NativelyPurchases();
         const packageId = "$rc_monthly"; // Replace with your actual package ID
 
