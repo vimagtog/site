@@ -630,8 +630,10 @@ function loginToInAppPurchases() {
   console.log("Creating purchases object"); // Before creating the NativelyPurchases object
 
   const purchases = new NativelyPurchases();
-  const userId = "sdfdsr-2345-3rsd-fsd3432"; // Replace with your actual user ID
-  const customerEmail = "customer@example.com"; // Optional: Set this if needed
+  
+  // Get values from the input fields
+  const customerEmail = document.getElementById('customer-email').value;
+  const userId = document.getElementById('customer-id').value;
 
   // Logging the parameters being sent for the login
   console.log("Logging in with User ID:", userId);
@@ -642,12 +644,12 @@ function loginToInAppPurchases() {
     if (resp.status === "SUCCESS") {
       window.natively.showAppToast("SUCCESS", "Login to in-app purchases successful!");
       document.getElementById('purchase-status').textContent = "Login Status: " + resp.status;
-      document.getElementById('customer-id').textContent = "Customer ID: " + resp.customerId;
+      document.getElementById('customer-id-display').textContent = "Customer ID: " + resp.customerId;
       document.getElementById('purchase-error').textContent = ""; // Clear any previous errors
     } else {
       window.natively.showAppToast("ERROR", "Login to in-app purchases failed.");
       document.getElementById('purchase-status').textContent = "Login Status: " + resp.status;
-      document.getElementById('customer-id').textContent = ""; // Clear customer ID if failed
+      document.getElementById('customer-id-display').textContent = ""; // Clear customer ID if failed
       document.getElementById('purchase-error').textContent = "Error: " + resp.error;
     }
   };
