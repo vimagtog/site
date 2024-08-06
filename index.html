@@ -593,9 +593,13 @@ stopBackgroundLocationButton.addEventListener('click', stopBackgroundLocation);
 
 // In-App Purchases Login
 function loginToInAppPurchases() {
+  console.log("Button clicked"); // At the start of the login function
+  console.log("Creating purchases object"); // Before creating the NativelyPurchases object
+
   const purchases = new NativelyPurchases();
   const login_callback = function(resp) {
-   console.log("Login callback triggered:", resp); // Add this line
+    console.log("Login callback triggered:", resp); // Log the response
+
     if (resp.status === "SUCCESS") {
       window.natively.showAppToast("SUCCESS", "Login to in-app purchases successful!");
       document.getElementById('purchase-status').textContent = "Login Status: " + resp.status;
