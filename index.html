@@ -143,7 +143,10 @@ p {
  <hr class="dark-hr">
  <br>
  <p>In-app purchase</p>
- <button id="getCustomerIDButton">Get Customer ID</button>
+<button id="login-purchases-btn">Get Customer DI - In-App Purchases</button>
+<p id="purchase-status"></p>
+<p id="customer-id"></p>
+<p id="purchase-error"></p>
  <br>
  <button id="openConsoleButton">Open Console</button>
  <br>
@@ -538,7 +541,7 @@ function startBackgroundLocation() {
   const location_bg_callback = function (resp) {
     let toastMessage = "";
     if (resp.status === "SUCCESS") {
-      toastMessage = "Background location retrieved: Longitude: " + resp.longitude + ", Latitude: " + resp.latitude;
+      toastMessage = "Background location started. " + resp.status;
       window.natively.showAppToast("SUCCESS", toastMessage);
     } else {
       toastMessage = "Failed to retrieve background location: " + resp.status;
@@ -588,23 +591,31 @@ stopBackgroundLocationButton.addEventListener('click', stopBackgroundLocation);
     window.natively.openConsole();
   });
 
-//Get customer ID
-   
+// In-App Purchases Login
+function loginToInAppPurchases() {
+  const purchases = new NativelyPurchases();
+  const login_callback = function(resp) {
+    if (resp.status === "SUCCESS") {
+      window.natively.showAppToast("SUCCESS", "Login to in-app purchases successful!");
+      document.getElementById('purchase-status').textContent = "Login Status: " + resp.status;
+      document.getElementById('customer-id').textContent = "Customer ID: " + resp.customerId;
+      document.getElementById('purchase-error').textContent = ""; // Clear any previous errors
+    } else {
+      window.natively.showAppToast("ERROR", "Login to in-app purchases failed.");
+      document.getElementById('purchase-status').textContent = "Login Status: " + resp.status;
+      document.getElementById('customer-id').textContent = ""; // Clear customer ID if failed
+      document.getElementById('purchase-error').textContent = "Error: " + resp.error;
+    }
+  };
 
-  const getCustomerIDButton = document.getElementById('getCustomerIDButton');
+  // Link your user with the customer on RevenueCat
+  const userId = "sdfdsr-2345-3rsd-fsd3432"; // Replace with your actual user ID
+  purchases.login(userId, login_callback);
+}
 
-  getCustomerIDButton.addEventListener('click', () => {
-    const purchases = new NativelyPurchases();
-    purchases.customerId((resp) => {
-      if (resp.customerId) {
-        console.log('Customer ID:', resp.customerId);
-        showToast('SUCCESS', 'Customer ID: ' + resp.customerId);
-      } else {
-        console.error('Error getting customer ID:', resp.error);
-        showToast('ERROR', 'Failed to get customer ID');
-      }
-    });
-  });
+// Button Click Event Listener for In-App Purchases Login
+const loginPurchasesButton = document.getElementById('login-purchases-btn');
+loginPurchasesButton.addEventListener('click', loginToInAppPurchases);
    
   </script>
 </body>
