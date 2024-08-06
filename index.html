@@ -704,13 +704,21 @@ document.addEventListener('DOMContentLoaded', function() {
         const packageId = "$rc_monthly"; // Replace with your actual package ID
 
         const purchases_package_callback = function(resp) {
-          console.log("Purchase callback triggered:", JSON.stringify(resp)); // Log the response
-          if (resp.status === "SUCCESS") {
+        console.log("Purchase callback triggered:", resp); // Log the raw response object
+        
+        // Check if the response object has properties
+        if (resp && typeof resp === 'object') {
+            console.log("Purchase Response:", JSON.stringify(resp, null, 2)); // Log the full response object
+        } else {
+            console.log("Unexpected response format:", resp); // Log unexpected formats
+        }
+
+        if (resp.status === "SUCCESS") {
             window.natively.showAppToast("SUCCESS", "Purchase successful!");
-          } else {
-            window.natively.showAppToast("ERROR", "Purchase failed: " + resp.error);
-          }
-        };
+        } else {
+            window.natively.showAppToast("ERROR", "Purchase failed: " + (resp.error || "Unknown error"));
+        }
+    };
 
         // Trigger the purchase
         purchases.purchasePackage(packageId, purchases_package_callback);
