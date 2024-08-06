@@ -698,12 +698,11 @@ document.addEventListener('DOMContentLoaded', function() {
   const verifyCustomerIdButton = document.getElementById('verify-customer-id-btn');
   verifyCustomerIdButton.addEventListener('click', verifyCustomerId);
 
-   // Purchase Package
-      function purchasePackage() {
+   function purchasePackage() {
         const purchases = new NativelyPurchases();
         const packageId = "$rc_monthly"; // Replace with your actual package ID
 
-        const purchase_callback = function(resp) {
+        const purchases_package_callback = function(resp) {
           console.log("Purchase callback triggered:", resp); // Log the response
           if (resp.status === "SUCCESS") {
             window.natively.showAppToast("SUCCESS", "Purchase successful!");
@@ -713,7 +712,7 @@ document.addEventListener('DOMContentLoaded', function() {
         };
 
         // Trigger the purchase
-        purchases.purchasePackage(packageId, purchase_callback);
+        purchases.purchasePackage(packageId, purchases_package_callback);
       }
 
    // Button Click Event Listener for Purchase Package
