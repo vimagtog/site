@@ -78,6 +78,10 @@ p {
   display: inline-block; /* Show only when there's a date */
 }
 
+   
+  .hidden {
+    display: none;
+  }
   </style>
   <script async onload="nativelyOnLoad = function(){}" src="https://cdn.jsdelivr.net/npm/natively@2.14.0/natively-frontend.min.js"></script>
 </head>
@@ -125,6 +129,7 @@ p {
 <button id="get-location-btn">Get current location</button>
  <br>
  <button id="start-foreground-location-btn">Start Foreground Location</button>
+ <button id="stop-foreground-location-btn" class="hidden">Stop Foreground Location</button>
  <br>
  <p id="location-status"></p>
  <p id="longitude"></p>
@@ -476,11 +481,28 @@ function startForegroundLocation() {
 
   // Start Foreground Location
   locationService.start(interval, minAccuracy, accuracyType, priority_android, location_callback);
+
+  // Toggle button visibility
+  document.getElementById('start-foreground-location-btn').classList.add('hidden');
+  document.getElementById('stop-foreground-location-btn').classList.remove('hidden');
+}
+
+// Stop Foreground Location Updates
+function stopForegroundLocation() {
+  const locationService = new NativelyLocation();
+  locationService.stop();
+  window.natively.showAppToast("INFO", "Foreground location updates stopped");
+
+  // Toggle button visibility
+  document.getElementById('start-foreground-location-btn').classList.remove('hidden');
+  document.getElementById('stop-foreground-location-btn').classList.add('hidden');
 }
 
 // Button Click Event Listeners
 const startForegroundLocationButton = document.getElementById('start-foreground-location-btn');
 startForegroundLocationButton.addEventListener('click', startForegroundLocation);
+const stopForegroundLocationButton = document.getElementById('stop-foreground-location-btn');
+stopForegroundLocationButton.addEventListener('click', stopForegroundLocation);
    
    //Open Console
    const openConsoleButton = document.getElementById('openConsoleButton');
