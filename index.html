@@ -124,6 +124,10 @@ p {
 <br>
 <button id="get-location-btn">Get current location</button>
  <br>
+ <p id="location-status"></p>
+<p id="longitude"></p>
+<p id="latitude"></p>
+ <br>
  <hr class="dark-hr">
  <br>
  <p>In-app purchase</p>
@@ -400,15 +404,21 @@ function getCurrentLocation() {
   const locationService = new NativelyLocation();
   const location_callback = function (resp) {
     let toastMessage = "";
-    if (resp.status == "SUCCESS") {
-      toastMessage = "Location retrieved successfully: \nLongitude: " + resp.longitude + "\nLatitude: " + resp.latitude;
+    if (resp.status === "SUCCESS") {
+      toastMessage = "Location retrieved successfully";
+      document.getElementById('location-status').textContent = toastMessage;
+      document.getElementById('longitude').textContent = "Longitude: " + resp.longitude;
+      document.getElementById('latitude').textContent = "Latitude: " + resp.latitude;
       window.natively.showAppToast("SUCCESS", toastMessage);
     } else {
       toastMessage = "Failed to retrieve location: " + resp.status;
+      document.getElementById('location-status').textContent = toastMessage;
+      document.getElementById('longitude').textContent = "";
+      document.getElementById('latitude').textContent = "";
       window.natively.showAppToast("ERROR", toastMessage);
     }
   };
-  
+
   const priority_android = "BALANCED"; // "BALANCED" or "HIGH" [Android only]
   const interval = 10000; // in milliseconds
   const minAccuracy = 50; // Customize based on your requirements
@@ -421,7 +431,6 @@ function getCurrentLocation() {
 // Button Click Event Listener for Location
 const getLocationButton = document.getElementById('get-location-btn');
 getLocationButton.addEventListener('click', getCurrentLocation);
-
    //Open Console
    const openConsoleButton = document.getElementById('openConsoleButton');
 
