@@ -668,7 +668,29 @@ document.addEventListener('DOMContentLoaded', function() {
   loginPurchasesButton.addEventListener('click', loginToInAppPurchases);
 });
 
+  // Verify Customer ID
+  function verifyCustomerId() {
+    const purchases = new NativelyPurchases();
   
+    const customer_id_callback = function(resp) {
+      console.log("Customer ID callback triggered:", resp); // Log the response
+      if (resp.customerId) {
+        document.getElementById('customer-id-display').textContent = "Customer ID: " + resp.customerId;
+        window.natively.showAppToast("SUCCESS", "Customer ID retrieved successfully!");
+      } else {
+        document.getElementById('customer-id-display').textContent = "Customer ID: Not found.";
+        window.natively.showAppToast("ERROR", "Failed to retrieve Customer ID.");
+      }
+    };
+  
+    // Trigger the customer ID retrieval
+    purchases.customerId(customer_id_callback);
+  }
+
+  // Button Click Event Listener for Verify Customer ID
+  const verifyCustomerIdButton = document.getElementById('verify-customer-id-btn');
+  verifyCustomerIdButton.addEventListener('click', verifyCustomerId);
+});
    
   </script>
 </body>
