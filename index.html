@@ -400,7 +400,7 @@ function getCurrentLocation() {
   const locationService = new NativelyLocation();
   const location_callback = function (resp) {
     let toastMessage = "";
-    if (resp.status == "Success") {
+    if (resp.status == "SUCCESS") {
       toastMessage = "Location retrieved successfully: \nLongitude: " + resp.longitude + "\nLatitude: " + resp.latitude;
       window.natively.showAppToast("SUCCESS", toastMessage);
     } else {
