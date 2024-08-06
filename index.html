@@ -161,6 +161,7 @@ p {
   <p id="customer-id-display"></p>
   <p id="purchase-error"></p>
 </div>
+ <button id="purchase-package-btn" class="hidden">Purchase Monthly Package</button>
  <br>
  <button id="openConsoleButton">Open Console</button>
  <br>
@@ -668,7 +669,7 @@ document.addEventListener('DOMContentLoaded', function() {
   loginPurchasesButton.addEventListener('click', loginToInAppPurchases);
 });
 
-  // Verify Customer ID
+  // Retrieve Customer ID
   function verifyCustomerId() {
     const purchases = new NativelyPurchases();
   
@@ -690,6 +691,28 @@ document.addEventListener('DOMContentLoaded', function() {
   // Button Click Event Listener for Verify Customer ID
   const verifyCustomerIdButton = document.getElementById('verify-customer-id-btn');
   verifyCustomerIdButton.addEventListener('click', verifyCustomerId);
+
+   // Purchase Package
+      function purchasePackage() {
+        const purchases = new NativelyPurchases();
+        const packageId = "$rc_monthly"; // Replace with your actual package ID
+
+        const purchase_callback = function(resp) {
+          console.log("Purchase callback triggered:", resp); // Log the response
+          if (resp.status === "SUCCESS") {
+            window.natively.showAppToast("SUCCESS", "Purchase successful!");
+          } else {
+            window.natively.showAppToast("ERROR", "Purchase failed: " + resp.error);
+          }
+        };
+
+        // Trigger the purchase
+        purchases.purchasePackage(packageId, purchase_callback);
+      }
+
+   // Button Click Event Listener for Purchase Package
+      const purchasePackageButton = document.getElementById('purchase-package-btn');
+      purchasePackageButton.addEventListener('click', purchasePackage);
    
   </script>
 </body>
