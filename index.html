@@ -132,6 +132,8 @@ p {
  <button id="stop-foreground-location-btn" class="hidden">Stop Foreground Location</button>
  <br>
  <button id="check-bg-status-btn">Check Background Location Status</button>
+ <button id="start-background-location-btn">Start Background Location</button>
+ <button id="stop-background-location-btn" class="hidden">Stop Background Location</button>
  <br>
  <p id="location-status"></p>
  <p id="longitude"></p>
@@ -529,6 +531,55 @@ function checkBackgroundLocationStatus() {
 // Button Click Event Listeners
    const checkBgStatusButton = document.getElementById('check-bg-status-btn');
 checkBgStatusButton.addEventListener('click', checkBackgroundLocationStatus);
+
+   // Start Background Location Updates
+function startBackgroundLocation() {
+  const locationService = new NativelyLocation();
+  const location_bg_callback = function (resp) {
+    let toastMessage = "";
+    if (resp.status === "SUCCESS") {
+      toastMessage = "Background location retrieved: Longitude: " + resp.longitude + ", Latitude: " + resp.latitude;
+      window.natively.showAppToast("SUCCESS", toastMessage);
+    } else {
+      toastMessage = "Failed to retrieve background location: " + resp.status;
+      window.natively.showAppToast("ERROR", toastMessage);
+    }
+  };
+
+  const priority_android = "BALANCED"; // "BALANCED" or "HIGH" [Android only]
+  const interval = 10000; // in milliseconds
+  const minAccuracy = 50; // Customize based on your requirements
+  const accuracyType = "Best"; // Customize based on your requirements
+  const responseId = "my-user-id"; // Replace with your user ID
+
+  // Start Background Location
+  locationService.startBackground(interval, minAccuracy, accuracyType, priority_android, responseId, location_bg_callback);
+
+  // Toggle button visibility
+  document.getElementById('start-background-location-btn').classList.add('hidden');
+  document.getElementById('stop-background-location-btn').classList.remove('hidden');
+}
+
+// Stop Background Location Updates
+function stopBackgroundLocation() {
+  const locationService = new NativelyLocation();
+  const location_bg_callback = function (resp) {
+    window.natively.showAppToast("INFO", "Background location updates stopped");
+  };
+
+  locationService.stopBackground(location_bg_callback);
+
+  // Toggle button visibility
+  document.getElementById('start-background-location-btn').classList.remove('hidden');
+  document.getElementById('stop-background-location-btn').classList.add('hidden');
+}
+// Button Click Event Listeners
+   const startBackgroundLocationButton = document.getElementById('start-background-location-btn');
+startBackgroundLocationButton.addEventListener('click', startBackgroundLocation);
+
+const stopBackgroundLocationButton = document.getElementById('stop-background-location-btn');
+stopBackgroundLocationButton.addEventListener('click', stopBackgroundLocation);
+
    
    //Open Console
    const openConsoleButton = document.getElementById('openConsoleButton');
