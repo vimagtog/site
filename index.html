@@ -145,7 +145,15 @@ p {
  <hr class="dark-hr">
  <br>
  <p>In-app purchase</p>
-<button id="login-purchases-btn">Get Customer ID - In-App Purchases</button>
+ <div>
+  <label for="customer-email">Email:</label>
+  <input type="email" id="customer-email" placeholder="Enter your email" required>
+</div>
+<div>
+  <label for="customer-id">Customer ID:</label>
+  <input type="text" id="customer-id" placeholder="Enter your Customer ID" required>
+</div>
+<button id="login-purchases-btn">Login - In-App Purchases</button>
 <p id="purchase-status"></p>
 <p id="customer-id"></p>
 <p id="purchase-error"></p>
