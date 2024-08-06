@@ -125,8 +125,9 @@ p {
 <button id="get-location-btn">Get current location</button>
  <br>
  <p id="location-status"></p>
-<p id="longitude"></p>
-<p id="latitude"></p>
+ <p id="longitude"></p>
+ <p id="latitude"></p>
+ <p id="current-time"></p>
  <br>
  <hr class="dark-hr">
  <br>
@@ -409,12 +410,19 @@ function getCurrentLocation() {
       document.getElementById('location-status').textContent = toastMessage;
       document.getElementById('longitude').textContent = "Longitude: " + resp.longitude;
       document.getElementById('latitude').textContent = "Latitude: " + resp.latitude;
+
+      // Get current time
+      const now = new Date();
+      const currentTime = now.toLocaleTimeString();
+      document.getElementById('current-time').textContent = "Retrieved at: " + currentTime;
+      
       window.natively.showAppToast("SUCCESS", toastMessage);
     } else {
       toastMessage = "Failed to retrieve location: " + resp.status;
       document.getElementById('location-status').textContent = toastMessage;
       document.getElementById('longitude').textContent = "";
       document.getElementById('latitude').textContent = "";
+      document.getElementById('current-time').textContent = "";
       window.natively.showAppToast("ERROR", toastMessage);
     }
   };
@@ -431,6 +439,7 @@ function getCurrentLocation() {
 // Button Click Event Listener for Location
 const getLocationButton = document.getElementById('get-location-btn');
 getLocationButton.addEventListener('click', getCurrentLocation);
+   
    //Open Console
    const openConsoleButton = document.getElementById('openConsoleButton');
 
