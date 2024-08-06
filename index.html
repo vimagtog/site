@@ -493,10 +493,17 @@ function stopForegroundLocation() {
   locationService.stop();
   window.natively.showAppToast("INFO", "Foreground location updates stopped");
 
+  // Clear location info
+  document.getElementById('location-status').textContent = "";
+  document.getElementById('longitude').textContent = "";
+  document.getElementById('latitude').textContent = "";
+  document.getElementById('current-time').textContent = "";
+
   // Toggle button visibility
   document.getElementById('start-foreground-location-btn').classList.remove('hidden');
   document.getElementById('stop-foreground-location-btn').classList.add('hidden');
 }
+
 
 // Button Click Event Listeners
 const startForegroundLocationButton = document.getElementById('start-foreground-location-btn');
