@@ -594,6 +594,7 @@ stopBackgroundLocationButton.addEventListener('click', stopBackgroundLocation);
 // In-App Purchases Login
 function loginToInAppPurchases() {
   console.log("Button clicked"); // At the start of the login function
+  console.log("Login function executed."); // Check if the function is running
   console.log("Creating purchases object"); // Before creating the NativelyPurchases object
 
   const purchases = new NativelyPurchases();
@@ -618,8 +619,12 @@ function loginToInAppPurchases() {
 
   // Link your user with the customer on RevenueCat
   const userId = "sdfdsr-2345-3rsd-fsd3432"; // Replace with your actual user ID
-  purchases.login(userId, login_callback);
-  console.log("Login function called with userId:", userId); // Log after calling login
+  console.log("User ID for login:", userId);
+  
+  // Call login with a delay
+  setTimeout(() => {
+    purchases.login(userId, login_callback);
+  }, 100); // Delay of 100 milliseconds
 }
 
 // Button Click Event Listener for In-App Purchases Login
@@ -627,6 +632,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const loginPurchasesButton = document.getElementById('login-purchases-btn');
     loginPurchasesButton.addEventListener('click', loginToInAppPurchases);
 });
+
    
   </script>
 </body>
