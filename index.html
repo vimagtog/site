@@ -601,7 +601,8 @@ function loginToInAppPurchases() {
   console.log("Purchases object created:", purchases); // Check if the object is created
 
   const login_callback = function(resp) {
-    console.log("Login callback triggered:", resp); // Log the response
+    console.log("Login callback triggered"); // Log just before checking the response
+    console.log("Response:", resp); // Log the response object
 
     if (resp.status === "SUCCESS") {
       window.natively.showAppToast("SUCCESS", "Login to in-app purchases successful!");
@@ -621,10 +622,7 @@ function loginToInAppPurchases() {
   const userId = "sdfdsr-2345-3rsd-fsd3432"; // Replace with your actual user ID
   console.log("User ID for login:", userId);
   
-  // Call login with a delay
-  setTimeout(() => {
-    purchases.login(userId, login_callback);
-  }, 100); // Delay of 100 milliseconds
+  purchases.login(userId, login_callback);
 }
 
 // Button Click Event Listener for In-App Purchases Login
