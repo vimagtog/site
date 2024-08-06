@@ -704,7 +704,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const packageId = "$rc_monthly"; // Replace with your actual package ID
 
         const purchases_package_callback = function(resp) {
-          console.log("Purchase callback triggered:", resp); // Log the response
+          console.log("Purchase callback triggered:", JSON.stringify(resp)); // Log the response
           if (resp.status === "SUCCESS") {
             window.natively.showAppToast("SUCCESS", "Purchase successful!");
           } else {
