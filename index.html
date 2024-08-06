@@ -597,6 +597,8 @@ function loginToInAppPurchases() {
   console.log("Creating purchases object"); // Before creating the NativelyPurchases object
 
   const purchases = new NativelyPurchases();
+  console.log("Purchases object created:", purchases); // Check if the object is created
+
   const login_callback = function(resp) {
     console.log("Login callback triggered:", resp); // Log the response
 
@@ -610,12 +612,14 @@ function loginToInAppPurchases() {
       document.getElementById('purchase-status').textContent = "Login Status: " + resp.status;
       document.getElementById('customer-id').textContent = ""; // Clear customer ID if failed
       document.getElementById('purchase-error').textContent = "Error: " + resp.error;
+      console.error("Login failed with error:", resp.error); // Log the error if it exists
     }
   };
 
   // Link your user with the customer on RevenueCat
   const userId = "sdfdsr-2345-3rsd-fsd3432"; // Replace with your actual user ID
   purchases.login(userId, login_callback);
+  console.log("Login function called with userId:", userId); // Log after calling login
 }
 
 // Button Click Event Listener for In-App Purchases Login
