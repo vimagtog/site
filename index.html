@@ -619,16 +619,18 @@ stopBackgroundLocationButton.addEventListener('click', stopBackgroundLocation);
 // In-App Purchases Login
 function loginToInAppPurchases() {
   console.log("Button clicked"); // At the start of the login function
-  console.log("Login function executed."); // Check if the function is running
   console.log("Creating purchases object"); // Before creating the NativelyPurchases object
 
   const purchases = new NativelyPurchases();
-  console.log("Purchases object created:", purchases); // Check if the object is created
+  const userId = "sdfdsr-2345-3rsd-fsd3432"; // Replace with your actual user ID
+  const customerEmail = "customer@example.com"; // Optional: Set this if needed
+
+  // Logging the parameters being sent for the login
+  console.log("Logging in with User ID:", userId);
+  console.log("Using Customer Email:", customerEmail);
 
   const login_callback = function(resp) {
-    console.log("Login callback triggered"); // Log just before checking the response
-    console.log("Response:", resp); // Log the response object
-
+    console.log("Login callback triggered:", resp); // Log the response
     if (resp.status === "SUCCESS") {
       window.natively.showAppToast("SUCCESS", "Login to in-app purchases successful!");
       document.getElementById('purchase-status').textContent = "Login Status: " + resp.status;
@@ -639,21 +641,17 @@ function loginToInAppPurchases() {
       document.getElementById('purchase-status').textContent = "Login Status: " + resp.status;
       document.getElementById('customer-id').textContent = ""; // Clear customer ID if failed
       document.getElementById('purchase-error').textContent = "Error: " + resp.error;
-      console.error("Login failed with error:", resp.error); // Log the error if it exists
     }
   };
 
-  // Link your user with the customer on RevenueCat
-  const userId = "sdfdsr-2345-3rsd-fsd3432"; // Replace with your actual user ID
-  console.log("User ID for login:", userId);
-  
-  purchases.login(userId, login_callback);
+  // Triggering the login function
+  purchases.login(userId, customerEmail, login_callback);
 }
 
 // Button Click Event Listener for In-App Purchases Login
 document.addEventListener('DOMContentLoaded', function() {
-    const loginPurchasesButton = document.getElementById('login-purchases-btn');
-    loginPurchasesButton.addEventListener('click', loginToInAppPurchases);
+  const loginPurchasesButton = document.getElementById('login-purchases-btn');
+  loginPurchasesButton.addEventListener('click', loginToInAppPurchases);
 });
 
    
