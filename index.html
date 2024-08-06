@@ -135,6 +135,8 @@ p {
  <button id="start-background-location-btn">Start Background Location</button>
  <button id="stop-background-location-btn" class="hidden">Stop Background Location</button>
  <br>
+ <button id="check-location-permission-btn">Check Geolocation Permission</button>
+ <br>
  <p id="location-status"></p>
  <p id="longitude"></p>
  <p id="latitude"></p>
@@ -582,6 +584,29 @@ startBackgroundLocationButton.addEventListener('click', startBackgroundLocation)
 
 const stopBackgroundLocationButton = document.getElementById('stop-background-location-btn');
 stopBackgroundLocationButton.addEventListener('click', stopBackgroundLocation);
+
+   // Function to check geolocation permission
+        function checkGeolocationPermission() {
+            const locationService = new NativelyLocation();
+            const permission_callback = function (resp) {
+                let toastMessage = "";
+                if (resp === "AWLAYS") {
+                    toastMessage = "Geolocation permission granted: ALWAYS";
+                } else if (resp === "IN_USE") {
+                    toastMessage = "Geolocation permission granted: IN USE";
+                } else if (resp === "DENIED") {
+                    toastMessage = "Geolocation permission denied.";
+                } else {
+                    toastMessage = "Geolocation permission status: " + resp;
+                }
+                window.natively.showAppToast("Permission Status", toastMessage);
+            };
+
+            locationService.permission(permission_callback);
+        }
+
+        // Button Click Event Listener for Geolocation Permission Check
+        document.getElementById('check-location-permission-btn').addEventListener('click', checkGeolocationPermission);
 
    
    //Open Console
