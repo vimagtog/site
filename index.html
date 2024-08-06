@@ -131,6 +131,8 @@ p {
  <button id="start-foreground-location-btn">Start Foreground Location</button>
  <button id="stop-foreground-location-btn" class="hidden">Stop Foreground Location</button>
  <br>
+ <button id="check-bg-status-btn">Check Background Location Status</button>
+ <br>
  <p id="location-status"></p>
  <p id="longitude"></p>
  <p id="latitude"></p>
@@ -510,6 +512,23 @@ const startForegroundLocationButton = document.getElementById('start-foreground-
 startForegroundLocationButton.addEventListener('click', startForegroundLocation);
 const stopForegroundLocationButton = document.getElementById('stop-foreground-location-btn');
 stopForegroundLocationButton.addEventListener('click', stopForegroundLocation);
+
+   // Check Background Location Status
+function checkBackgroundLocationStatus() {
+  const locationService = new NativelyLocation();
+  const location_status_bg_callback = function (resp) {
+    if (resp.status) {
+      window.natively.showAppToast("INFO", "Background Location Service is running: " + resp.status);
+    } else {
+      window.natively.showAppToast("INFO", "Background Location Service is not running: " + resp.status);
+    }
+  };
+
+  locationService.statusBackground(location_status_bg_callback);
+}
+// Button Click Event Listeners
+   const checkBgStatusButton = document.getElementById('check-bg-status-btn');
+checkBgStatusButton.addEventListener('click', checkBackgroundLocationStatus);
    
    //Open Console
    const openConsoleButton = document.getElementById('openConsoleButton');
