@@ -704,7 +704,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const packageId = "$rc_monthly"; // Replace with your actual package ID
 
         const purchases_package_callback = function(resp) {
-        console.log("Purchase callback triggered:", resp); // Log the raw response object
+        console.log("Purchase callback triggered:", resp.status , " ", resp.transactionID, " ", resp.error); // Log the raw response object
         
         // Check if the response object has properties
         if (resp && typeof resp === 'object') {
