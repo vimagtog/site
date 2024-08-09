@@ -700,17 +700,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Purchase Package
 function purchasePackage() {
+    const purchases = new NativelyPurchases();
+    const packageId = "$rc_monthly"; // Replace with your actual package ID
     console.log("Purchase button clicked");
 
-    const purchases = new NativelyPurchases();
-    console.log("NativelyPurchases object created:", purchases);
-
-    const packageId = "$rc_monthly";
-    console.log("Package ID set:", packageId);
-
-    // Callback function for purchase result
     const purchases_package_callback = function(resp) {
         console.log("Purchase callback triggered");
+        console.log("Response received:", resp); // Check the full response object
         if (resp) {
             console.log("Status:", resp.status);
             console.log("Transaction ID:", resp.transactionId);
@@ -719,11 +715,9 @@ function purchasePackage() {
             console.log("No response received");
         }
     };
-    
-    // Trigger the real purchase process
+
     console.log("Triggering purchase for package:", packageId);
     purchases.purchasePackage(packageId, purchases_package_callback);
-    console.log("Purchase function executed");
 }
 
 // Button Click Event Listener for Purchase Package
@@ -736,9 +730,6 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Purchase button not found in the DOM");
     }
 });
-
-
-
    
   </script>
 </body>
