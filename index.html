@@ -704,7 +704,9 @@ function purchasePackage() {
     const packageId = "$rc_monthly"; // Replace with your actual package ID
 
     const purchases_package_callback = function(resp) {
-        console.log("Purchase callback triggered:", resp.status, resp.transactionId, resp.error); // Log the raw response object
+    console.log(resp.status);
+    console.log(resp.transactionId);
+    console.log(resp.error);
     };
     
     // Trigger the purchase
