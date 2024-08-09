@@ -698,7 +698,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const verifyCustomerIdButton = document.getElementById('verify-customer-id-btn');
   verifyCustomerIdButton.addEventListener('click', verifyCustomerId);
 
-  // Simulated Purchase Package Function
+  // Purchase Package
 function purchasePackage() {
     console.log("Purchase button clicked");
 
@@ -720,18 +720,7 @@ function purchasePackage() {
         }
     };
     
-    // Simulated purchase
-    purchases.purchasePackage = function(packageId, callback) {
-        console.log("Simulated purchase triggered for package:", packageId);
-        const simulatedResponse = {
-            status: "SUCCESS",
-            transactionId: "1234567890",
-            error: null
-        };
-        callback(simulatedResponse);
-    };
-
-    // Trigger the simulated purchase
+    // Trigger the real purchase process
     console.log("Triggering purchase for package:", packageId);
     purchases.purchasePackage(packageId, purchases_package_callback);
     console.log("Purchase function executed");
@@ -747,6 +736,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Purchase button not found in the DOM");
     }
 });
+
 
 
    
