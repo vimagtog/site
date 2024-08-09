@@ -706,20 +706,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const purchases_package_callback = function(resp) {
         console.log("Purchase callback triggered:", resp.status , " ", resp.transactionID, " ", resp.error); // Log the raw response object
         
-        // Check if the response object has properties
-        if (resp && typeof resp === 'object') {
-            console.log("Purchase Response:", JSON.stringify(resp, null, 2)); // Log the full response object
-        } else {
-            console.log("Unexpected response format:", resp); // Log unexpected formats
-        }
-
-        if (resp.status === "SUCCESS") {
-            window.natively.showAppToast("SUCCESS", "Purchase successful!");
-        } else {
-            window.natively.showAppToast("ERROR", "Purchase failed: " + (resp.error || "Unknown error"));
-        }
-    };
-
         // Trigger the purchase
         purchases.purchasePackage(packageId, purchases_package_callback);
       }
