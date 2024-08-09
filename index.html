@@ -705,15 +705,12 @@ function purchasePackage() {
     console.log("Purchase button clicked");
 
     const purchases_package_callback = function(resp) {
-        console.log("Purchase callback triggered");
-        console.log("Response received:", resp); // Check the full response object
-        if (resp) {
+        console.log("Purchase callback triggered"); // Check if this gets executed
+        
             console.log("Status:", resp.status);
             console.log("Transaction ID:", resp.transactionId);
             console.log("Error:", resp.error);
-        } else {
-            console.log("No response received");
-        }
+      
     };
 
     console.log("Triggering purchase for package:", packageId);
