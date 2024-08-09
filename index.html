@@ -698,14 +698,14 @@ document.addEventListener('DOMContentLoaded', function() {
   const verifyCustomerIdButton = document.getElementById('verify-customer-id-btn');
   verifyCustomerIdButton.addEventListener('click', verifyCustomerId);
 
-  // Purchase Package Function
+  // Simulated Purchase Package Function
 function purchasePackage() {
     console.log("Purchase button clicked");
 
-    const purchases = new NativelyPurchases(); // Initialize the NativelyPurchases object
+    const purchases = new NativelyPurchases();
     console.log("NativelyPurchases object created:", purchases);
 
-    const packageId = "$rc_monthly"; // Replace with your actual package ID
+    const packageId = "$rc_monthly";
     console.log("Package ID set:", packageId);
 
     // Callback function for purchase result
@@ -720,7 +720,18 @@ function purchasePackage() {
         }
     };
     
-    // Trigger the purchase
+    // Simulated purchase
+    purchases.purchasePackage = function(packageId, callback) {
+        console.log("Simulated purchase triggered for package:", packageId);
+        const simulatedResponse = {
+            status: "SUCCESS",
+            transactionId: "1234567890",
+            error: null
+        };
+        callback(simulatedResponse);
+    };
+
+    // Trigger the simulated purchase
     console.log("Triggering purchase for package:", packageId);
     purchases.purchasePackage(packageId, purchases_package_callback);
     console.log("Purchase function executed");
@@ -736,6 +747,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Purchase button not found in the DOM");
     }
 });
+
 
    
   </script>
