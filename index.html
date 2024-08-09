@@ -698,27 +698,45 @@ document.addEventListener('DOMContentLoaded', function() {
   const verifyCustomerIdButton = document.getElementById('verify-customer-id-btn');
   verifyCustomerIdButton.addEventListener('click', verifyCustomerId);
 
-   function purchasePackage() {
+  // Purchase Package Function
+function purchasePackage() {
     console.log("Purchase button clicked");
-    const purchases = new NativelyPurchases();
-    const packageId = "$rc_monthly";
 
+    const purchases = new NativelyPurchases(); // Initialize the NativelyPurchases object
+    console.log("NativelyPurchases object created:", purchases);
+
+    const packageId = "$rc_monthly"; // Replace with your actual package ID
+    console.log("Package ID set:", packageId);
+
+    // Callback function for purchase result
     const purchases_package_callback = function(resp) {
-        console.log("Purchase callback triggered:", resp);
-        console.log("Status:", resp.status);
-        console.log("Transaction ID:", resp.transactionId);
-        console.log("Error:", resp.error);
+        console.log("Purchase callback triggered");
+        if (resp) {
+            console.log("Status:", resp.status);
+            console.log("Transaction ID:", resp.transactionId);
+            console.log("Error:", resp.error);
+        } else {
+            console.log("No response received");
+        }
     };
     
     // Trigger the purchase
+    console.log("Triggering purchase for package:", packageId);
     purchases.purchasePackage(packageId, purchases_package_callback);
+    console.log("Purchase function executed");
 }
 
+// Button Click Event Listener for Purchase Package
 document.addEventListener('DOMContentLoaded', function() {
     const purchasePackageButton = document.getElementById('purchase-package-btn');
-    console.log("Button found:", purchasePackageButton);
-    purchasePackageButton.addEventListener('click', purchasePackage);
+    if (purchasePackageButton) {
+        purchasePackageButton.addEventListener('click', purchasePackage);
+        console.log("Purchase button event listener added");
+    } else {
+        console.error("Purchase button not found in the DOM");
+    }
 });
+
    
   </script>
 </body>
