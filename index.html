@@ -698,19 +698,35 @@ document.addEventListener('DOMContentLoaded', function() {
   const verifyCustomerIdButton = document.getElementById('verify-customer-id-btn');
   verifyCustomerIdButton.addEventListener('click', verifyCustomerId);
 
-  // Purchase Package
+// Purchase Package
 function purchasePackage() {
     const purchases = new NativelyPurchases();
     const packageId = "$rc_monthly"; // Replace with your actual package ID
     console.log("Purchase button clicked");
 
+    // Purchase Package Callback
     const purchases_package_callback = function(resp) {
-        console.log("Purchase callback triggered"); // Check if this gets executed
-        
-            console.log("Status:", resp.status);
-            console.log("Transaction ID:", resp.transactionId);
-            console.log("Error:", resp.error);
-      
+        switch (resp.status) {
+            case "SUCCESS":
+                console.log("Purchase callback triggered");
+                console.log("Transaction ID:", resp.transactionId);
+                // Optionally handle state publishing if required
+                // instance.publishState('transaction_id', resp.transactionId);
+                // instance.publishState('package_id', resp.packageId || '');
+                // instance.triggerEvent('purchase_success');
+                break;
+            case "CANCELLED":
+                console.log("Purchase cancelled");
+                // Optionally handle cancelled event
+                // instance.triggerEvent('purchase_cancelled');
+                break;
+            default:
+                console.error("Error:", resp.error);
+                // Optionally handle error publishing
+                // instance.publishState('error', resp.error);
+                // instance.triggerEvent('purchase_failed');
+                break;
+        }
     };
 
     console.log("Triggering purchase for package:", packageId);
