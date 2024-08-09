@@ -706,26 +706,26 @@ function purchasePackage() {
 
     // Purchase Package Callback
     const purchases_package_callback = function(resp) {
-        switch (resp.status) {
-            case "SUCCESS":
-                console.log("Purchase callback triggered");
-                console.log("Transaction ID:", resp.transactionId);
-                // Optionally handle state publishing if required
-                // instance.publishState('transaction_id', resp.transactionId);
-                // instance.publishState('package_id', resp.packageId || '');
-                // instance.triggerEvent('purchase_success');
-                break;
-            case "CANCELLED":
-                console.log("Purchase cancelled");
-                // Optionally handle cancelled event
-                // instance.triggerEvent('purchase_cancelled');
-                break;
-            default:
-                console.error("Error:", resp.error);
-                // Optionally handle error publishing
-                // instance.publishState('error', resp.error);
-                // instance.triggerEvent('purchase_failed');
-                break;
+        console.log("Purchase callback triggered"); // Check if this gets executed
+        console.log("Response received:", resp); // Log the full response object
+
+        if (resp) {
+            console.log("Status:", resp.status);
+            console.log("Transaction ID:", resp.transactionId);
+            console.log("Error:", resp.error);
+            switch (resp.status) {
+                case "SUCCESS":
+                    console.log("Purchase successful");
+                    break;
+                case "CANCELLED":
+                    console.log("Purchase cancelled");
+                    break;
+                default:
+                    console.error("Error:", resp.error);
+                    break;
+            }
+        } else {
+            console.log("No response received");
         }
     };
 
