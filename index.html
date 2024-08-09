@@ -699,20 +699,21 @@ document.addEventListener('DOMContentLoaded', function() {
   verifyCustomerIdButton.addEventListener('click', verifyCustomerId);
 
    // Purchase Package
-      function purchasePackage() {
-        const purchases = new NativelyPurchases();
-        const packageId = "$rc_monthly"; // Replace with your actual package ID
+function purchasePackage() {
+    const purchases = new NativelyPurchases();
+    const packageId = "$rc_monthly"; // Replace with your actual package ID
 
-        const purchases_package_callback = function(resp) {
-        console.log("Purchase callback triggered:", resp.status , " ", resp.transactionID, " ", resp.error); // Log the raw response object
-        
-        // Trigger the purchase
-        purchases.purchasePackage(packageId, purchases_package_callback);
-      }
+    const purchases_package_callback = function(resp) {
+        console.log("Purchase callback triggered:", resp.status, resp.transactionId, resp.error); // Log the raw response object
+    };
+    
+    // Trigger the purchase
+    purchases.purchasePackage(packageId, purchases_package_callback);
+}
 
-   // Button Click Event Listener for Purchase Package
-      const purchasePackageButton = document.getElementById('purchase-package-btn');
-      purchasePackageButton.addEventListener('click', purchasePackage);
+// Button Click Event Listener for Purchase Package
+const purchasePackageButton = document.getElementById('purchase-package-btn');
+purchasePackageButton.addEventListener('click', purchasePackage);
    
   </script>
 </body>
