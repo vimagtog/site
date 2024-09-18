@@ -3,30 +3,14 @@
 <head>
   <title>Natively Information</title>
   <script async onload="nativelyOnLoad()" src="https://cdn.jsdelivr.net/npm/natively@2.14.0/natively-frontend.min.js"></script>
+  
+<script>
+function nativelyOnLoad() {
+    window.natively.setDebug(true); // To see errors
+}
+</script>
 </head>
 <body>
-  <h1>Natively Device Information</h1>
-  <p id="deviceInfo"></p>
-  <script>
-    function nativelyOnLoad() {
-      window.natively.setDebug(true);
-      window.natively.openLogger();
-
-      const info = new NativelyInfo();
-      const app_info_callback = function(resp) {
-        const deviceInfo = `
-          Device: ${resp.device}<br>
-          OS Version: ${resp.osVersion}<br>
-          OS Name: ${resp.osName}<br>
-          Build Version: ${resp.buildVersion}<br>
-          Build Number: ${resp.buildNumber}<br>
-          SDK Version: ${resp.sdkVersion}<br>
-          Is Dark Mode: ${resp.isDarkMode}
-        `;
-        document.getElementById("deviceInfo").innerHTML = deviceInfo;
-      };
-      info.getAppInfo(app_info_callback);
-    }
-  </script>
+  <p>Hop hey lala ley</p>
 </body>
 </html>
