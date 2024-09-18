@@ -9,21 +9,17 @@
     window.natively.setDebug(true)
     window.natively.openLogger()
   
-    const info = new NativelyInfo()
-    const app_info_callback = function(resp) {
-      console.log("device", resp.device);
-      console.log("osVersion", resp.osVersion);
-      console.log("osName", resp.osName);
-      console.log("buildVersion", resp.buildVersion);
-      console.log("buildNumber", resp.buildNumber);
-      console.log("sdkVersion", resp.sdkVersion);
-      console.log("isDarkMode", resp.isDarkMode);
-    };
-    info.getAppInfo(app_info_callback);
-  }
+  const info = new NativelyInfo();
+      const browserInfo = info.browserInfo();
+
+      if (browserInfo.isNativeApp) {
+        console.log("Yes");
+      } else {
+        console.log("No");
+      }
 </script>
 </head>
 <body>
-  <p>Hop hey lala ley 2</p>
+  <p>Hop hey lala ley 3</p>
 </body>
 </html>
