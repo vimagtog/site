@@ -20,10 +20,22 @@
       console.log("isDarkMode", resp.isDarkMode);
     };
     info.getAppInfo(app_info_callback);
-  }
+  };
+ function() {
+      const info = new NativelyInfo();
+      const browserInfo = info.browserInfo();
+
+      if (browserInfo.isNativeApp) {
+        console.log("Yes");
+      
+      } else {
+        console.log("No");
+      
+      }
+    }
   </script>
 </head>
 <body>
-  <p>Hop hey lala ley 7</p>
+  <p>Hop hey lala ley 8</p>
 </body>
 </html>
