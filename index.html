@@ -103,7 +103,13 @@ p {
   <div id="is-native-app" class="is-native-app">
     Is native app: <span id="native-app-status"></span>
   </div>
-
+<br>
+ <div>
+  <button id="get-app-info-btn">Get App Info</button>
+  <button id="track-app-state-btn">Track App State</button>
+  <div id="app-info-display"></div>
+<p id="app-state-display">App state will be displayed here</p>
+ </div>
  <button id="send-email-btn">Send Email</button>
  <button id="send-sms-btn">Send SMS</button>
 <div id="datepicker-container">
@@ -270,6 +276,39 @@ function redirectToSite() {
       }
     });
 
+
+// Get App Info Button
+const getAppInfoBtn = document.getElementById('get-app-info-btn');
+getAppInfoBtn.addEventListener('click', function() {
+ const info = new NativelyInfo();
+    info.getAppInfo(function(resp) {
+        const appInfoDisplay = document.getElementById('app-info-display');
+        appInfoDisplay.innerHTML = `
+            <p>Device: ${resp.device}</p>
+            <p>OS Version: ${resp.osVersion}</p>
+            <p>OS Name: ${resp.osName}</p>
+            <p>Build Version: ${resp.buildVersion}</p>
+            <p>Build Number: ${resp.buildNumber}</p>
+            <p>SDK Version: ${resp.sdkVersion}</p>
+            <p>Dark Mode: ${resp.isDarkMode}</p>
+        `;
+    });
+});
+
+// Track App State Button
+let isTrackingAppState = false;
+const trackAppStateBtn = document.getElementById('track-app-state-btn');
+const appStateDisplay = document.getElementById('app-state-display'); 
+trackAppStateBtn.addEventListener('click', function() {
+    if (!isTrackingAppState) {
+        info.app_state(function(resp) {
+            appStateDisplay.textContent = resp.state ? "App is in foreground" : "App is in background";
+        });
+        isTrackingAppState = true;
+        trackAppStateBtn.textContent = "Tracking App State..."; 
+    } 
+});
+ 
    // Email sending functionality
     const sendEmailButton = document.getElementById('send-email-btn');
     sendEmailButton.addEventListener('click', function() {
