@@ -278,6 +278,7 @@ function redirectToSite() {
 
 
 // Get App Info Button
+   /*
 const getAppInfoBtn = document.getElementById('get-app-info-btn');
 getAppInfoBtn.addEventListener('click', function() {
  const info = new NativelyInfo();
@@ -294,7 +295,21 @@ getAppInfoBtn.addEventListener('click', function() {
         `;
     });
 });
-
+*/
+   // Get App Info Button
+const getAppInfoBtn = document.getElementById('get-app-info-btn');
+getAppInfoBtn.addEventListener('click', function() {
+    info.getAppInfo(function(resp) {
+        console.log(resp.device); 
+        console.log(resp.osVersion); 
+        console.log(resp.osName);
+        console.log(resp.buildVersion); 
+        console.log(resp.buildNumber);
+        console.log(resp.sdkVersion);
+        console.log(resp.isDarkMode); 
+    });
+});
+   
 // Track App State Button
 let isTrackingAppState = false;
 const trackAppStateBtn = document.getElementById('track-app-state-btn');
