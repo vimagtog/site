@@ -84,35 +84,6 @@ p {
   }
   </style>
   <script async onload="nativelyOnLoad = function(){}" src="https://cdn.jsdelivr.net/npm/natively@2.14.0/natively-frontend.min.js"></script>
- 
-  
- <script>
-        // Ensure the script runs after the DOM is fully loaded
-        document.addEventListener('DOMContentLoaded', function() {
-
-            // Check if 'natively' object exists
-            if (window.natively) {
-                window.natively.setDebug(true); 
-                window.natively.openConsole();
-
-                // Get App Info logic (executed on page load)
-                const info = new NativelyInfo();
-                info.getAppInfo(function(resp) {
-                    console.log(resp.device); 
-                    console.log(resp.osVersion); 
-                    console.log(resp.osName);
-                    console.log(resp.buildVersion); 
-                    console.log(resp.buildNumber);
-                    console.log(resp.sdkVersion);
-                    console.log(resp.isDarkMode); 
-                });
-            } else {
-                console.error("Error: 'natively' object not found. Make sure the required library is included before this script.");
-            }
-        });
-    
-    
- </script>
 </head>
 <body>
   <h1>Welcome to Natively JS SDK</h1>
