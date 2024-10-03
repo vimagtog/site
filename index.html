@@ -189,6 +189,12 @@ p {
  <br>
  <button id="openConsoleButton">Open Console</button>
  <br>
+ <p>Status Bar Style</p>
+ <br>
+ <button id="noneButton">Status bar: NONE</button>
+ <button id="darkButton">Status bar: DARK</button>
+ <button id="lightButton">Status bar: LIGHT</button>
+ <br>
 
 
 
@@ -816,6 +822,24 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Purchase button not found in the DOM");
     }
 });
+
+   //Status Bar Style
+    const noneButton = document.getElementById('noneButton');
+    const darkButton = document.getElementById('darkButton');
+    const lightButton = document.getElementById('lightButton');
+
+    noneButton.addEventListener('click', () => {
+      window.natively.setAppStatusBarStyleIOS("NONE"); 
+    });
+
+    darkButton.addEventListener('click', () => {
+      window.natively.setAppStatusBarStyleIOS("DARK"); 
+    });
+
+    lightButton.addEventListener('click', () => {
+      window.natively.setAppStatusBarStyleIOS("LIGHT"); 
+    });
+
    
   </script>
 </body>
