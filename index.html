@@ -782,11 +782,11 @@ document.addEventListener('DOMContentLoaded', function() {
 // Purchase Package
 function purchasePackage() {
     const purchases = new NativelyPurchases();
-    const packageId = "$rc_monthly"; // Replace with your actual package ID
+    var packageId = "$rc_monthly"; // Replace with your actual package ID
     console.log("Purchase button clicked");
 
     // Purchase Package Callback
-    const purchases_package_callback = function(resp) {
+    var purchases_package_callback = function(resp) {
         console.log("Purchase callback triggered"); // Check if this gets executed
         console.log("Response received:", resp); // Log the full response object
 
@@ -828,12 +828,12 @@ document.addEventListener('DOMContentLoaded', function() {
 // Purchase Business Package
 function purchasePackage() {
     const purchases = new NativelyPurchases();
-    const packageId = "Business"; // Replace with your actual package ID
-    const oldProductId = "$rc_monthly"; // Replace with your current package ID
+    var packageId = "Business"; // Replace with your actual package ID
+    var oldProductId = "$rc_monthly"; // Replace with your current package ID
     console.log("Purchase button clicked");
 
     // Purchase Package Callback
-    const purchases_package_callback = function(resp) {
+    var purchases_package_callback = function(resp) {
         console.log("Purchase callback triggered"); // Check if this gets executed
         console.log("Response received:", resp); // Log the full response object
 
