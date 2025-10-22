@@ -190,6 +190,10 @@ p {
  <br>
  <button id="purchase-package-business-btn" >Purchase Business Package</button>
  <br>
+ <button id="show-paywall-btn">Show Paywall</button>
+ <br>
+ <button id="show-paywall-if-needed-btn">Show Paywall If Needed</button>
+ <br>
  <button id="openConsoleButton">Open Console</button>
  <br>
  <p>Status Bar Style</p>
@@ -965,6 +969,130 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log("Purchase button event listener added");
     } else {
         console.error("Purchase button not found in the DOM");
+    }
+});
+
+   // Show Paywall
+function showDefaultPaywall() {
+    const purchases = new NativelyPurchases();
+    var offeringId = "Premium"; // Optional: specify which offering to show
+    var showCloseButton = true;
+    console.log("Show Paywall button clicked");
+
+    var show_paywall_callback = function(resp) {
+        console.log("Paywall callback triggered");
+        console.log("Response received:", resp);
+
+        if (resp) {
+            console.log("Status:", resp.status); // SUCCESS or FAILED
+            console.log("Message:", resp.message); // purchased, restored, cancelled, not_presented
+            console.log("Error:", resp.error); // offering_not_found, etc.
+
+            if (resp.status === "SUCCESS") {
+                // Handle success based on the message
+                if (resp.message === "purchased") {
+                    console.log("Paywall resulted in a purchase");
+                } else if (resp.message === "restored") {
+                    console.log("Paywall resulted in a restore");
+                }
+            } else if (resp.status === "FAILED") {
+                // Handle failure based on the error code
+                const errorCode = resp.error || resp.message;
+                switch (errorCode) {
+                    case "cancelled":
+                        console.log("Paywall was cancelled by user");
+                        break;
+                    case "not_presented":
+                        console.log("Paywall was not presented");
+                        break;
+                    case "offering_not_found":
+                        console.error("Error: Offering not found");
+                        break;
+                    default:
+                        console.error("Paywall failed:", errorCode);
+                        break;
+                }
+            }
+        } else {
+            console.log("No response received");
+        }
+    };
+
+    console.log("Triggering showPaywall for offering:", offeringId);
+    purchases.showPaywall(showCloseButton, offeringId, show_paywall_callback);
+}
+
+// Button Click Event Listener for Show Paywall
+document.addEventListener('DOMContentLoaded', function() {
+    const showPaywallButton = document.getElementById('show-paywall-btn');
+    if (showPaywallButton) {
+        showPaywallButton.addEventListener('click', showDefaultPaywall);
+        console.log("Show Paywall button event listener added");
+    } else {
+        console.error("Show Paywall button not found in the DOM");
+    }
+});
+   
+   // Show Paywall If Needed
+function showPaywallForPro() {
+    const purchases = new NativelyPurchases();
+    var entitlementId = "Premium"; // The entitlement to check for
+    var offeringId = "Premium"; // Optional: specify which offering to show
+    var showCloseButton = true;
+    console.log("Show Paywall If Needed button clicked");
+
+    var show_paywall_if_needed_callback = function(resp) {
+        console.log("Paywall If Needed callback triggered");
+        console.log("Response received:", resp);
+
+        if (resp) {
+            console.log("Status:", resp.status); // SUCCESS or FAILED
+            console.log("Message:", resp.message); // purchased, restored, cancelled, not_presented
+            console.log("Error:", resp.error); // entitlement_id_missing, etc.
+
+            if (resp.status === "SUCCESS") {
+                // Handle success based on the message
+                if (resp.message === "purchased") {
+                    console.log("Paywall resulted in a purchase");
+                } else if (resp.message === "restored") {
+                    console.log("Paywall resulted in a restore");
+                }
+            } else if (resp.status === "FAILED") {
+                // Handle failure based on the error code
+                const errorCode = resp.error || resp.message;
+                switch (errorCode) {
+                    case "cancelled":
+                        console.log("Paywall was cancelled by user");
+                        break;
+                    case "not_presented":
+                        // This is common: it means the user already has the entitlement.
+                        console.log("Paywall not presented (user may already have 'pro_access')");
+                        break;
+                    case "entitlement_id_missing":
+                        console.error("Error: Entitlement ID was missing or empty");
+                        break;
+                    default:
+                        console.error("Paywall failed:", errorCode);
+                        break;
+                }
+            }
+        } else {
+            console.log("No response received");
+        }
+    };
+
+    console.log("Triggering showPaywallIfNeeded for entitlement:", entitlementId);
+    purchases.showPaywallIfNeeded(entitlementId, showCloseButton, offeringId, show_paywall_if_needed_callback);
+}
+
+// Button Click Event Listener for Show Paywall If Needed
+document.addEventListener('DOMContentLoaded', function() {
+    const showPaywallIfNeededButton = document.getElementById('show-paywall-if-needed-btn');
+    if (showPaywallIfNeededButton) {
+        showPaywallIfNeededButton.addEventListener('click', showPaywallForPro);
+        console.log("Show Paywall If Needed button event listener added");
+    } else {
+        console.error("Show Paywall If Needed button not found in the DOM");
     }
 });
    
