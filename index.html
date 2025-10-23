@@ -533,9 +533,10 @@ sendPushButton.addEventListener('click', sendPushNotification);
                 
                 let parsedResult;
                 try {
+                    // This function expects a STRING, so we parse it
                     parsedResult = JSON.parse(result); 
                 } catch (e) {
-                    console.error("Failed to parse response:", e);
+                    console.error("Failed to parse response:", e, result);
                     return;
                 }
 
@@ -544,7 +545,6 @@ sendPushButton.addEventListener('click', sendPushNotification);
                 if (res && res.externalId) {
                     console.log('Current external ID:', res.externalId);
                 } else {
-                    // ✅ **FIX: Replaced optional chaining with standard checks**
                     const errorMessage = (res && res.error) || (res && res.message) || "Failed to get external ID";
                     console.error(errorMessage);
                 }
