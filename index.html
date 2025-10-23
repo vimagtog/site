@@ -146,6 +146,9 @@ p {
 <button id="check-permission-btn">Check Push Notification Permission</button>
 <button id="get-onesignal-id-btn">Get OneSignal Player ID</button>
 <button id="send-push-btn">Send Push Notification</button>
+<button id="get-id-btn">1. Get External ID</button>
+<button id="set-id-btn">2. Set External ID ('user123')</button>
+<button id="remove-id-btn">3. Remove External ID</button>
 <br>
 <hr class="dark-hr">
 <br>
@@ -518,6 +521,64 @@ getOneSignalIdButton.addEventListener('click', getOneSignalPlayerId);
 }
 const sendPushButton = document.getElementById('send-push-btn');
 sendPushButton.addEventListener('click', sendPushNotification);
+
+   
+        // --- OneSignal External ID ---
+
+        // --- Action 1: Get External ID ---
+        function getExternalIdAction() {
+          const notifications = new NativelyNotifications();
+            console.log("Button Clicked: Get External ID");
+            notifications.getExternalId((result) => {
+                const res = (Array.isArray(result) && result.length > 0) ? result[0] : null;
+
+                if (res && res.externalId) {
+                    console.log('Current external ID:', res.externalId);
+                } else {
+                    const errorMessage = res?.error || res?.message || "Failed to get external ID";
+                    console.error(errorMessage);
+                }
+            });
+        }
+
+        // --- Action 2: Set External ID ---
+        function setExternalIdAction() {
+          const notifications = new NativelyNotifications();
+            console.log("Button Clicked: Set External ID");
+            notifications.setExternalId({ externalId: 'user123' }, (result) => {
+                if (result && result.externalId) {
+                    console.log('External ID set successfully:', result.externalId);
+                } else {
+                    const errorMessage = result?.error || result?.message || "Failed to set external ID";
+                    console.error(errorMessage);
+                }
+            });
+        }
+
+        // --- Action 3: Remove External ID ---
+        function removeExternalIdAction() {
+          const notifications = new NativelyNotifications();
+            console.log("Button Clicked: Remove External ID");
+            notifications.removeExternalId((result) => {
+                if (result && (result.error || result.message)) {
+                    // FAILURE: An error object/message was returned
+                    const errorMessage = result.error || result.message;
+                    console.error('Failed to remove external ID:', errorMessage);
+                } else {
+                    // SUCCESS: No error was returned
+                    console.log('External ID removed successfully');
+                }
+            });
+        }
+
+        // --- Event Listeners ---
+        // Wait for the DOM to be ready before attaching listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('get-id-btn').addEventListener('click', getExternalIdAction);
+            document.getElementById('set-id-btn').addEventListener('click', setExternalIdAction);
+            document.getElementById('remove-id-btn').addEventListener('click', removeExternalIdAction);
+            console.log("Event listeners added.");
+        });
 
    // Get Location
 function getCurrentLocation() {
