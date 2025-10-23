@@ -527,10 +527,21 @@ sendPushButton.addEventListener('click', sendPushNotification);
 
         // --- Action 1: Get External ID ---
         function getExternalIdAction() {
-          const notifications = new NativelyNotifications();
+         const notifications = new NativelyNotifications();
             console.log("Button Clicked: Get External ID");
             notifications.getExternalId((result) => {
-                const res = (Array.isArray(result) && result.length > 0) ? result[0] : null;
+                
+                let parsedResult;
+                try {
+                    // ✅ **FIX: Parse the JSON string into an array**
+                    parsedResult = JSON.parse(result); 
+                } catch (e) {
+                    console.error("Failed to parse response:", e);
+                    return;
+                }
+
+                // Now the rest of your original logic will work
+                const res = (Array.isArray(parsedResult) && parsedResult.length > 0) ? parsedResult[0] : null;
 
                 if (res && res.externalId) {
                     console.log('Current external ID:', res.externalId);
