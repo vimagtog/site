@@ -529,24 +529,24 @@ sendPushButton.addEventListener('click', sendPushNotification);
         function getExternalIdAction() {
          const notifications = new NativelyNotifications();
             console.log("Button Clicked: Get External ID");
-            notifications.getExternalId((result) => {
+            notifications.getExternalId((resp) => {
                 
-                let parsedResult;
-                try {
-                    // This function expects a STRING, so we parse it
-                    parsedResult = JSON.parse(result); 
-                } catch (e) {
-                    console.error("Failed to parse response:", e, result);
+                if (!resp) {
+                    console.error('Failed to get external ID: No response');
                     return;
                 }
 
-                const res = (Array.isArray(parsedResult) && parsedResult.length > 0) ? parsedResult[0] : null;
+                // This is your working logic from Bubble
+                const resultObj = (Array.isArray(resp) && resp.length > 0) ? resp[0] : resp;
 
-                if (res && res.externalId) {
-                    console.log('Current external ID:', res.externalId);
+                if (resultObj && resultObj.externalId) {
+                    console.log('Current external ID:', resultObj.externalId);
+                } else if (resultObj && resultObj.error) {
+                    console.error('Failed to get external ID:', resultObj.error);
+                } else if (resultObj && resultObj.message) {
+                    console.error('Failed to get external ID:', resultObj.message);
                 } else {
-                    const errorMessage = (res && res.error) || (res && res.message) || "Failed to get external ID";
-                    console.error(errorMessage);
+                    console.error('Failed to get external ID with unknown response:', JSON.stringify(resp));
                 }
             });
         }
