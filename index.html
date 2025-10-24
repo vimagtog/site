@@ -205,6 +205,9 @@ p {
  <button id="darkButton">Status bar: DARK</button>
  <button id="lightButton">Status bar: LIGHT</button>
  <br>
+ <p>Sent event</p>
+ <button id="track-event-btn">Track "purchase_completed" Event</button>
+ <br>
 <a href="https://solidgate.com">Visit Solidgate</a>
  <br>
  <a href="https://payment-page.solidgate.com/DbXB8eX">Checkout page</a>
@@ -213,6 +216,57 @@ p {
 
 
   <script>
+
+   //Send event to Analytics
+   if (typeof Natively === 'undefined') {
+            var Natively = class {
+                constructor() {
+                    console.log("Mock Natively() class initialized.");
+                }
+
+                analyticsTrackEvent(name, data) {
+                    console.log("analyticsTrackEvent CALLED:");
+                    console.log("Event Name:", name);
+                    console.log("Event Data (Map):", data);
+                    // You can iterate to see the Map contents clearly
+                    data.forEach((value, key) => {
+                        console.log(` -> ${key}: ${value}`);
+                    });
+                }
+            };
+        }
+
+        // --- The Function ---
+        // This function contains your exact code
+        function trackMyEvent() {
+            console.log("Button clicked. Tracking event...");
+
+            // Create an instance of Natively
+            const natively = new Natively();
+
+            // Create a Map with additional event data
+            // (Note: We use 'new Map()' as plain JS doesn't use TypeScript types)
+            const eventData = new Map();
+            eventData.set('user_id', '12345');
+            eventData.set('screen', 'home');
+            eventData.set('duration_seconds', 45);
+            eventData.set('is_premium_user', true);
+
+            // Track an event with name and additional data
+            natively.analyticsTrackEvent('button_clicked', eventData);
+
+            console.log("...Event sent.");
+        }
+
+        // --- Event Listener ---
+        // Wait for the page to load, then find the button and attach the click event
+        document.addEventListener('DOMContentLoaded', function() {
+            const trackButton = document.getElementById('track-event-btn');
+            if (trackButton) {
+                trackButton.addEventListener('click', trackMyEvent);
+                console.log("Event listener added to button.");
+            }
+        });
 
    //Go to No-SDK page
 function redirectToSite() {
