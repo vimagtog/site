@@ -1052,7 +1052,8 @@ p {
           console.log("Event listener added to button.");
 
        }
-      function registerHandler() {
+    }); // --- End of DOMContentLoaded ---
+function registerHandler() {
             
             // 1. Define the callback function
             const error_handler_callback = function (resp) {
@@ -1119,8 +1120,6 @@ p {
             console.error("Fetch failed completely:", error);
         }
     }
-
-    }); // --- End of DOMContentLoaded ---
 
   </script>
 </body>
