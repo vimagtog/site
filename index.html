@@ -83,7 +83,7 @@ p {
    }
   </style>
   
-  <script async src="https://cdn.jsdelivr.net/npm/natively@2.19.1/natively-frontend.min.js"></script>
+  <script async src="https://cdn.jsdelivr.net/npm/natively@2.20.0/natively-frontend.min.js"></script>
   
   <script>
      function nativelyOnLoad() {
@@ -213,6 +213,31 @@ p {
   <a href="https://payment-page.solidgate.com/DbXB8eX">Checkout page</a>
   <br>
   <a href="https://vimagtog.github.io/site/sdk-in-script.html" target="_blank">Target Blank</a>
+  <br>
+  <button onclick="registerHandler()">Register Error Handler</button>
+  <br>
+  <div class="test-box">
+    <h3>📡 Postman Echo Status Tester</h3>
+    <p>Click a button to simulate that specific HTTP response.</p>
+
+    <button onclick="testPostmanEcho(200)">
+        Test 200 (OK)
+    </button>
+    
+    <br>
+
+    <button onclick="testPostmanEcho(404)">
+        Test 404 (Not Found)
+    </button>
+    <button onclick="testPostmanEcho(500)">
+        Test 500 (Server Error)
+    </button>
+    <button onclick="testPostmanEcho(503)">
+        Test 503 (Service Unavailable)
+    </button>
+
+    <div id="console-output">Waiting for input...</div>
+</div>
 
 
   <script>
@@ -1025,7 +1050,75 @@ p {
       if (trackButton) {
           trackButton.addEventListener('click', trackMyEvent);
           console.log("Event listener added to button.");
-      }
+
+       }
+      function registerHandler() {
+            
+            // 1. Define the callback function
+            const error_handler_callback = function (resp) {
+                console.log("%c[Error Handler Triggered]", "color: red; font-weight: bold;");
+                console.log("Code:", resp.code);         // Number
+                console.log("Desc:", resp.description);  // String
+                console.log("URL:",  resp.url);          // String
+                console.log("Type:", resp.type);         // String
+                
+                if (resp.response_data) {
+                    console.log("Data:", JSON.stringify(resp.response_data, null, 2)); 
+                }
+            };
+
+            // 2. Safety Check & Registration
+            if (window.natively) {
+                window.natively.setErrorHandler(error_handler_callback);
+                console.log("✅ Error Handler successfully registered with SDK.");
+                alert("Handler Registered! Now try simulating an error.");
+            } else {
+                console.error("❌ 'window.natively' is missing. Are you in the app?");
+                
+                // FOR TESTING ONLY: If SDK is missing, we create a fake one 
+                // so you can test the button in Chrome.
+                window.natively = {
+                    setErrorHandler: function(cb) {
+                        window.fakeErrorTrigger = cb; // Store it to trigger later
+                        console.log("⚠️ Fake SDK: Handler registered for testing.");
+                        alert("Handler Registered (Fake SDK Mode)");
+                    }
+                };
+                window.natively.setErrorHandler(error_handler_callback);
+            }
+        }
+
+      async function testPostmanEcho(statusCode) {
+        const output = document.getElementById('console-output');
+        const url = `https://postman-echo.com/status/${statusCode}`;
+        
+        output.innerText = `Sending request to: ${url} ...`;
+        output.style.color = "yellow";
+
+        try {
+            console.log(`[Test] Requesting status ${statusCode}...`);
+            
+            // Send the request
+            const response = await fetch(url);
+
+            // Update the display
+            output.innerText = `Result: Received Status ${response.status} (${response.statusText})`;
+            
+            // Color code the result based on the status
+            if (response.ok) {
+                output.style.color = "#0f0"; // Green for 200
+                console.log("Success:", response);
+            } else {
+                output.style.color = "#ff4444"; // Red for 400/500
+                console.warn("Error Detected:", response);
+            }
+
+        } catch (error) {
+            output.innerText = `Network Error: ${error.message}`;
+            output.style.color = "red";
+            console.error("Fetch failed completely:", error);
+        }
+    }
 
     }); // --- End of DOMContentLoaded ---
 
