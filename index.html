@@ -308,43 +308,72 @@ p {
       notifications.getOneSignalId(onesignal_playerid_callback);
     }
     
-    //Send push notification
-    // FIX: 'await' call moved INSIDE the callback to ensure 'playerId' is defined
-    function sendPushNotification() {
-      const notifications = new NativelyNotifications();
-      
-      // 1. Get the Player ID first
-      notifications.getOneSignalId(function (resp) {
-          if (resp.playerId) {
-              console.log("Got Player ID:", resp.playerId);
-              const playerId = resp.playerId; // Assign it to a variable
-
-              // 2. Now, define the payload
-              const payload = {
-                  redirect_url: "https://buildnatively.com/",
-                  title: "Title Text",
-                  subtitle: "Subtitle Text",
-                  description: "Description Text",
-              };
-              const appId = "472bbdc5-5dca-46b1-9e02-b2af5e1761a7"; // Your OneSignal app id
-              const isPreview = false; 
-              const player_ids = [playerId]; // Now 'playerId' is defined
-
-              // 3. Send the push notification INSIDE the callback
-              (async function() {
-                  try {
-                      const sendResp = await window.natively.sendPushNotification(appId, payload, player_ids, isPreview);
-                      console.log("Push sent:", sendResp);
-                  } catch (e) {
-                      console.error("Error sending push:", e);
-                  }
-              })();
-
-          } else {
-              window.natively.showAppToast("ERROR", "Failed to retrieve OneSignal Player ID.");
-          }
-      });
+    // Send push notification
+function sendPushNotification() {
+    // Safety Check: Ensure SDK is loaded
+    if (!window.NativelyNotifications || !window.natively) {
+        console.error("Natively SDK not found.");
+        return;
     }
+
+    const notifications = new NativelyNotifications();
+
+    // 1. Get the Player ID first
+    notifications.getOneSignalId(function(resp) {
+        if (resp.playerId) {
+            console.log("Got Player ID:", resp.playerId);
+            const playerId = resp.playerId;
+
+            // 2. Define the payload matching OneSignal's API (Like Snippet 2)
+            const payload = {
+                // Map 'redirect_url' to 'url'
+                url: "https://buildnatively.com/",
+                
+                // Map 'title' to 'headings.en'
+                headings: {
+                    en: "Title Text"
+                },
+
+                // Map 'description' to 'contents.en'
+                contents: {
+                    en: "Description Text"
+                },
+
+                // Map 'subtitle' to 'subtitle.en'
+                subtitle: {
+                    en: "Subtitle Text"
+                },
+                
+                // Optional: Add badge or sound if needed (matching Snippet 2)
+                // ios_badgeType: "Increase",
+                // ios_badgeCount: 1
+            };
+
+            const appId = "472bbdc5-5dca-46b1-9e02-b2af5e1761a7"; // Your OneSignal App ID
+            const isPreview = false;
+            const player_ids = [playerId];
+
+            // 3. Send the request
+            (async function() {
+                try {
+                    // We pass the corrected payload structure here
+                    const sendResp = await window.natively.sendPushNotification(appId, payload, player_ids, isPreview);
+                    console.log("Push sent successfully:", sendResp);
+                } catch (e) {
+                    console.error("Error sending push:", e);
+                }
+            })();
+
+        } else {
+            // Use optional chaining for safety
+            if (window.natively?.showAppToast) {
+                window.natively.showAppToast("ERROR", "Failed to retrieve OneSignal Player ID.");
+            } else {
+                console.error("Failed to retrieve OneSignal Player ID");
+            }
+        }
+    });
+}
 
     // --- OneSignal External ID ---
 
