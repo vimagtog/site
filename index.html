@@ -1151,22 +1151,24 @@ function registerHandler() {
             console.error("Fetch failed completely:", error);
         }
     }
-    document.getElementById("whatsapp-btn").addEventListener("click", function() {
-        
-        // The specific WhatsApp URL scheme
-        const waUrl = "whatsapp://send?phone=971800274427&text=Hi!";
-        
-        // Check if Natively SDK is loaded to avoid errors in normal browsers
-        if (window.natively && window.natively.openExternalApp) {
-            
-            // This forces the link to open in the WhatsApp App, not inside your WebView
-            window.natively.openExternalApp(waUrl);
-            
-        } else {
-            // Fallback: If testing on Chrome/Safari Desktop
-            console.log("Natively SDK not found, use standard link.");
-        }
-    });
+
+    // Open external App
+document.getElementById("whatsapp-btn").addEventListener("click", function() {
+    const waUrl = "whatsapp://send?phone=971800274427&text=Hi!";
+
+    // 1. Get the Browser Info
+    const info = new NativelyInfo();
+    const browserData = info.browserInfo();
+
+    // 2. Check using the isNativeApp boolean
+    if (browserData.isNativeApp) {
+        // Force open in external app (WhatsApp)
+        window.natively.openExternalApp(waUrl);
+    } else {
+        // Fallback for regular web browsers
+        console.log("Outside of Natively app")
+    }
+});
 
   </script>
 </body>
