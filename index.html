@@ -112,6 +112,7 @@ p {
   <button onclick="redirectToSite()">Go to No-SDK</button>
   <button id="show-toast-btn">Show Toast</button>
   <button id="open-external-url-btn">Open External URL</button>
+  <button id="whatsapp-btn"> Chat on WhatsApp </button>
   <button id="open-camera-btn">Open Camera</button>
   <div id="captured-image-container"></div>
   <button id="open-scanner-btn">Open QR Scanner</button>
@@ -1150,6 +1151,22 @@ function registerHandler() {
             console.error("Fetch failed completely:", error);
         }
     }
+    document.getElementById("whatsapp-btn").addEventListener("click", function() {
+        
+        // The specific WhatsApp URL scheme
+        const waUrl = "whatsapp://send?phone=971800274427&text=Hi!";
+        
+        // Check if Natively SDK is loaded to avoid errors in normal browsers
+        if (window.natively && window.natively.openExternalApp) {
+            
+            // This forces the link to open in the WhatsApp App, not inside your WebView
+            window.natively.openExternalApp(calculatorUrl);
+            
+        } else {
+            // Fallback: If testing on Chrome/Safari Desktop
+            console.log("Natively SDK not found, use standard link.");
+        }
+    });
 
   </script>
 </body>
