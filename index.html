@@ -82,9 +82,11 @@ p {
    .hidden {
      display: none;
    }
+   .controls { display: flex; flex-wrap: wrap; gap: 10px; max-width: 600px; 
+   }
   </style>
   
-  <script async src="https://cdn.jsdelivr.net/npm/natively@2.20.0/natively-frontend.min.js"></script>
+  <script async src="https://cdn.jsdelivr.net/npm/natively@2.23.0/natively-frontend.min.js"></script>
   
   <script>
      function nativelyOnLoad() {
@@ -237,10 +239,25 @@ p {
     <button onclick="testPostmanEcho(503)">
         Test 503 (Service Unavailable)
     </button>
-
-    <div id="console-output">Waiting for input...</div>
 </div>
-
+<br>
+  <h3>Native Player</h3>
+  <div id="console-output">Waiting for input...</div>
+    <br>
+    <div class="controls">
+    <button id="btn-play">Play Track</button>
+    <button id="btn-pause">Pause</button>
+    <button id="btn-stop">Stop</button>
+    <button id="btn-seek">Seek to 0:42</button>
+    
+    <button id="btn-queue-add">Add to Queue</button>
+    <button id="btn-queue-get">Get Queue</button>
+    <button id="btn-queue-remove">Remove First in Queue</button>
+    
+    <button id="btn-set-meta">Update Metadata</button>
+    <button id="btn-set-vol">Set Volume (50%)</button>
+    <button id="btn-set-speed">Set Speed (1.5x)</button>
+  </div>
 
   <script>
     // --- Define all functions in the global scope ---
@@ -1170,6 +1187,102 @@ document.getElementById("whatsapp-btn").addEventListener("click", function() {
     }
 });
 
+    //Native Player
+    // 1. Initialize the player
+    const player = new NativelyAudioPlayer(); 
+
+    // 2. Play
+    document.getElementById('btn-play').addEventListener('click', () => {
+      console.log("Attempting to play...");
+      player.play(
+        "https://file-examples.com/wp-content/storage/2017/11/file_example_MP3_2MG.mp3",
+        {
+          autoplay: true,
+          start_position: 10,
+          volume: 0.8,
+          speed: 1.25,
+          title: "Episode 12",
+          artist: "Build Natively",
+          artwork: "https://www.portraitflip.com/wp-content/uploads/2023/10/5.-The-Scream.jpg"
+        },
+        (resp) => {
+          if (resp.status === "SUCCESS") {
+            console.log("Playing:", resp.source);
+          } else {
+            console.warn("Play Error:", resp.message);
+          }
+        }
+      );
+    });
+
+    // 3. Pause
+    document.getElementById('btn-pause').addEventListener('click', () => {
+      console.log("Pausing...");
+      player.pause((resp) => console.log("Pause response:", resp));
+    });
+
+    // 4. Stop
+    document.getElementById('btn-stop').addEventListener('click', () => {
+      console.log("Stopping...");
+      player.stop((resp) => console.log("Stop response:", resp));
+    });
+
+    // 5. Seek
+    document.getElementById('btn-seek').addEventListener('click', () => {
+      console.log("Seeking to 42 seconds...");
+      player.seek(42, (resp) => console.log("Seek response:", resp));
+    });
+
+    // 6. Add to Queue
+    document.getElementById('btn-queue-add').addEventListener('click', () => {
+      console.log("Adding track to queue...");
+      player.queueAdd(
+        "https://file-examples.com/wp-content/storage/2017/11/file_example_MP3_1MG.mp3", 
+        { title: "Next Track in Queue" },
+        (resp) => console.log("Queue Add response:", resp) // Added callback for consistency
+      );
+    });
+
+    // 7. Get Queue
+    document.getElementById('btn-queue-get').addEventListener('click', () => {
+      console.log("Fetching queue...");
+      player.queueGet((resp) => {   
+        console.log("Current Queue:", resp);   
+      });
+    });
+
+    // 8. Remove from Queue (Index 0)
+    document.getElementById('btn-queue-remove').addEventListener('click', () => {
+      console.log("Removing index 0 from queue...");
+      player.queueRemove(0, (resp) => {
+        console.log("Queue Remove response:", resp); 
+      });
+    });
+
+    // 9. Set Metadata
+    document.getElementById('btn-set-meta').addEventListener('click', () => {
+      console.log("Updating metadata...");
+      player.setMetadata(
+        {
+          title: "New Title",
+          artist: "New Artist",
+          artwork: "https://images.stockcake.com/public/c/7/0/c70dcf47-1b63-420f-ae52-41cc8c92d6f4_large/vivid-abstract-art-stockcake.jpg",
+        },
+        (resp) => console.log("Metadata response:", resp) 
+      );
+    });
+
+    // 10. Set Volume
+    document.getElementById('btn-set-vol').addEventListener('click', () => {
+      console.log("Setting volume to 0.5...");
+      player.setVolume(0.5, (resp) => console.log("Volume response:", resp));
+    });
+
+    // 11. Set Speed
+    document.getElementById('btn-set-speed').addEventListener('click', () => {
+      console.log("Setting speed to 1.5...");
+      player.setSpeed(1.5, (resp) => console.log("Speed response:", resp));
+    });
   </script>
 </body>
 </html>
