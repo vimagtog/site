@@ -1188,11 +1188,14 @@ document.getElementById("whatsapp-btn").addEventListener("click", function() {
 });
 
     //Native Player
-    // 1. Initialize the player
-    const player = new NativelyAudioPlayer(); 
+    // 1. Declare globally so all buttons can access it
+  let player = null;
 
     // 2. Play
     document.getElementById('btn-play').addEventListener('click', () => {
+      if (!player) {
+      player = new NativelyAudioPlayer();
+    }
       console.log("Attempting to play...");
       player.play(
         "https://file-examples.com/wp-content/storage/2017/11/file_example_MP3_2MG.mp3",
