@@ -1,0 +1,14 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "BUNDLE_ID",
+      "sha256_cert_fingerprints":
+        [
+          "PRODUCTION_SHA256",
+          "STAGING_SHA256"
+        ]
+    }
+  }
+]
