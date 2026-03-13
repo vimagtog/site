@@ -1,11 +1,19 @@
 {
-	"applinks": {
-		"apps": [],
-		"details": [{
-			"appID": "TEAM_ID.com.ncnp.app",
-			"paths": [
-				"*"
-			]
-		}]
-	}
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appIDs": ["ABCDE12345.app.natively.pro"],
+        "paths": ["/pro/*", "/settings/*", "/dashboard/*"]
+      },
+      {
+        "appIDs": ["ABCDE12345.app.natively.lite", "XYZ7890.app.natively.othercompany"],
+        "paths": ["/lite/*", "/public/*"]
+      },
+      {
+        "appIDs": ["*"],
+        "paths": ["/universal-login"]
+      }
+    ]
+  }
 }
