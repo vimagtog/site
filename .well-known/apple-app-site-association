@@ -2,7 +2,7 @@
 	"applinks": {
 		"apps": [],
 		"details": [{
-			"appID": "TEAM_ID.com.ncnp.app123",
+			"appID": "TEAM_ID.com.ncnp.app",
 			"paths": [
 				"*"
 			]
