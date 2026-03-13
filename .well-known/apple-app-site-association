@@ -1,19 +1,42 @@
-{
-  "applinks": {
-    "apps": [],
-    "details": [
-      {
-        "appIDs": ["ABCDE12345.app.natively.pro"],
-        "paths": ["/pro/*", "/settings/*", "/dashboard/*"]
-      },
-      {
-        "appIDs": ["ABCDE12345.app.natively.lite", "XYZ7890.app.natively.othercompany"],
-        "paths": ["/lite/*", "/public/*"]
-      },
-      {
-        "appIDs": ["*"],
-        "paths": ["/universal-login"]
-      }
-    ]
-  }
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Launch Page - app.natively.pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-color: #f8fafc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-white p-8 rounded-2xl shadow-xl max-w-sm w-full text-center border border-slate-100">
+        <!-- App Icon Placeholder -->
+        <div class="w-20 h-20 bg-indigo-600 rounded-2xl mx-auto mb-6 flex items-center justify-center shadow-lg shadow-indigo-200">
+            <span class="text-white text-3xl font-bold">N</span>
+        </div>
+        
+        <h1 class="text-2xl font-bold text-slate-800 mb-2">Natively Pro</h1>
+        <p class="text-slate-500 mb-8 text-sm">Bundle ID: app.natively.pro</p>
+
+        <a href="natively://open" 
+           class="block w-full py-4 px-6 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl transition duration-200 shadow-md">
+            Open App
+        </a>
+        
+        <p class="mt-6 text-xs text-slate-400">
+            If the app is not installed, please visit the <br> App Store or Play Store.
+        </p>
+    </div>
+
+</body>
+</html>
