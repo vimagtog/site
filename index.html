@@ -6,6 +6,19 @@
   <link rel="icon" type="image/x-icon" href="/site/favicon.ico">
   <title>Sample HTML Page</title>
   <style>
+    /* Hide global scrollbar for Chrome, Safari, and Opera */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+}
+
+/* Hide global scrollbar for IE, Edge, and Firefox */
+html {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
     body {
      background-color: white;
      font-family: Arial, sans-serif;
