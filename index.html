@@ -114,6 +114,8 @@
     button[onclick*="runLoadingWorkflow"], 
     button[onclick*="startAutoBanner"],
     button[onclick*="triggerAutoInterstitial"],
+    button[onclick*="requestAttPermission"],
+    button[onclick*="handleFetchAllContacts"],
     #btn-play {
         background: rgba(117, 147, 255, 0.1);
         border-color: rgba(117, 147, 255, 0.3);
@@ -122,6 +124,8 @@
     button[onclick*="runLoadingWorkflow"]:hover, 
     button[onclick*="startAutoBanner"]:hover,
     button[onclick*="triggerAutoInterstitial"]:hover,
+    button[onclick*="requestAttPermission"]:hover,
+    button[onclick*="handleFetchAllContacts"]:hover,
     #btn-play:hover {
         background: #7593FF;
         color: #0B0F19;
@@ -141,7 +145,7 @@
         font-weight: 500;
     }
 
-    input[type="text"], input[type="email"] {
+    input[type="text"], input[type="email"], input[type="password"] {
         background: #070A12;
         border: 1px solid #1E293B;
         border-radius: 6px;
@@ -151,7 +155,7 @@
         outline: none;
     }
 
-    input[type="text"]:focus, input[type="email"]:focus {
+    input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus {
         border-color: #7593FF;
     }
 
@@ -247,9 +251,159 @@
           <button onclick="redirectToSite()">Go to No-SDK</button>
           <button id="show-toast-btn">Show Toast</button>
           <button id="open-external-url-btn">External URL</button>
-          <button id="copy-btn">Copy Sample Payload</button>
           <button id="openConsoleButton">Open SDK Console</button>
           <button onclick="registerHandler()">Attach Handler</button>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h3>App Tracking Transparency (ATT)</h3>
+        <div id="att-status-terminal" class="terminal-box" style="margin: 0 0 16px 0;">ATT Framework: Awaiting execution</div>
+        <div class="controls-group">
+          <button onclick="checkAttStatus()">1. Get Current Status</button>
+          <button onclick="requestAttPermission()">2. Present Permission Dialog</button>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h3>Native Contacts Manager</h3>
+        <div id="contacts-status-terminal" class="terminal-box" style="margin: 0 0 16px 0;">Contacts: Awaiting connection loop</div>
+        <div class="controls-group">
+          <button onclick="handleFetchAllContacts()">1. Read All Device Contacts</button>
+          <button onclick="handleCreateContactOverlay()">2. Present Save Contact Overlay</button>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h3>Clipboard Manipulation</h3>
+        <div class="field-row">
+          <label>Payload String Content</label>
+          <input type="text" id="clipboard-input" value="Natively custom clipboard plain string payload.">
+        </div>
+        <div id="clipboard-status-terminal" class="terminal-box" style="margin: 4px 0 16px 0;">Clipboard: Awaiting deployment</div>
+        <div class="controls-group">
+          <button onclick="handleClipboardCopy()">1. Copy to Clipboard</button>
+          <button onclick="handleClipboardPaste()">2. Read from Clipboard</button>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h3>Calendar Management</h3>
+        <div class="field-row">
+          <label>Event Title</label>
+          <input type="text" id="cal-title" value="Sync Session">
+        </div>
+        <div class="field-row">
+          <label>Start Date / Time (ISO 8601)</label>
+          <input type="text" id="cal-start" value="2026-07-10 14:00:00.000">
+        </div>
+        <div class="field-row">
+          <label>End Date / Time (ISO 8601)</label>
+          <input type="text" id="cal-end" value="2026-07-10 15:00:00.000">
+        </div>
+        <div class="field-row">
+          <label>Timezone Identifier</label>
+          <input type="text" id="cal-tz" value="Africa/Abidjan">
+        </div>
+        <div class="field-row">
+          <label>Explicit Calendar Target ID</label>
+          <input type="text" id="cal-id" value="primary_calendar">
+        </div>
+        <div class="field-row">
+          <label>Description Notes</label>
+          <input type="text" id="cal-desc" value="Natively SDK automated execution test row.">
+        </div>
+        <div id="calendar-status-terminal" class="terminal-box" style="margin: 4px 0 16px 0;">Calendar: Awaiting interaction</div>
+        <div class="controls-group">
+          <button onclick="handleRetrieveCalendars()">1. Fetch System Calendars</button>
+          <button onclick="handleCreateCalendarEvent()">2. Inject Calendar Event</button>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h3>Environment & Connectivity</h3>
+        <div id="environment-status-terminal" class="terminal-box" style="margin: 0 0 16px 0;">
+          <div>Network Status: Monitoring...</div>
+          <div id="env-details" style="color: #60A5FA; margin-top: 4px;"></div>
+        </div>
+        <div class="controls-group">
+          <button onclick="handleCheckEnvironment()">Query Browser Info</button>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h3>Device Peripherals</h3>
+        <div class="field-row">
+          <label>Media Capture Mode (type)</label>
+          <input type="text" id="cam-media-type" value="photo">
+        </div>
+        <div class="field-row">
+          <label>Resolution Tier (quality)</label>
+          <input type="text" id="cam-quality-tier" value="high">
+        </div>
+        <div class="field-row">
+          <label>Hardware Selection (cameraType)</label>
+          <input type="text" id="cam-hardware-type" value="FRONT">
+        </div>
+        <div id="peripheral-status-terminal" class="terminal-box" style="margin: 4px 0 16px 0;">Peripherals: Ready for input</div>
+        <div class="controls-group">
+          <button onclick="handleLaunchCamera()">1. Trigger Native Camera</button>
+          <button id="open-scanner-btn">2. Scan QR / Barcode</button>
+          <button id="check-native-app-btn">3. Check Architecture (Legacy)</button>
+        </div>
+        <div id="captured-image-container"></div>
+        <div id="scanner-result" class="scanner-result">
+          <div class="status-text">Scanner Output:</div>
+          <div id="scanned-text" class="terminal-box"></div>
+        </div>
+        <div id="is-native-app" class="status-text">Native Environment: <span id="native-app-status" style="color:#F8FAFC;"></span></div>
+      </div>
+
+      <div class="section-card">
+        <h3>Biometrics & Secure Storage</h3>
+        <div class="field-row">
+          <label>Test Username / Alias</label>
+          <input type="text" id="biometric-username" value="developer@buildnatively.com">
+        </div>
+        <div class="field-row">
+          <label>Test Password / Secret Token</label>
+          <input type="password" id="biometric-password" value="K3ycha1nSecr3t!">
+        </div>
+        <div id="biometrics-status-terminal" class="terminal-box" style="margin: 4px 0 16px 0;">Biometrics: Awaiting context check</div>
+        <div class="controls-group">
+          <button onclick="handleCheckBiometrics()">1. Check Support Status</button>
+          <button onclick="handleCheckCredentials()">2. Check Stored Keys</button>
+          <button onclick="handleVerifyIdentity()">3. Verify User Identity Only</button>
+          <button onclick="handleSaveCredentials()">4. Save Secure Credentials</button>
+          <button onclick="handleGetCredentials()">5. Read Secure Credentials</button>
+          <button onclick="handleRemoveCredentials()">6. Delete Credentials</button>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h3>Native Audio Recorder</h3>
+        <div id="recorder-status-terminal" class="terminal-box" style="margin: 0 0 16px 0;">Recorder: Awaiting initialization</div>
+        <div class="controls-group">
+          <button onclick="triggerAudioRecorder()">Launch Native Audio Overlay</button>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h3>Native App Storage</h3>
+        <div class="field-row">
+          <label>Storage Key</label>
+          <input type="text" id="storage-key" value="user_preference">
+        </div>
+        <div class="field-row">
+          <label>Value Payload</label>
+          <input type="text" id="storage-value" value="dark_mode">
+        </div>
+        <div id="storage-status-terminal" class="terminal-box" style="margin: 4px 0 16px 0;">Storage: Awaiting allocation</div>
+        <div class="controls-group">
+          <button onclick="handleSaveStorage()">1. Save Key/Value</button>
+          <button onclick="handleGetStorage()">2. Retrieve Key</button>
+          <button onclick="handleRemoveStorage()">3. Delete Specific Key</button>
+          <button onclick="handleResetStorage()">4. Flush Entire Storage</button>
         </div>
       </div>
 
@@ -276,21 +430,6 @@
           <button onclick="loadManualInterstitial()">4. Manual: Fetch Ad</button>
           <button onclick="showManualInterstitial()">5. Manual: Show Ad</button>
         </div>
-      </div>
-
-      <div class="section-card">
-        <h3>Device Peripherals</h3>
-        <div class="controls-group">
-          <button id="open-camera-btn">Trigger Camera</button>
-          <button id="open-scanner-btn">Scan QR / Barcode</button>
-          <button id="check-native-app-btn">Check Architecture</button>
-        </div>
-        <div id="captured-image-container"></div>
-        <div id="scanner-result" class="scanner-result">
-          <div class="status-text">Scanner Output:</div>
-          <div id="scanned-text" class="terminal-box"></div>
-        </div>
-        <div id="is-native-app" class="status-text">Native Environment: <span id="native-app-status" style="color:#F8FAFC;"></span></div>
       </div>
 
       <div class="section-card">
@@ -378,6 +517,15 @@
       </div>
 
       <div class="section-card">
+        <h3>Bottom Navigation Bar</h3>
+        <div id="tabbar-status-terminal" class="terminal-box" style="margin: 0 0 16px 0;">Tab Bar Layout: Default state</div>
+        <div class="controls-group">
+          <button onclick="handleShowTabBar()">Show Tab Bar View</button>
+          <button onclick="handleHideTabBar()">Hide Tab Bar View</button>
+        </div>
+      </div>
+
+      <div class="section-card">
         <h3>Postman Network Tester</h3>
         <p class="status-text" style="margin-bottom:12px;">Simulate strict response arrays from endpoint nodes.</p>
         <div class="controls-group">
@@ -409,14 +557,19 @@
   </div>
 
   <script>
-    // System reference variables for handling dynamic instances
+    // Module references mapping structural instances
     let player = null;
     let autoBannerInstance = null;
     let manualBannerInstance = null;
     let autoInterstitialInstance = null;
     let manualInterstitialInstance = null;
+    let storageInstance = null;
+    let biometricsInstance = null;
+    let calendarInstance = null;
+    let clipboardInstance = null;
+    let contactsInstance = null;
 
-    // Standard test network AdMob configurations
+    // Standard Test Unit AdMob Network Data Parameters
     const BANNER_TEST_CONFIG = {
         androidUnitId: "ca-app-pub-3940256099942544/6300978111",
         iOSUnitId: "ca-app-pub-3940256099942544/2934735716",
@@ -430,398 +583,454 @@
     };
 
     // ===================================================
-    // ADMOB BANNER ADS EXPERIMENTAL IMPLEMENTATIONS
+    // NATIVE ADDRESS BOOK CONTACTS MANAGEMENT LAYER
     // ===================================================
-    
-    function logBannerStatus(message) {
-        document.getElementById('banner-status-terminal').innerText = "Banner: " + message;
+
+    function logContactsStatus(message) {
+        document.getElementById('contacts-status-terminal').innerText = "Contacts: " + message;
     }
 
-    function startAutoBanner() {
-        if (typeof NativelyAdmobBanner === 'undefined') {
-            logBannerStatus("Error — SDK Class Missing");
+    function getContactsInstance() {
+        if (!contactsInstance && typeof NativelyContacts !== 'undefined') {
+            contactsInstance = new NativelyContacts();
+        }
+        return contactsInstance;
+    }
+
+    function handleFetchAllContacts() {
+        const contacts = getContactsInstance();
+        if (!contacts) return logContactsStatus("Fallback Intercept — Class unavailable outside WebView execution wrappers.");
+
+        logContactsStatus("Querying address book database entries...");
+        contacts.getAllContacts(function(resp) {
+            // Logs status outcomes: "SUCCESS" / "FAILED"
+            logContactsStatus(`Status: ${resp.status} | Total Records Loaded: ${Array.isArray(resp.contacts) ? resp.contacts.length : 0}`);
+            console.log("Full address book response dataset trace object:", resp.contacts);
+        });
+    }
+
+    function handleCreateContactOverlay() {
+        const contacts = getContactsInstance();
+        if (!contacts) return logContactsStatus("Fallback Intercept — Class unavailable outside WebView execution wrappers.");
+
+        logContactsStatus("Triggering native address book save screen...");
+        contacts.createContact(function(resp) {
+            logContactsStatus(`Status: ${resp.status} | Created Record ID: ${resp.id || 'N/A'}`);
+            console.log("Create contact complete response frame trace:", resp);
+        });
+    }
+
+    // ===================================================
+    // NATIVE CLIPBOARD INTERFACE LAYER
+    // ===================================================
+
+    function logClipboardStatus(message) {
+        document.getElementById('clipboard-status-terminal').innerText = "Clipboard: " + message;
+    }
+
+    function getClipboardInstance() {
+        if (!clipboardInstance && typeof NativelyClipboard !== 'undefined') {
+            clipboardInstance = new NativelyClipboard();
+        }
+        return clipboardInstance;
+    }
+
+    function handleClipboardCopy() {
+        const clip = getClipboardInstance();
+        const textPayload = document.getElementById('clipboard-input').value;
+
+        if (!clip) {
+            navigator.clipboard.writeText(textPayload)
+              .then(() => { logClipboardStatus(`[Browser Fallback] Copied -> "${textPayload}"`); })
+              .catch(err => { logClipboardStatus(`Error -> ${err.message}`); });
             return;
         }
-        logBannerStatus("Initializing Automatic Banner...");
-        const eventLogger = function(resp) { logBannerStatus("Event -> " + resp.event); };
+
+        clip.copy(textPayload);
+        logClipboardStatus(`Copied payload text -> "${textPayload}"`);
+    }
+
+    function handleClipboardPaste() {
+        const clip = getClipboardInstance();
+
+        if (!clip) {
+            navigator.clipboard.readText()
+              .then(text => { logClipboardStatus(`[Browser Fallback] Pasted -> "${text || 'EMPTY'}"`); })
+              .catch(err => { logClipboardStatus(`Access Denied or Unsupported Browser API`); });
+            return;
+        }
+
+        logClipboardStatus("Reading layout tracking index...");
+        clip.paste(function(resp) {
+            logClipboardStatus(`Pasted Result -> "${resp.text || 'NULL'}"`);
+        });
+    }
+
+    // ===================================================
+    // NATIVE HARDWARE CAMERA CONTROLLER PIPELINE
+    // ===================================================
+
+    function logPeripheralStatus(message) {
+        document.getElementById('peripheral-status-terminal').innerText = message;
+    }
+
+    function handleLaunchCamera() {
+        if (typeof NativelyCamera === 'undefined') {
+            logPeripheralStatus("Fallback Intercept — NativelyCamera class definition unavailable outside mobile environment.");
+            return;
+        }
+
+        const type = document.getElementById('cam-media-type').value.trim();
+        const quality = document.getElementById('cam-quality-tier').value.trim();
+        const cameraType = document.getElementById('cam-hardware-type').value.trim();
+
+        logPeripheralStatus("Status: Launching system view overlay...");
+        const camera = new NativelyCamera();
+
+        camera.showCamera(type, quality, cameraType, function (resp) {
+            if (resp && !resp.error) {
+                logPeripheralStatus(`SUCCESS | Mime: ${resp.content_type} | Size: ${resp.size} KB`);
+                
+                const container = document.getElementById('captured-image-container');
+                if (container && resp.base64) {
+                    container.innerHTML = ""; 
+                    const img = document.createElement('img');
+                    img.className = 'captured-image';
+                    img.src = `data:${resp.content_type};base64,${resp.base64}`;
+                    img.style.maxWidth = "100%";
+                    img.style.borderRadius = "6px";
+                    img.style.marginTop = "12px";
+                    container.appendChild(img);
+                }
+            } else if (resp && resp.error) {
+                logPeripheralStatus(`ERROR: ${resp.error}`);
+            } else {
+                logPeripheralStatus("Interaction dismissed or closed.");
+            }
+        });
+    }
+
+    // ===================================================
+    // NATIVE DEVICE CALENDAR MODULE LAYER
+    // ===================================================
+
+    function logCalendarStatus(message) {
+        document.getElementById('calendar-status-terminal').innerText = "Calendar: " + message;
+    }
+
+    function getCalendarInstance() {
+        if (!calendarInstance && typeof NativelyCalendar !== 'undefined') {
+            calendarInstance = new NativelyCalendar();
+        }
+        return calendarInstance;
+    }
+
+    function handleRetrieveCalendars() {
+        const cal = getCalendarInstance();
+        if (!cal) return logCalendarStatus("Fallback Intercept — Class unavailable outside WebView execution wrappers.");
+
+        logCalendarStatus("Reading system calendars...");
+        cal.retrieveCalendars(function(resp) {
+            logCalendarStatus(`Status: ${resp.status} | Active ID: ${resp.data?.id || 'None'} | Error: ${resp.error || 'None'}`);
+        });
+    }
+
+    function handleCreateCalendarEvent() {
+        const cal = getCalendarInstance();
+        if (!cal) return logCalendarStatus("Fallback Intercept — Class unavailable outside WebView execution wrappers.");
+
+        const title = document.getElementById('cal-title').value.trim();
+        const startDate = document.getElementById('cal-start').value.trim();
+        const endDate = document.getElementById('cal-end').value.trim();
+        const timezone = document.getElementById('cal-tz').value.trim();
+        const calendarId = document.getElementById('cal-id').value.trim();
+        const description = document.getElementById('cal-desc').value.trim();
+
+        logCalendarStatus("Pushing event parameters payload...");
         
-        autoBannerInstance = new NativelyAdmobBanner(
-            BANNER_TEST_CONFIG, eventLogger, true, eventLogger, true, eventLogger
+        cal.createCalendarEvent(
+            title, endDate, startDate, timezone, calendarId, description,
+            function (resp) {
+                logCalendarStatus(`Response: ${resp.status} | Created Event: "${resp.data?.title || 'N/A'}"`);
+            }
         );
+    }
+
+    // ===================================================
+    // ENVIRONMENT DETECTION & CONNECTIVITY MONITOR
+    // ===================================================
+
+    function logEnvironmentStatus(statusText, detailsHtml = "") {
+        const terminal = document.getElementById('environment-status-terminal');
+        if (terminal) {
+            terminal.innerHTML = `<div>Network Status: ${statusText}</div>`;
+            if (detailsHtml) {
+                terminal.innerHTML += `<div id="env-details" style="color: #60A5FA; margin-top: 4px; font-size: 0.75rem; line-height: 1.4;">${detailsHtml}</div>`;
+            }
+        }
+    }
+
+    function handleCheckEnvironment() {
+        if (typeof NativelyInfo === 'undefined') {
+            logEnvironmentStatus("Active", "Fallback Intercept: NativelyInfo class definition unavailable outside mobile wrapper container.");
+            return;
+        }
+
+        const info = new NativelyInfo();
+        const browserInfo = info.browserInfo();
+
+        const displayData = `
+            Is Android App: ${browserInfo.isAndroidApp}<br>
+            Is iOS App: ${browserInfo.isIOSApp}<br>
+            Is Native App: ${browserInfo.isNativeApp}
+        `;
+        logEnvironmentStatus(navigator.onLine ? "Online" : "Offline", displayData);
+    }
+
+    window.ononline = function() { logEnvironmentStatus("<span style='color: #34D399; font-weight: bold;'>Online</span>"); };
+    window.onoffline = function() { logEnvironmentStatus("<span style='color: #EF4444; font-weight: bold;'>Offline</span>"); };
+
+    // ===================================================
+    // BIOMETRICS & KEYCHAIN CREDENTIAL SECURITY LAYER
+    // ===================================================
+
+    function logBiometricsStatus(message) {
+        document.getElementById('biometrics-status-terminal').innerText = "Biometrics: " + message;
+    }
+
+    function getBiometricsInstance() {
+        if (!biometricsInstance && typeof NativelyBiometrics !== 'undefined') {
+            biometricsInstance = new NativelyBiometrics(true);
+        }
+        return biometricsInstance;
+    }
+
+    function handleCheckBiometrics() {
+        const instance = getBiometricsInstance();
+        if (!instance) return logBiometricsStatus("Fallback — SDK Unavailable");
+        instance.checkBiometricsSupport(function(resp) { logBiometricsStatus(`Hardware Support Available: ${resp.status}`); });
+    }
+
+    function handleCheckCredentials() {
+        const instance = getBiometricsInstance();
+        if (!instance) return logBiometricsStatus("Fallback — SDK Unavailable");
+        instance.checkCredentials(function(resp) { logBiometricsStatus(`Stored Keychain Record Exists: ${resp.status}`); });
+    }
+
+    function handleVerifyIdentity() {
+        const instance = getBiometricsInstance();
+        if (!instance) return logBiometricsStatus("Fallback — SDK Unavailable");
+        logBiometricsStatus("Triggering authentication challenge window...");
+        instance.verifyUserIdentify(function(resp) { logBiometricsStatus(`Identity Verification Result: ${resp.status}`); });
+    }
+
+    function handleSaveCredentials() {
+        const instance = getBiometricsInstance();
+        if (!instance) return logBiometricsStatus("Fallback — SDK Unavailable");
+
+        const login = document.getElementById('biometric-username').value.trim();
+        const password = document.getElementById('biometric-password').value.trim();
+
+        if (!login || !password) return logBiometricsStatus("Error: Required input parameters absent.");
+        instance.saveUserCredentials(login, password, function(resp) { logBiometricsStatus(`Save Execution Callback -> ${resp.status}`); });
+    }
+
+    function handleGetCredentials() {
+        const instance = getBiometricsInstance();
+        if (!instance) return logBiometricsStatus("Fallback — SDK Unavailable");
+        instance.getUserCredentials(function(resp) { logBiometricsStatus(`Auth Execution Callback -> ${resp.status}`); });
+    }
+
+    function handleRemoveCredentials() {
+        const instance = getBiometricsInstance();
+        if (!instance) return logBiometricsStatus("Fallback — SDK Unavailable");
+        instance.removeUserCredentials(function() { logBiometricsStatus("Success: Secure records evicted from device keychain."); });
+    }
+
+    // ===================================================
+    // BOTTOM NAVIGATION TAB BAR MANAGEMENT
+    // ===================================================
+    
+    function logTabBarStatus(message) {
+        document.getElementById('tabbar-status-terminal').innerText = "Tab Bar: " + message;
+    }
+
+    function handleShowTabBar() {
+        if (window.natively && typeof window.natively.showTabBar === 'function') {
+            window.natively.showTabBar();
+            logTabBarStatus("Fired showTabBar() successfully.");
+        } else {
+            logTabBarStatus("Fallback Context — Action acknowledged outside WebView wrapper container.");
+        }
+    }
+
+    function handleHideTabBar() {
+        if (window.natively && typeof window.natively.hideTabBar === 'function') {
+            window.natively.hideTabBar();
+            logTabBarStatus("Fired hideTabBar() successfully.");
+        } else {
+            logTabBarStatus("Fallback Context — Action acknowledged outside WebView wrapper container.");
+        }
+    }
+
+    // ===================================================
+    // NATIVE AUDIO RECORDER INTERFACE LAYER
+    // ===================================================
+    
+    function logRecorderStatus(message) { document.getElementById('recorder-status-terminal').innerText = message; }
+
+    function triggerAudioRecorder() {
+        if (typeof NativelyAudioRecorder === 'undefined') {
+            logRecorderStatus("Fallback Intercept — Class definition missing outside WebView container environment.");
+            return;
+        }
+        logRecorderStatus("Status: Recording module active...");
+        new NativelyAudioRecorder().showRecorder(function (resp) {
+            if (resp.status === "SUCCESS") {
+                logRecorderStatus(`SUCCESS | Format: ${resp.content_type} | Size: ${resp.size} KB`);
+            } else {
+                logRecorderStatus("CANCELLED | Capture interaction dismissed by user.");
+            }
+        });
+    }
+
+    // ===================================================
+    // NATIVE APP STORAGE COMPONENT MANAGEMENT
+    // ===================================================
+
+    function logStorageStatus(message) { document.getElementById('storage-status-terminal').innerText = "Storage: " + message; }
+
+    function getStorageInstance() {
+        if (!storageInstance && typeof NativelyStorage !== 'undefined') {
+            storageInstance = new NativelyStorage();
+        }
+        return storageInstance;
+    }
+
+    function handleSaveStorage() {
+        const store = getStorageInstance();
+        const inputKey = document.getElementById('storage-key').value.trim();
+        const inputValue = document.getElementById('storage-value').value.trim();
+        if (!store || !inputKey) return logStorageStatus("Error: Configuration baseline missing.");
+        store.setStorageValue(inputKey, inputValue);
+        logStorageStatus(`Saved string under key [${inputKey}]`);
+    }
+
+    function handleGetStorage() {
+        const store = getStorageInstance();
+        const inputKey = document.getElementById('storage-key').value.trim();
+        if (!store || !inputKey) return logStorageStatus("Error: Configuration baseline missing.");
+        store.getStorageValue(inputKey, function(resp) {
+            logStorageStatus(resp.value === null ? `No records for: "${resp.key}"` : `Resolved [${resp.key}] -> "${resp.value}"`);
+        });
+    }
+
+    function handleRemoveStorage() {
+        const store = getStorageInstance();
+        const inputKey = document.getElementById('storage-key').value.trim();
+        if (!store || !inputKey) return logStorageStatus("Error: Configuration baseline missing.");
+        store.removeStorageValue(inputKey);
+        logStorageStatus(`Cleared dataset matching key [${inputKey}]`);
+    }
+
+    function handleResetStorage() {
+        const store = getStorageInstance();
+        if (store) { store.resetStorage(); logStorageStatus("Purge complete."); }
+    }
+
+    // ===================================================
+    // APP TRACKING TRANSPARENCY (ATT) MANAGEMENT LAYER
+    // ===================================================
+    
+    function logAttStatus(message) { document.getElementById('att-status-terminal').innerText = "ATT: " + message; }
+
+    function checkAttStatus() {
+        if (window.natively?.attGetStatus) window.natively.attGetStatus(handleAttResponse);
+        else logAttStatus("Fallback Context: Active (Desktop Mode)");
+    }
+
+    function requestAttPermission() {
+        if (window.natively?.attShowPopup) window.natively.attShowPopup(handleAttResponse);
+        else logAttStatus("Fallback Intercept: Request simulation handled.");
+    }
+
+    // ===================================================
+    // ADMOB BANNER & INTERSTITIAL ADS PIPELINES
+    // ===================================================
+    
+    function logBannerStatus(message) { document.getElementById('banner-status-terminal').innerText = "Banner: " + message; }
+
+    function startAutoBanner() {
+        if (typeof NativelyAdmobBanner !== 'undefined') {
+            const eventLogger = function(resp) { logBannerStatus("Event -> " + resp.event); };
+            autoBannerInstance = new NativelyAdmobBanner(BANNER_TEST_CONFIG, eventLogger, true, eventLogger, true, eventLogger);
+        }
     }
 
     function setupManualBanner() {
-        if (typeof NativelyAdmobBanner === 'undefined') {
-            logBannerStatus("Error — SDK Class Missing");
-            return;
+        if (typeof NativelyAdmobBanner !== 'undefined') {
+            const logger = function(resp) { logBannerStatus("Manual -> " + resp.event); };
+            manualBannerInstance = new NativelyAdmobBanner(BANNER_TEST_CONFIG, logger, false, logger, false, logger);
         }
-        logBannerStatus("Initializing Manual Instance...");
-        
-        const manualLifecycleHandler = function(resp) {
-            const event = resp.event;
-            logBannerStatus("Manual Event -> " + event);
-            if (event === "DID_FINISH_SETUP") console.log("Setup complete. Safe to fetch ads.");
-        };
-
-        manualBannerInstance = new NativelyAdmobBanner(
-            BANNER_TEST_CONFIG, manualLifecycleHandler, false, manualLifecycleHandler, false, manualLifecycleHandler
-        );
     }
 
-    function loadManualBannerAd() {
-        if (!manualBannerInstance) return logBannerStatus("Init card step 2 first.");
-        logBannerStatus("Requesting ad allocation...");
-        manualBannerInstance.loadAd(function(resp) { console.log("Load hook processed:", resp); });
-    }
+    function loadManualBannerAd() { manualBannerInstance?.loadAd(function(resp){}); }
+    function showManualBanner() { manualBannerInstance?.showBanner(function(resp){}); }
+    function hideManualBanner() { manualBannerInstance?.hideBanner(function(resp){}); }
+    function checkBannerVisibility() { (manualBannerInstance || autoBannerInstance)?.bannerIsVisible(function(s){ logBannerStatus("Visible: " + s.result); }); }
 
-    function showManualBanner() {
-        if (!manualBannerInstance) return logBannerStatus("Init card step 2 first.");
-        manualBannerInstance.showBanner(function(resp) { console.log("Show hook processed:", resp); });
-    }
-
-    function hideManualBanner() {
-        if (!manualBannerInstance) return logBannerStatus("Init card step 2 first.");
-        manualBannerInstance.hideBanner(function(resp) { console.log("Hide hook processed:", resp); });
-    }
-
-    function checkBannerVisibility() {
-        const activeInstance = manualBannerInstance || autoBannerInstance;
-        if (!activeInstance) return logBannerStatus("No active instance found.");
-        activeInstance.bannerIsVisible(function(status) { logBannerStatus("Visibility Status: " + status.result); });
-    }
-
-    // ===================================================
-    // ADMOB INTERSTITIAL ADS EXPERIMENTAL IMPLEMENTATIONS
-    // ===================================================
-
-    function logInterstitialStatus(message) {
-        document.getElementById('interstitial-status-terminal').innerText = "Interstitial: " + message;
-    }
+    function logInterstitialStatus(message) { document.getElementById('interstitial-status-terminal').innerText = "Interstitial: " + message; }
 
     function initAutoInterstitial() {
-        if (typeof NativelyAdmobInterstitial === 'undefined') {
-            logInterstitialStatus("Error — SDK Class Missing");
-            return;
+        if (typeof NativelyAdmobInterstitial !== 'undefined') {
+            const logger = function(r){ logInterstitialStatus("Auto -> " + r.event); };
+            autoInterstitialInstance = new NativelyAdmobInterstitial(INTERSTITIAL_TEST_CONFIG.iOSUnitId, INTERSTITIAL_TEST_CONFIG.androidUnitId, logger, true, logger);
         }
-        logInterstitialStatus("Initializing Auto-Reload Sequence...");
-        
-        const autoHandler = function(resp) {
-            logInterstitialStatus("Auto Event -> " + resp.event);
-        };
-
-        autoInterstitialInstance = new NativelyAdmobInterstitial(
-            INTERSTITIAL_TEST_CONFIG.iOSUnitId, INTERSTITIAL_TEST_CONFIG.androidUnitId, autoHandler, true, autoHandler
-        );
     }
 
     function triggerAutoInterstitial() {
-        if (!autoInterstitialInstance) return logInterstitialStatus("Initialize pipeline first.");
-        autoInterstitialInstance.interstitialIsReady(function(status) {
-            if (status.result) {
-                autoInterstitialInstance.showInterstitialAd();
-            } else {
-                logInterstitialStatus("Ad buffer empty. Fetching in background...");
-            }
-        });
+        autoInterstitialInstance?.interstitialIsReady(function(s){ if(s.result) autoInterstitialInstance.showInterstitialAd(); });
     }
 
     function initManualInterstitial() {
-        if (typeof NativelyAdmobInterstitial === 'undefined') {
-            logInterstitialStatus("Error — SDK Class Missing");
-            return;
+        if (typeof NativelyAdmobInterstitial !== 'undefined') {
+            const logger = function(r){ logInterstitialStatus("Manual -> " + r.event); };
+            manualInterstitialInstance = new NativelyAdmobInterstitial(INTERSTITIAL_TEST_CONFIG.iOSUnitId, INTERSTITIAL_TEST_CONFIG.androidUnitId, logger, false, logger);
         }
-        logInterstitialStatus("Manual Instance Configured.");
-        
-        const manualHandler = function(resp) {
-            logInterstitialStatus("Manual Event -> " + resp.event);
-        };
-
-        manualInterstitialInstance = new NativelyAdmobInterstitial(
-            INTERSTITIAL_TEST_CONFIG.iOSUnitId, INTERSTITIAL_TEST_CONFIG.androidUnitId, manualHandler, false, manualHandler
-        );
     }
 
-    function loadManualInterstitial() {
-        if (!manualInterstitialInstance) return logInterstitialStatus("Init step 3 first.");
-        logInterstitialStatus("Requesting full screen ad structural block...");
-        manualInterstitialInstance.loadAd();
-    }
-
-    function showManualInterstitial() {
-        if (!manualInterstitialInstance) return logInterstitialStatus("Init step 3 first.");
-        manualInterstitialInstance.interstitialIsReady(function(status) {
-            if (status.result) {
-                manualInterstitialInstance.showInterstitialAd();
-            } else {
-                logInterstitialStatus("Manual ad not ready for presentation.");
-            }
-        });
-    }
+    function loadManualInterstitial() { manualInterstitialInstance?.loadAd(); }
+    function showManualInterstitial() { manualInterstitialInstance?.interstitialIsReady(function(s){ if(s.result) manualInterstitialInstance.showInterstitialAd(); }); }
 
     // ===================================================
-    // CORE NATIVE PERIPHERALS & WORKFLOWS
+    // GLOBAL SYSTEM DOM LOAD CONFIGURATORS
     // ===================================================
 
-    function redirectToSite() {
-      window.location.href = "https://vimagtog.github.io/site/sdk-in-script.html";
-    }
-
-    function isUrl(text) {
-      return /^(http|https):\/\/[^\s]+/i.test(text);
-    }
-
-    function copyToClipboard(text) {
-      if (typeof NativelyClipboard !== 'undefined') {
-        new NativelyClipboard().copy(text);
-      } else {
-        navigator.clipboard.writeText(text)
-          .then(() => { console.log('Copied fallback text string via browser execution.'); })
-          .catch(err => { console.error('Browser modern clipboard API failed: ', err); });
-      }
-    }
-
-    async function requestPermissionFn() {
-      if (typeof NativelyNotifications === 'undefined') return;
-      await new NativelyNotifications().requestPermission(false, function (resp) { 
-          console.log("Permission status resolution: ", resp.status); 
-      }); 
-    }
-
-    function checkPushPermission() {
-      if (typeof NativelyNotifications === 'undefined') return;
-      new NativelyNotifications().getPermissionStatus(function (resp) {
-        const statusStr = resp.status ? "GRANTED" : "DENIED";
-        if (window.natively?.showAppToast) window.natively.showAppToast("INFO", "Push State: " + statusStr);
-      });
-    }
-    
-    function getOneSignalPlayerId() {
-      if (typeof NativelyNotifications === 'undefined') return;
-      new NativelyNotifications().getOneSignalId(function (resp) {
-        if (resp.playerId && window.natively?.showAppToast) {
-            window.natively.showAppToast("SUCCESS", "UUID Sync: " + resp.playerId);
-        }
-      });
-    }
-    
-    function sendPushNotification() {
-        if (typeof NativelyNotifications === 'undefined' || !window.natively) return;
-        new NativelyNotifications().getOneSignalId(function(resp) {
-            if (resp.playerId && window.natively.sendPushNotification) {
-                const payload = {
-                    url: "https://buildnatively.com/",
-                    headings: { en: "Console Context Alert" },
-                    contents: { en: "Dispatched automated debug frame metrics stream." }
-                };
-                window.natively.sendPushNotification("472bbdc5-5dca-46b1-9e02-b2af5e1761a7", payload, [resp.playerId], false);
-            }
-        });
-    }
-
-    function getExternalIdAction() {
-      if (typeof NativelyNotifications === 'undefined') return;
-      new NativelyNotifications().getExternalId((resp) => {
-            const resultObj = (Array.isArray(resp) && resp.length > 0) ? resp[0] : resp;
-            if (resultObj?.externalId) console.log('External Record target:', resultObj.externalId);
-      });
-    }
-
-    function setExternalIdAction() {
-      if (typeof NativelyNotifications === 'undefined') return;
-      new NativelyNotifications().setExternalId({ externalId: 'user123' }, (result) => {
-            if (result?.externalId) console.log('Synchronized mapped link:', result.externalId);
-      });
-    }
-
-    function removeExternalIdAction() {
-      if (typeof NativelyNotifications === 'undefined') return;
-      new NativelyNotifications().removeExternalId((result) => { console.log('External metadata identity dropped.'); });
-    }
-
-    function getCurrentLocation() {
-      if (typeof NativelyLocation === 'undefined') return;
-      new NativelyLocation().current(50, "Best", "BALANCED", function (resp) {
-        if (resp.status === "SUCCESS") {
-          document.getElementById('location-status').textContent = "Status: Active Core Resolution";
-          document.getElementById('longitude').textContent = "Lon: " + resp.longitude;
-          document.getElementById('latitude').textContent = "Lat: " + resp.latitude;
-        }
-      });
-    }
-
-    function startForegroundLocation() {
-      if (typeof NativelyLocation === 'undefined') return;
-      new NativelyLocation().start(10000, 50, "Best", "BALANCED", function (resp) {});
-      document.getElementById('start-foreground-location-btn').classList.add('hidden');
-      document.getElementById('stop-foreground-location-btn').classList.remove('hidden');
-    }
-
-    function stopForegroundLocation() {
-      if (typeof NativelyLocation === 'undefined') return;
-      new NativelyLocation().stop();
-      document.getElementById('start-foreground-location-btn').classList.remove('hidden');
-      document.getElementById('stop-foreground-location-btn').classList.add('hidden');
-    }
-
-    function checkBackgroundLocationStatus() {
-      if (typeof NativelyLocation === 'undefined') return;
-      new NativelyLocation().statusBackground(function(resp) { console.log(resp.status); });
-    }
-
-    function startBackgroundLocation() {
-      if (typeof NativelyLocation === 'undefined') return;
-      new NativelyLocation().startBackground(10000, 50, "Best", "BALANCED", "my-user-id", function(resp) {});
-      document.getElementById('start-background-location-btn').classList.add('hidden');
-      document.getElementById('stop-background-location-btn').classList.remove('hidden');
-    }
-
-    function stopBackgroundLocation() {
-      if (typeof NativelyLocation === 'undefined') return;
-      new NativelyLocation().stopBackground(function(resp) {});
-      document.getElementById('start-background-location-btn').classList.remove('hidden');
-      document.getElementById('stop-background-location-btn').classList.add('hidden');
-    }
-
-    function checkGeolocationPermission() {
-      if (typeof NativelyLocation === 'undefined') return;
-      new NativelyLocation().permission(function(resp) { console.log(resp); });
-    }
-
-    function loginToInAppPurchases() {
-      if (typeof NativelyPurchases === 'undefined') return;
-      const customerEmail = document.getElementById('customer-email').value;
-      const userId = document.getElementById('customer-id').value;
-      new NativelyPurchases().login(userId, customerEmail, function(resp) {});
-    }
-
-    function verifyCustomerId() {
-      if (typeof NativelyPurchases === 'undefined') return;
-      new NativelyPurchases().customerId(function(resp) {});
-    }
-
-    function purchaseRcMonthlyPackage() {
-      if (typeof NativelyPurchases === 'undefined') return;
-      new NativelyPurchases().purchasePackage("$rc_monthly", function(resp) {});
-    }
-
-    function purchaseBusinessPackage() {
-      if (typeof NativelyPurchases === 'undefined') return;
-      new NativelyPurchases().purchasePackage("Business", "$rc_monthly", function(resp) {});
-    }
-
-    function showDefaultPaywall() {
-      if (typeof NativelyPurchases === 'undefined') return;
-      new NativelyPurchases().showPaywall(true, "Premium", function(resp) {});
-    }
-    
-    function showPaywallForPro() {
-      if (typeof NativelyPurchases === 'undefined') return;
-      new NativelyPurchases().showPaywallIfNeeded("Premium", true, "Premium", function(resp) {});
-    }
-    
-    function trackMyEvent() {
-      if (typeof Natively === 'undefined') return;
-      const eventData = new Map();
-      eventData.set('user_id', '12345');
-      new Natively().analyticsTrackEvent('button_clicked', eventData);
-    }
-
-    /**
-     * Defensive Event Binding Initializer
-     * Uses optional chaining selectors (?.) to bypass errors if particular modules 
-     * are detached from user-facing template configurations.
-     */
     document.addEventListener('DOMContentLoaded', function() {
-      document.getElementById('show-toast-btn')?.addEventListener('click', function() {
-        window.natively?.showAppToast?.("DEFAULT", "This is a toast");
-      });
-
-      document.getElementById('open-external-url-btn')?.addEventListener('click', function() {
-        window.natively?.openExternalURL?.("https://vimagtog.github.io/site/sdk-in-script.html", true);
-      });
-
-      document.getElementById('open-camera-btn')?.addEventListener('click', function() {
-        if (typeof NativelyCamera !== 'undefined') new NativelyCamera().showCamera("photo", "high", "FRONT", function(resp){});
-      });
-
       document.getElementById('open-scanner-btn')?.addEventListener('click', function() {
-        if (typeof NativelyScanner !== 'undefined') new NativelyScanner().showScanner(function(resp){});
+        if (typeof NativelyScanner === 'undefined') return;
+        new NativelyScanner().showScanner(function(resp) {
+            const scannerResult = document.getElementById('scanner-result');
+            const scannedTextElement = document.getElementById('scanned-text');
+            if (resp?.result) {
+                scannedTextElement.textContent = resp.result;
+                if (scannerResult) scannerResult.style.display = 'block';
+            }
+        });
       });
 
       document.getElementById('check-native-app-btn')?.addEventListener('click', function() {
-        if (typeof NativelyInfo === 'undefined') return;
-        document.getElementById('native-app-status').textContent = new NativelyInfo().browserInfo().isNativeApp ? 'Yes' : 'No';
+        if (typeof NativelyInfo !== 'undefined') {
+            document.getElementById('native-app-status').textContent = new NativelyInfo().browserInfo().isNativeApp ? 'Yes' : 'No';
+        }
       });
 
-      document.getElementById('get-app-info-btn')?.addEventListener('click', function() {
-        if (typeof NativelyInfo !== 'undefined') new NativelyInfo().getAppInfo(function(resp){});
-      });
-      
-      document.getElementById('track-app-state-btn')?.addEventListener('click', function() {
-        if (typeof NativelyInfo !== 'undefined') new NativelyInfo().app_state(function(resp){});
-      });
-      
-      document.getElementById('send-email-btn')?.addEventListener('click', function() {
-        if (typeof NativelyMessage !== 'undefined') new NativelyMessage().sendEmail("Subject", "", "email@example.com");
-      });
-
-      document.getElementById('send-sms-btn')?.addEventListener('click', function() {
-        if (typeof NativelyMessage !== 'undefined') new NativelyMessage().sendSMS("Hello", "1234567890", function(resp){});
-      });
-
-      document.getElementById('open-date-picker-btn')?.addEventListener('click', function() {
-        if (typeof NativelyDatePicker !== 'undefined') new NativelyDatePicker().showDatePicker("Select Date", "", "DATE_AND_TIME", "LIGHT", function(resp){});
-      });
-      
-      document.getElementById('copy-btn')?.addEventListener('click', function() {
-        copyToClipboard("Text data copy payload stream context track");
-      });
-
-      document.getElementById("request-permission-btn")?.addEventListener("click", requestPermissionFn);
-      document.getElementById('check-permission-btn')?.addEventListener('click', checkPushPermission);
-      document.getElementById('get-onesignal-id-btn')?.addEventListener('click', getOneSignalPlayerId);
-      document.getElementById('send-push-btn')?.addEventListener('click', sendPushNotification);
-      
-      document.getElementById('get-id-btn')?.addEventListener('click', getExternalIdAction);
-      document.getElementById('set-id-btn')?.addEventListener('click', setExternalIdAction);
-      document.getElementById('remove-id-btn')?.addEventListener('click', removeExternalIdAction);
-
-      document.getElementById('get-location-btn')?.addEventListener('click', getCurrentLocation);
-      document.getElementById('start-foreground-location-btn')?.addEventListener('click', startForegroundLocation);
-      document.getElementById('stop-foreground-location-btn')?.addEventListener('click', stopForegroundLocation);
-      document.getElementById('check-bg-status-btn')?.addEventListener('click', checkBackgroundLocationStatus);
-      document.getElementById('start-background-location-btn')?.addEventListener('click', startBackgroundLocation);
-      document.getElementById('stop-background-location-btn')?.addEventListener('click', stopBackgroundLocation);
-      document.getElementById('check-location-permission-btn')?.addEventListener('click', checkGeolocationPermission);
-      
-      document.getElementById('openConsoleButton')?.addEventListener('click', function() {
-        window.natively?.openConsole?.();
-      });
-
-      document.getElementById('login-purchases-btn')?.addEventListener('click', loginToInAppPurchases);
-      document.getElementById('verify-customer-id-btn')?.addEventListener('click', verifyCustomerId);
-      document.getElementById('purchase-package-btn')?.addEventListener('click', purchaseRcMonthlyPackage);
-      document.getElementById('purchase-package-business-btn')?.addEventListener('click', purchaseBusinessPackage);
-      document.getElementById('show-paywall-btn')?.addEventListener('click', showDefaultPaywall);
-      document.getElementById('show-paywall-if-needed-btn')?.addEventListener('click', showPaywallForPro);
-
-      document.getElementById('noneButton')?.addEventListener('click', () => { window.natively?.setAppStatusBarStyleIOS?.("NONE"); });
-      document.getElementById('darkButton')?.addEventListener('click', () => { window.natively?.setAppStatusBarStyleIOS?.("DARK"); });
-      document.getElementById('lightButton')?.addEventListener('click', () => { window.natively?.setAppStatusBarStyleIOS?.("LIGHT"); });
-      document.getElementById('track-event-btn')?.addEventListener('click', trackMyEvent);
-      
-      document.getElementById('whatsapp-btn')?.addEventListener('click', function() {
-          if (typeof NativelyInfo === 'undefined') return;
-          if (new NativelyInfo().browserInfo().isNativeApp) {
-              window.natively?.openExternalApp?.("whatsapp://send?phone=971800274427&text=Hi!");
-          }
-      });
-
-      // Native Audio Player pipeline initialization mapping tracking profiles safely
+      // Secondary modular actions structural fallback bindings mapping track profiles safely
       document.getElementById('btn-play')?.addEventListener('click', () => {
-         if (typeof NativelyAudioPlayer === 'undefined') return;
-         if (!player) player = new NativelyAudioPlayer();
-         player.play("https://file-examples.com/wp-content/storage/2017/11/file_example_MP3_2MG.mp3", { autoplay: true }, (resp) => {});
+         if (typeof NativelyAudioPlayer !== 'undefined') {
+             if (!player) player = new NativelyAudioPlayer();
+             player.play("https://file-examples.com/wp-content/storage/2017/11/file_example_MP3_2MG.mp3", { autoplay: true }, (resp) => {});
+         }
       });
       document.getElementById('btn-pause')?.addEventListener('click', () => { player?.pause?.((resp) => {}); });
       document.getElementById('btn-stop')?.addEventListener('click', () => { player?.stop?.((resp) => {}); });
@@ -829,8 +1038,8 @@
     });
 
     function registerHandler() {
-        if (window.natively && typeof window.natively.setErrorHandler === 'function') {
-            window.natively.setErrorHandler(function(resp) { console.log("Exception code: ", resp.code); });
+        if (window.natively?.setErrorHandler) {
+            window.natively.setErrorHandler(function(resp) { console.log("Exception: ", resp.code); });
         }
     }
 
@@ -847,29 +1056,18 @@
         }
     }
 
-    /**
-     * Desktop Host Isolation Safeguards
-     * Declares runtime fallbacks so that if a developer launches this script outside 
-     * a true compiled WebView context, the preview features won't crash the browser engine.
-     */
     window.natively = window.natively || {};
     window.natively.showLoadingScreen = window.natively.showLoadingScreen || function(autoHide) {
-        console.log("Mock execution path: showLoadingScreen");
         const overlay = document.getElementById('loadingScreen');
         if (overlay) overlay.style.display = 'flex';
-        if (autoHide) {
-            setTimeout(() => { window.natively.hideLoadingScreen(); }, 3000);
-        }
+        if (autoHide) setTimeout(() => { window.natively.hideLoadingScreen(); }, 3000);
     };
     window.natively.hideLoadingScreen = window.natively.hideLoadingScreen || function() {
-        console.log("Mock execution path: hideLoadingScreen");
         const overlay = document.getElementById('loadingScreen');
         if (overlay) overlay.style.display = 'none';
     };
 
-    function runLoadingWorkflow() {
-        window.natively.showLoadingScreen(true);
-    }
+    function runLoadingWorkflow() { window.natively.showLoadingScreen(true); }
   </script>
 </body>
 </html>
