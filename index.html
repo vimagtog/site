@@ -111,12 +111,18 @@
     }
 
     /* Primary brand actions */
-    button[onclick*="runLoadingWorkflow"], #btn-play {
+    button[onclick*="runLoadingWorkflow"], 
+    button[onclick*="startAutoBanner"],
+    button[onclick*="triggerAutoInterstitial"],
+    #btn-play {
         background: rgba(117, 147, 255, 0.1);
         border-color: rgba(117, 147, 255, 0.3);
         color: #7593FF;
     }
-    button[onclick*="runLoadingWorkflow"]:hover, #btn-play:hover {
+    button[onclick*="runLoadingWorkflow"]:hover, 
+    button[onclick*="startAutoBanner"]:hover,
+    button[onclick*="triggerAutoInterstitial"]:hover,
+    #btn-play:hover {
         background: #7593FF;
         color: #0B0F19;
     }
@@ -234,7 +240,6 @@
 
     <div class="module-grid">
       
-      <!-- Core Operations -->
       <div class="section-card">
         <h3>System Framework</h3>
         <div class="controls-group">
@@ -248,7 +253,31 @@
         </div>
       </div>
 
-      <!-- Hardware Peripherals -->
+      <div class="section-card">
+        <h3>AdMob Banner Ads</h3>
+        <div id="banner-status-terminal" class="terminal-box" style="margin: 0 0 16px 0;">AdMob Banner: Awaiting execution</div>
+        <div class="controls-group">
+          <button onclick="startAutoBanner()">1. Auto Handle (Load & Show)</button>
+          <button onclick="setupManualBanner()">2. Manual Init (Flags False)</button>
+          <button onclick="loadManualBannerAd()">3. Manual: Fetch Ad</button>
+          <button onclick="showManualBanner()">4. Manual: Show Banner</button>
+          <button onclick="hideManualBanner()">5. Manual: Hide Banner</button>
+          <button onclick="checkBannerVisibility()">Check Visibility</button>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h3>AdMob Interstitial Ads</h3>
+        <div id="interstitial-status-terminal" class="terminal-box" style="margin: 0 0 16px 0;">AdMob Interstitial: Awaiting execution</div>
+        <div class="controls-group">
+          <button onclick="initAutoInterstitial()">1. Init Auto-Reload</button>
+          <button onclick="triggerAutoInterstitial()">2. Show Auto Ad</button>
+          <button onclick="initManualInterstitial()">3. Init Manual Mode</button>
+          <button onclick="loadManualInterstitial()">4. Manual: Fetch Ad</button>
+          <button onclick="showManualInterstitial()">5. Manual: Show Ad</button>
+        </div>
+      </div>
+
       <div class="section-card">
         <h3>Device Peripherals</h3>
         <div class="controls-group">
@@ -264,7 +293,6 @@
         <div id="is-native-app" class="status-text">Native Environment: <span id="native-app-status" style="color:#F8FAFC;"></span></div>
       </div>
 
-      <!-- Telephony / Messages -->
       <div class="section-card">
         <h3>Communications</h3>
         <div class="controls-group">
@@ -279,7 +307,6 @@
         </div>
       </div>
 
-      <!-- Push Alerts Interface -->
       <div class="section-card">
         <h3>OneSignal Notifications</h3>
         <div class="controls-group">
@@ -293,7 +320,6 @@
         </div>
       </div>
 
-      <!-- Geo-Spatial Framework -->
       <div class="section-card">
         <h3>Location Services</h3>
         <div class="controls-group">
@@ -313,7 +339,6 @@
         </div>
       </div>
 
-      <!-- Ledger / Commercial -->
       <div class="section-card">
         <h3>In-App Purchases</h3>
         <div class="field-row">
@@ -337,7 +362,6 @@
         <div class="status-text" id="purchase-error" style="color:#EF4444;"></div>
       </div>
 
-      <!-- System Shell Rendering Styles -->
       <div class="section-card">
         <h3>Viewport Elements Style</h3>
         <div class="controls-group">
@@ -353,7 +377,6 @@
         </div>
       </div>
 
-      <!-- Server Echo Simulation -->
       <div class="section-card">
         <h3>Postman Network Tester</h3>
         <p class="status-text" style="margin-bottom:12px;">Simulate strict response arrays from endpoint nodes.</p>
@@ -365,7 +388,6 @@
         </div>
       </div>
 
-      <!-- Native Sound Deck -->
       <div class="section-card">
         <h3>Native Audio Player</h3>
         <div id="console-output" class="terminal-box" style="margin: 0 0 16px 0;">Audio Engine Status: Awaiting input...</div>
@@ -387,8 +409,158 @@
   </div>
 
   <script>
-    // Module-scoped audio reference variable tracking
+    // System reference variables for handling dynamic instances
     let player = null;
+    let autoBannerInstance = null;
+    let manualBannerInstance = null;
+    let autoInterstitialInstance = null;
+    let manualInterstitialInstance = null;
+
+    // Standard test network AdMob configurations
+    const BANNER_TEST_CONFIG = {
+        androidUnitId: "ca-app-pub-3940256099942544/6300978111",
+        iOSUnitId: "ca-app-pub-3940256099942544/2934735716",
+        position: "BOTTOM",
+        sizeType: "AUTO"
+    };
+
+    const INTERSTITIAL_TEST_CONFIG = {
+        androidUnitId: "ca-app-pub-3940256099942544/4411468910",
+        iOSUnitId: "ca-app-pub-3940256099942544/1033173712"
+    };
+
+    // ===================================================
+    // ADMOB BANNER ADS EXPERIMENTAL IMPLEMENTATIONS
+    // ===================================================
+    
+    function logBannerStatus(message) {
+        document.getElementById('banner-status-terminal').innerText = "Banner: " + message;
+    }
+
+    function startAutoBanner() {
+        if (typeof NativelyAdmobBanner === 'undefined') {
+            logBannerStatus("Error — SDK Class Missing");
+            return;
+        }
+        logBannerStatus("Initializing Automatic Banner...");
+        const eventLogger = function(resp) { logBannerStatus("Event -> " + resp.event); };
+        
+        autoBannerInstance = new NativelyAdmobBanner(
+            BANNER_TEST_CONFIG, eventLogger, true, eventLogger, true, eventLogger
+        );
+    }
+
+    function setupManualBanner() {
+        if (typeof NativelyAdmobBanner === 'undefined') {
+            logBannerStatus("Error — SDK Class Missing");
+            return;
+        }
+        logBannerStatus("Initializing Manual Instance...");
+        
+        const manualLifecycleHandler = function(resp) {
+            const event = resp.event;
+            logBannerStatus("Manual Event -> " + event);
+            if (event === "DID_FINISH_SETUP") console.log("Setup complete. Safe to fetch ads.");
+        };
+
+        manualBannerInstance = new NativelyAdmobBanner(
+            BANNER_TEST_CONFIG, manualLifecycleHandler, false, manualLifecycleHandler, false, manualLifecycleHandler
+        );
+    }
+
+    function loadManualBannerAd() {
+        if (!manualBannerInstance) return logBannerStatus("Init card step 2 first.");
+        logBannerStatus("Requesting ad allocation...");
+        manualBannerInstance.loadAd(function(resp) { console.log("Load hook processed:", resp); });
+    }
+
+    function showManualBanner() {
+        if (!manualBannerInstance) return logBannerStatus("Init card step 2 first.");
+        manualBannerInstance.showBanner(function(resp) { console.log("Show hook processed:", resp); });
+    }
+
+    function hideManualBanner() {
+        if (!manualBannerInstance) return logBannerStatus("Init card step 2 first.");
+        manualBannerInstance.hideBanner(function(resp) { console.log("Hide hook processed:", resp); });
+    }
+
+    function checkBannerVisibility() {
+        const activeInstance = manualBannerInstance || autoBannerInstance;
+        if (!activeInstance) return logBannerStatus("No active instance found.");
+        activeInstance.bannerIsVisible(function(status) { logBannerStatus("Visibility Status: " + status.result); });
+    }
+
+    // ===================================================
+    // ADMOB INTERSTITIAL ADS EXPERIMENTAL IMPLEMENTATIONS
+    // ===================================================
+
+    function logInterstitialStatus(message) {
+        document.getElementById('interstitial-status-terminal').innerText = "Interstitial: " + message;
+    }
+
+    function initAutoInterstitial() {
+        if (typeof NativelyAdmobInterstitial === 'undefined') {
+            logInterstitialStatus("Error — SDK Class Missing");
+            return;
+        }
+        logInterstitialStatus("Initializing Auto-Reload Sequence...");
+        
+        const autoHandler = function(resp) {
+            logInterstitialStatus("Auto Event -> " + resp.event);
+        };
+
+        autoInterstitialInstance = new NativelyAdmobInterstitial(
+            INTERSTITIAL_TEST_CONFIG.iOSUnitId, INTERSTITIAL_TEST_CONFIG.androidUnitId, autoHandler, true, autoHandler
+        );
+    }
+
+    function triggerAutoInterstitial() {
+        if (!autoInterstitialInstance) return logInterstitialStatus("Initialize pipeline first.");
+        autoInterstitialInstance.interstitialIsReady(function(status) {
+            if (status.result) {
+                autoInterstitialInstance.showInterstitialAd();
+            } else {
+                logInterstitialStatus("Ad buffer empty. Fetching in background...");
+            }
+        });
+    }
+
+    function initManualInterstitial() {
+        if (typeof NativelyAdmobInterstitial === 'undefined') {
+            logInterstitialStatus("Error — SDK Class Missing");
+            return;
+        }
+        logInterstitialStatus("Manual Instance Configured.");
+        
+        const manualHandler = function(resp) {
+            logInterstitialStatus("Manual Event -> " + resp.event);
+        };
+
+        manualInterstitialInstance = new NativelyAdmobInterstitial(
+            INTERSTITIAL_TEST_CONFIG.iOSUnitId, INTERSTITIAL_TEST_CONFIG.androidUnitId, manualHandler, false, manualHandler
+        );
+    }
+
+    function loadManualInterstitial() {
+        if (!manualInterstitialInstance) return logInterstitialStatus("Init step 3 first.");
+        logInterstitialStatus("Requesting full screen ad structural block...");
+        manualInterstitialInstance.loadAd();
+    }
+
+    function showManualInterstitial() {
+        if (!manualInterstitialInstance) return logInterstitialStatus("Init step 3 first.");
+        manualInterstitialInstance.interstitialIsReady(function(status) {
+            if (status.result) {
+                manualInterstitialInstance.showInterstitialAd();
+            } else {
+                logInterstitialStatus("Manual ad not ready for presentation.");
+            }
+        });
+    }
+
+    // ===================================================
+    // CORE NATIVE PERIPHERALS & WORKFLOWS
+    // ===================================================
 
     function redirectToSite() {
       window.location.href = "https://vimagtog.github.io/site/sdk-in-script.html";
@@ -402,10 +574,9 @@
       if (typeof NativelyClipboard !== 'undefined') {
         new NativelyClipboard().copy(text);
       } else {
-        // Safe asynchronous fallback fallback route for desktop browser frames
         navigator.clipboard.writeText(text)
-          .then(() => { console.log('String written to web clipboard API context.'); })
-          .catch(err => { console.error('Failed processing copy execution frame: ', err); });
+          .then(() => { console.log('Copied fallback text string via browser execution.'); })
+          .catch(err => { console.error('Browser modern clipboard API failed: ', err); });
       }
     }
 
@@ -646,7 +817,7 @@
           }
       });
 
-      // Native Audio Initialization pipeline
+      // Native Audio Player pipeline initialization mapping tracking profiles safely
       document.getElementById('btn-play')?.addEventListener('click', () => {
          if (typeof NativelyAudioPlayer === 'undefined') return;
          if (!player) player = new NativelyAudioPlayer();
