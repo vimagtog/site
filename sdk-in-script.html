@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/x-icon" href="/site/favicon.ico">
-  <title>Sample HTML Page</title>
+  <title>Sample HTML Page V2</title>
   <style>
     /* Hide global scrollbar for Chrome, Safari, and Opera */
     html::-webkit-scrollbar,
@@ -100,32 +100,28 @@
     }
   </style>
   
-  <script async src="https://cdn.jsdelivr.net/npm/natively@2.26.7/natively-frontend.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/natively@2.26.7/natively-frontend.min.js"></script>
   
   <script>
-      // Safety polling wrapper to execute initialization setup once the async bundle is ready
-      function tryNativelyInit() {
-          if (typeof window.natively !== 'undefined' && typeof NativelyInfo !== 'undefined') {
-              console.log("Async Natively script loaded. Bootstrapping configurations...");
-              
-              if (typeof window.natively.setDebug === 'function') {
-                  window.natively.setDebug(true);  
-                  window.natively.openConsole();
-              }
+      function nativelyOnLoad() {
+          if (window.natively && typeof window.natively.setDebug === 'function') {
+              window.natively.setDebug(true);  
+              window.natively.openConsole();
+          }
 
+          if (typeof NativelyInfo !== 'undefined') {
               const info = new NativelyInfo();
               info.getAppInfo(function(resp) {
-                  console.log("OS Name:", resp.osName);
-                  console.log("SDK Version:", resp.sdkVersion);
+                  console.log(resp.device);  
+                  console.log(resp.osVersion);  
+                  console.log(resp.osName);
+                  console.log(resp.buildVersion);  
+                  console.log(resp.buildNumber);
+                  console.log(resp.sdkVersion);
+                  console.log(resp.isDarkMode);  
               });
-          } else {
-              // Retry in 50ms if the async network request hasn't completed yet
-              setTimeout(tryNativelyInit, 50);
           }
       }    
-      
-      // Start polling loop immediately
-      tryNativelyInit();
   </script>
 </head>
 <body>
@@ -250,11 +246,21 @@
       <h3>📡 Postman Echo Status Tester</h3>
       <p>Click a button to simulate that specific HTTP response.</p>
 
-      <button onclick="testPostmanEcho(200)">Test 200 (OK)</button>
+      <button onclick="testPostmanEcho(200)">
+          Test 200 (OK)
+      </button>
+      
       <br>
-      <button onclick="testPostmanEcho(404)">Test 404 (Not Found)</button>
-      <button onclick="testPostmanEcho(500)">Test 500 (Server Error)</button>
-      <button onclick="testPostmanEcho(503)">Test 503 (Service Unavailable)</button>
+
+      <button onclick="testPostmanEcho(404)">
+          Test 404 (Not Found)
+      </button>
+      <button onclick="testPostmanEcho(500)">
+          Test 500 (Server Error)
+      </button>
+      <button onclick="testPostmanEcho(503)">
+          Test 503 (Service Unavailable)
+      </button>
 </div>
 <br>
   <h3>Native Player</h3>
@@ -276,6 +282,8 @@
   </div>
 
   <script>
+    // --- Define all functions in the global scope ---
+
     function redirectToSite() {
       window.location.href = "https://vimagtog.github.io/site/sdk-in-script.html";
     }
@@ -299,7 +307,10 @@
     async function requestPermissionFn() {
       if (typeof NativelyNotifications === 'undefined') return;
       const notifications = new NativelyNotifications();
-      await notifications.requestPermission(false, function (resp) { console.log(resp.status); }); 
+      const fallbacktosettings = false; 
+      await notifications.requestPermission(fallbacktosettings, function (resp) {
+        console.log(resp.status); 
+      }); 
     }
 
     function checkPushPermission() {
@@ -313,50 +324,71 @@
     
     function getOneSignalPlayerId() {
       if (typeof NativelyNotifications === 'undefined') return;
-      new NativelyNotifications().getOneSignalId(function (resp) {
-        if (resp.playerId && window.natively?.showAppToast) {
-          window.natively.showAppToast("SUCCESS", "OneSignal ID: " + resp.playerId);
+      const notifications = new NativelyNotifications();
+      notifications.getOneSignalId(function (resp) {
+        if (resp.playerId) {
+          if(window.natively?.showAppToast) window.natively.showAppToast("SUCCESS", "OneSignal ID: " + resp.playerId);
+        } else {
+          if(window.natively?.showAppToast) window.natively.showAppToast("ERROR", "Failed to retrieve OneSignal ID.");
         }
       });
     }
     
     function sendPushNotification() {
-        if (typeof NativelyNotifications === 'undefined' || !window.natively) return;
-        new NativelyNotifications().getOneSignalId(function(resp) {
-            if (resp.playerId && window.natively.sendPushNotification) {
+        if (typeof NativelyNotifications === 'undefined' || !window.natively) {
+            console.error("Natively SDK not ready.");
+            return;
+        }
+        const notifications = new NativelyNotifications();
+        notifications.getOneSignalId(function(resp) {
+            if (resp.playerId) {
                 const payload = {
                     url: "https://buildnatively.com/",
                     headings: { en: "Title Text" },
-                    contents: { en: "Description Text" }
+                    contents: { en: "Description Text" },
+                    subtitle: { en: "Subtitle Text" }
                 };
-                window.natively.sendPushNotification("472bbdc5-5dca-46b1-9e02-b2af5e1761a7", payload, [resp.playerId], false);
+                const appId = "472bbdc5-5dca-46b1-9e02-b2af5e1761a7"; 
+                const isPreview = false;
+                const player_ids = [resp.playerId];
+
+                if(window.natively.sendPushNotification) {
+                    window.natively.sendPushNotification(appId, payload, player_ids, isPreview);
+                }
             }
         });
     }
 
     function getExternalIdAction() {
       if (typeof NativelyNotifications === 'undefined') return;
-      new NativelyNotifications().getExternalId((resp) => {
+      const notifications = new NativelyNotifications();
+      notifications.getExternalId((resp) => {
+            if (!resp) return;
             const resultObj = (Array.isArray(resp) && resp.length > 0) ? resp[0] : resp;
-            if (resultObj?.externalId) console.log('External ID:', resultObj.externalId);
+            if (resultObj && resultObj.externalId) console.log('External ID:', resultObj.externalId);
       });
     }
 
     function setExternalIdAction() {
       if (typeof NativelyNotifications === 'undefined') return;
-      new NativelyNotifications().setExternalId({ externalId: 'user123' }, (result) => {
-            if (result?.externalId) console.log('External ID set:', result.externalId);
+      const notifications = new NativelyNotifications();
+      notifications.setExternalId({ externalId: 'user123' }, (result) => {
+            if (result && result.externalId) console.log('External ID set:', result.externalId);
       });
     }
 
     function removeExternalIdAction() {
       if (typeof NativelyNotifications === 'undefined') return;
-      new NativelyNotifications().removeExternalId((result) => { console.log('External ID removed'); });
+      const notifications = new NativelyNotifications();
+      notifications.removeExternalId((result) => {
+            console.log('External ID removed state sync');
+      });
     }
 
     function getCurrentLocation() {
       if (typeof NativelyLocation === 'undefined') return;
-      new NativelyLocation().current(50, "Best", "BALANCED", function (resp) {
+      const locationService = new NativelyLocation();
+      locationService.current(50, "Best", "BALANCED", function (resp) {
         if (resp.status === "SUCCESS") {
           document.getElementById('location-status').textContent = "Success";
           document.getElementById('longitude').textContent = "Longitude: " + resp.longitude;
@@ -367,124 +399,152 @@
 
     function startForegroundLocation() {
       if (typeof NativelyLocation === 'undefined') return;
-      new NativelyLocation().start(10000, 50, "Best", "BALANCED", function (resp) {});
+      const locationService = new NativelyLocation();
+      locationService.start(10000, 50, "Best", "BALANCED", function (resp) {
+         console.log("Foreground update triggered");
+      });
       document.getElementById('start-foreground-location-btn').classList.add('hidden');
       document.getElementById('stop-foreground-location-btn').classList.remove('hidden');
     }
 
     function stopForegroundLocation() {
       if (typeof NativelyLocation === 'undefined') return;
-      new NativelyLocation().stop();
+      const locationService = new NativelyLocation();
+      locationService.stop();
       document.getElementById('start-foreground-location-btn').classList.remove('hidden');
       document.getElementById('stop-foreground-location-btn').classList.add('hidden');
     }
 
     function checkBackgroundLocationStatus() {
       if (typeof NativelyLocation === 'undefined') return;
-      new NativelyLocation().statusBackground(function(resp) { console.log(resp.status); });
+      const locationService = new NativelyLocation();
+      locationService.statusBackground(function(resp) { console.log(resp.status); });
     }
 
     function startBackgroundLocation() {
       if (typeof NativelyLocation === 'undefined') return;
-      new NativelyLocation().startBackground(10000, 50, "Best", "BALANCED", "my-user-id", function(resp) {});
+      const locationService = new NativelyLocation();
+      locationService.startBackground(10000, 50, "Best", "BALANCED", "my-user-id", function(resp) { console.log(resp); });
       document.getElementById('start-background-location-btn').classList.add('hidden');
       document.getElementById('stop-background-location-btn').classList.remove('hidden');
     }
 
     function stopBackgroundLocation() {
       if (typeof NativelyLocation === 'undefined') return;
-      new NativelyLocation().stopBackground(function(resp) {});
+      const locationService = new NativelyLocation();
+      locationService.stopBackground(function(resp) { console.log("Stopped background context"); });
       document.getElementById('start-background-location-btn').classList.remove('hidden');
       document.getElementById('stop-background-location-btn').classList.add('hidden');
     }
 
     function checkGeolocationPermission() {
       if (typeof NativelyLocation === 'undefined') return;
-      new NativelyLocation().permission(function(resp) { console.log(resp); });
+      const locationService = new NativelyLocation();
+      locationService.permission(function(resp) { console.log(resp); });
     }
 
     function loginToInAppPurchases() {
       if (typeof NativelyPurchases === 'undefined') return;
+      const purchases = new NativelyPurchases();
       const customerEmail = document.getElementById('customer-email').value;
       const userId = document.getElementById('customer-id').value;
-      new NativelyPurchases().login(userId, customerEmail, function(resp) {});
+      purchases.login(userId, customerEmail, function(resp) { console.log(resp); });
     }
 
     function verifyCustomerId() {
       if (typeof NativelyPurchases === 'undefined') return;
-      new NativelyPurchases().customerId(function(resp) {});
+      const purchases = new NativelyPurchases();
+      purchases.customerId(function(resp) { console.log(resp); });
     }
 
     function purchaseRcMonthlyPackage() {
       if (typeof NativelyPurchases === 'undefined') return;
-      new NativelyPurchases().purchasePackage("$rc_monthly", function(resp) {});
+      const purchases = new NativelyPurchases();
+      purchases.purchasePackage("$rc_monthly", function(resp) { console.log(resp); });
     }
 
-    // Fixed execution context parameter mapping order constraint
     function purchaseBusinessPackage() {
       if (typeof NativelyPurchases === 'undefined') return;
-      new NativelyPurchases().purchasePackage("Business", "$rc_monthly", function(resp) {});
+      const purchases = new NativelyPurchases();
+      purchases.purchasePackage("Business", "$rc_monthly", function(resp) { console.log(resp); });
     }
 
     function showDefaultPaywall() {
       if (typeof NativelyPurchases === 'undefined') return;
-      new NativelyPurchases().showPaywall(true, "Premium", function(resp) {});
+      const purchases = new NativelyPurchases();
+      purchases.showPaywall(true, "Premium", function(resp) { console.log(resp); });
     }
     
     function showPaywallForPro() {
       if (typeof NativelyPurchases === 'undefined') return;
-      new NativelyPurchases().showPaywallIfNeeded("Premium", true, "Premium", function(resp) {});
+      const purchases = new NativelyPurchases();
+      purchases.showPaywallIfNeeded("Premium", true, "Premium", function(resp) { console.log(resp); });
     }
     
     function trackMyEvent() {
       if (typeof Natively === 'undefined') return;
+      const natively = new Natively();
       const eventData = new Map();
       eventData.set('user_id', '12345');
-      new Natively().analyticsTrackEvent('button_clicked', eventData);
+      natively.analyticsTrackEvent('button_clicked', eventData);
     }
 
-    // Safety checking block wrapper for attaching button actions once DOM is painted
-    function bindActionListeners() {
+    // --- Core Listener Handlers Mapping ---
+    document.addEventListener('DOMContentLoaded', function() {
+      
+      // FIX 2: Added structural checks using optional chaining to prevent crash if any button handles are absent from view
       document.getElementById('show-toast-btn')?.addEventListener('click', function() {
-        window.natively?.showAppToast?.("DEFAULT", "This is a toast");
+        window.natively?.showAppToast("DEFAULT", "This is a toast");
       });
 
       document.getElementById('open-external-url-btn')?.addEventListener('click', function() {
-        window.natively?.openExternalURL?.("https://vimagtog.github.io/site/sdk-in-script.html", true);
+        window.natively?.openExternalURL("https://vimagtog.github.io/site/sdk-in-script.html", true);
       });
 
       document.getElementById('open-camera-btn')?.addEventListener('click', function() {
-        if (typeof NativelyCamera !== 'undefined') new NativelyCamera().showCamera("photo", "high", "FRONT", function(resp){});
+        if (typeof NativelyCamera === 'undefined') return;
+        const camera = new NativelyCamera();
+        camera.showCamera("photo", "high", "FRONT", function(resp) { console.log(resp); });
       });
 
       document.getElementById('open-scanner-btn')?.addEventListener('click', function() {
-        if (typeof NativelyScanner !== 'undefined') new NativelyScanner().showScanner(function(resp){});
+        if (typeof NativelyScanner === 'undefined') return;
+        const scanner = new NativelyScanner();
+        scanner.showScanner(function(resp) { console.log(resp); });
       });
 
       document.getElementById('check-native-app-btn')?.addEventListener('click', function() {
         if (typeof NativelyInfo === 'undefined') return;
-        document.getElementById('native-app-status').textContent = new NativelyInfo().browserInfo().isNativeApp ? 'Yes' : 'No';
+        const info = new NativelyInfo();
+        document.getElementById('native-app-status').textContent = info.browserInfo().isNativeApp ? 'Yes' : 'No';
         document.getElementById('is-native-app').style.display = 'block';
       });
 
       document.getElementById('get-app-info-btn')?.addEventListener('click', function() {
-        if (typeof NativelyInfo !== 'undefined') new NativelyInfo().getAppInfo(function(resp){});
+        if (typeof NativelyInfo === 'undefined') return;
+        const info = new NativelyInfo();
+        info.getAppInfo(function(resp) { console.log(resp); });
       });
       
       document.getElementById('track-app-state-btn')?.addEventListener('click', function() {
-        if (typeof NativelyInfo !== 'undefined') new NativelyInfo().app_state(function(resp){});
+        if (typeof NativelyInfo === 'undefined') return;
+        const info = new NativelyInfo();
+        info.app_state(function(resp) { console.log(resp); });
       });
       
       document.getElementById('send-email-btn')?.addEventListener('click', function() {
-        if (typeof NativelyMessage !== 'undefined') new NativelyMessage().sendEmail("Subject", "", "email@example.com");
+        if (typeof NativelyMessage === 'undefined') return;
+        new NativelyMessage().sendEmail("Subject", "", "email@example.com");
       });
 
       document.getElementById('send-sms-btn')?.addEventListener('click', function() {
-        if (typeof NativelyMessage !== 'undefined') new NativelyMessage().sendSMS("Hello", "1234567890", function(resp){});
+        if (typeof NativelyMessage === 'undefined') return;
+        new NativelyMessage().sendSMS("Hello", "1234567890", function(resp){});
       });
 
       document.getElementById('open-date-picker-btn')?.addEventListener('click', function() {
-        if (typeof NativelyDatePicker !== 'undefined') new NativelyDatePicker().showDatePicker("Select Date", "", "DATE_AND_TIME", "LIGHT", function(resp){});
+        if (typeof NativelyDatePicker === 'undefined') return;
+        new NativelyDatePicker().showDatePicker("Select Date", "", "DATE_AND_TIME", "LIGHT", function(resp){});
       });
       
       document.getElementById('copy-btn')?.addEventListener('click', function() {
@@ -509,7 +569,7 @@
       document.getElementById('check-location-permission-btn')?.addEventListener('click', checkGeolocationPermission);
       
       document.getElementById('openConsoleButton')?.addEventListener('click', function() {
-        window.natively?.openConsole?.();
+        window.natively?.openConsole();
       });
 
       document.getElementById('login-purchases-btn')?.addEventListener('click', loginToInAppPurchases);
@@ -519,36 +579,34 @@
       document.getElementById('show-paywall-btn')?.addEventListener('click', showDefaultPaywall);
       document.getElementById('show-paywall-if-needed-btn')?.addEventListener('click', showPaywallForPro);
 
-      document.getElementById('noneButton')?.addEventListener('click', () => { window.natively?.setAppStatusBarStyleIOS?.("NONE"); });
-      document.getElementById('darkButton')?.addEventListener('click', () => { window.natively?.setAppStatusBarStyleIOS?.("DARK"); });
-      document.getElementById('lightButton')?.addEventListener('click', () => { window.natively?.setAppStatusBarStyleIOS?.("LIGHT"); });
+      document.getElementById('noneButton')?.addEventListener('click', () => { window.natively?.setAppStatusBarStyleIOS("NONE"); });
+      document.getElementById('darkButton')?.addEventListener('click', () => { window.natively?.setAppStatusBarStyleIOS("DARK"); });
+      document.getElementById('lightButton')?.addEventListener('click', () => { window.natively?.setAppStatusBarStyleIOS("LIGHT"); });
       document.getElementById('track-event-btn')?.addEventListener('click', trackMyEvent);
       document.getElementById('whatsapp-btn')?.addEventListener('click', function() {
           if (typeof NativelyInfo === 'undefined') return;
-          if (new NativelyInfo().browserInfo().isNativeApp) window.natively?.openExternalApp?.("whatsapp://send?phone=971800274427&text=Hi!");
+          const browserData = new NativelyInfo().browserInfo();
+          if (browserData.isNativeApp) window.natively?.openExternalApp("whatsapp://send?phone=971800274427&text=Hi!");
       });
 
+      // Native Player Bindings Track
       let player = null;
       document.getElementById('btn-play')?.addEventListener('click', () => {
          if (typeof NativelyAudioPlayer === 'undefined') return;
          if (!player) player = new NativelyAudioPlayer();
          player.play("https://file-examples.com/wp-content/storage/2017/11/file_example_MP3_2MG.mp3", { autoplay: true }, (resp) => {});
       });
-      document.getElementById('btn-pause')?.addEventListener('click', () => { player?.pause?.((resp) => {}); });
-      document.getElementById('btn-stop')?.addEventListener('click', () => { player?.stop?.((resp) => {}); });
-      document.getElementById('btn-seek')?.addEventListener('click', () => { player?.seek?.(42, (resp) => {}); });
-    }
-
-    // Safely fire bindings initialization on DOM ready
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', bindActionListeners);
-    } else {
-        bindActionListeners();
-    }
+      document.getElementById('btn-pause')?.addEventListener('click', () => { player?.pause((resp) => {}); });
+      document.getElementById('btn-stop')?.addEventListener('click', () => { player?.stop((resp) => {}); });
+      document.getElementById('btn-seek')?.addEventListener('click', () => { player?.seek(42, (resp) => {}); });
+    });
 
     function registerHandler() {
+        const error_handler_callback = function (resp) {
+            console.log("Code:", resp.code);
+        };
         if (window.natively && typeof window.natively.setErrorHandler === 'function') {
-            window.natively.setErrorHandler(function(resp) { console.log(resp.code); });
+            window.natively.setErrorHandler(error_handler_callback);
         }
     }
 
@@ -565,20 +623,21 @@
         }
     }
 
-    // Fallback Mock Layer setup (preserves desktop preview testing utility rules)
-    window.natively = window.natively || {};
-    window.natively.showLoadingScreen = window.natively.showLoadingScreen || function(autoHide) {
-        console.log("Showing loading screen...");
-        const overlay = document.getElementById('loadingScreen');
-        if (overlay) overlay.style.display = 'flex';
-        if (autoHide) {
-            setTimeout(() => { window.natively.hideLoadingScreen(); }, 3000);
+    // 3. Fallback Initializations to support running testing routines mock profiles securely
+    window.natively = window.natively || {
+        showLoadingScreen: function(autoHide) {
+            console.log("Showing loading screen...");
+            const overlay = document.getElementById('loadingScreen');
+            if (overlay) overlay.style.display = 'flex';
+            if (autoHide) {
+                setTimeout(() => { this.hideLoadingScreen(); }, 3000);
+            }
+        },
+        hideLoadingScreen: function() {
+            console.log("Hiding loading screen...");
+            const overlay = document.getElementById('loadingScreen');
+            if (overlay) overlay.style.display = 'none';
         }
-    };
-    window.natively.hideLoadingScreen = window.natively.hideLoadingScreen || function() {
-        console.log("Hiding loading screen...");
-        const overlay = document.getElementById('loadingScreen');
-        if (overlay) overlay.style.display = 'none';
     };
 
     function runLoadingWorkflow() {
