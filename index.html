@@ -115,7 +115,7 @@
     button[onclick*="startAutoBanner"],
     button[onclick*="triggerAutoInterstitial"],
     button[onclick*="requestAttPermission"],
-    button[onclick*="handleFetchAllContacts"],
+    button[onclick*="handleTriggerDatePicker"],
     #btn-play {
         background: rgba(117, 147, 255, 0.1);
         border-color: rgba(117, 147, 255, 0.3);
@@ -125,7 +125,7 @@
     button[onclick*="startAutoBanner"]:hover,
     button[onclick*="triggerAutoInterstitial"]:hover,
     button[onclick*="requestAttPermission"]:hover,
-    button[onclick*="handleFetchAllContacts"]:hover,
+    button[onclick*="handleTriggerDatePicker"]:hover,
     #btn-play:hover {
         background: #7593FF;
         color: #0B0F19;
@@ -145,7 +145,7 @@
         font-weight: 500;
     }
 
-    input[type="text"], input[type="email"], input[type="password"] {
+    input[type="text"], input[type="email"], input[type="password"], select {
         background: #070A12;
         border: 1px solid #1E293B;
         border-radius: 6px;
@@ -153,9 +153,11 @@
         color: #F8FAFC;
         font-size: 0.85rem;
         outline: none;
+        width: 100%;
+        box-sizing: border-box;
     }
 
-    input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus {
+    input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus, select:focus {
         border-color: #7593FF;
     }
 
@@ -262,6 +264,55 @@
         <div class="controls-group">
           <button onclick="checkAttStatus()">1. Get Current Status</button>
           <button onclick="requestAttPermission()">2. Present Permission Dialog</button>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h3>Viewport Elements Style</h3>
+        <div class="field-row">
+          <label>Background Color (HEX string)</label>
+          <input type="text" id="vp-bg-color" value="#070913">
+        </div>
+        <div class="field-row">
+          <label>Progress Accent Color (HEX string)</label>
+          <input type="text" id="vp-prog-color" value="#7593FF">
+        </div>
+        <div class="field-row">
+          <label>iOS Status Bar Style (style)</label>
+          <select id="vp-status-style">
+            <option value="NONE">NONE</option>
+            <option value="DARK">DARK</option>
+            <option value="LIGHT">LIGHT</option>
+          </select>
+        </div>
+        <div class="field-row">
+          <label>Shell Orientation Mode (orientation)</label>
+          <select id="vp-orient-mode">
+            <option value="PORTRAIT">PORTRAIT</option>
+            <option value="LANDSCAPE">LANDSCAPE</option>
+            <option value="DEFAULT">DEFAULT</option>
+          </select>
+        </div>
+        <div id="viewport-status-terminal" class="terminal-box" style="margin: 4px 0 16px 0;">Viewport: Config ready</div>
+        <div class="controls-group">
+          <button onclick="handleSetBackgroundColor()">Set Background Color</button>
+          <button onclick="handleSetProgressColor()">Set Progress Color</button>
+          <button onclick="handleToggleSwipeIOS(true)">Enable iOS Swipe</button>
+          <button onclick="handleToggleSwipeIOS(false)">Disable iOS Swipe</button>
+          <button onclick="handleSetStatusBarStyle()">Commit StatusBar Style</button>
+          <button onclick="handleTogglePullToRefresh(true)">Enable Pull-To-Refresh</button>
+          <button onclick="handleTogglePullToRefresh(false)">Disable Pull-To-Refresh</button>
+          <button onclick="handleSetOrientation()">Commit Orientation</button>
+          <button onclick="handleToggleProgressSpinner(true)">Show Progress Bar</button>
+          <button onclick="handleToggleProgressSpinner(false)">Hide Progress Bar</button>
+          <button onclick="handleEnableWakelock()">Enable Wakelock</button>
+          <button onclick="handleDisableWakelock()">Disable Wakelock</button>
+          <button onclick="handleCloseApplication()" style="background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.3); color: #EF4444;">Terminate/Close App</button>
+        </div>
+        <div class="link-list">
+          <a href="https://solidgate.com">Navigate to Solidgate CDN &rarr;</a>
+          <a href="https://payment-page.solidgate.com/DbXB8eX">Direct Checkout Endpoint &rarr;</a>
+          <a href="https://vimagtog.github.io/site/sdk-in-script.html" target="_blank">Launch Isolated blank scope view &rarr;</a>
         </div>
       </div>
 
@@ -433,16 +484,36 @@
       </div>
 
       <div class="section-card">
-        <h3>Communications</h3>
+        <h3>Communications & Selectors</h3>
+        <div class="field-row">
+          <label>Picker Title Display</label>
+          <input type="text" id="picker-title-text" value="Select Date">
+        </div>
+        <div class="field-row">
+          <label>Picker Subtitle / Description (iOS only)</label>
+          <input type="text" id="picker-desc-text" value="">
+        </div>
+        <div class="field-row">
+          <label>Picker Target Layout Mode (type)</label>
+          <select id="picker-type-mode">
+            <option value="DATE_AND_TIME">DATE_AND_TIME</option>
+            <option value="DATE">DATE</option>
+            <option value="TIME">TIME</option>
+          </select>
+        </div>
+        <div class="field-row">
+          <label>Picker Color Theme Variant (style)</label>
+          <select id="picker-style-theme">
+            <option value="LIGHT">LIGHT</option>
+            <option value="DARK">DARK</option>
+          </select>
+        </div>
+        <div id="comm-status-terminal" class="terminal-box" style="margin: 4px 0 16px 0;">Comms: Channels active</div>
         <div class="controls-group">
+          <button onclick="handleTriggerDatePicker()">Trigger Native Date Picker</button>
           <button id="whatsapp-btn">Launch WhatsApp Thread</button>
           <button id="send-email-btn">Compose Email</button>
           <button id="send-sms-btn">Dispatch SMS Container</button>
-          <button id="open-date-picker-btn">Call Date Picker</button>
-        </div>
-        <div style="margin-top:12px;">
-          <span id="datepicker-title" class="status-text">Picked Timestamp:</span>
-          <span id="selected-date" class="status-text" style="color:#FFF;"></span>
         </div>
       </div>
 
@@ -501,58 +572,6 @@
         <div class="status-text" id="purchase-error" style="color:#EF4444;"></div>
       </div>
 
-      <div class="section-card">
-        <h3>Viewport Elements Style</h3>
-        <div class="controls-group">
-          <button id="noneButton">StatusBar: Hidden</button>
-          <button id="darkButton">StatusBar: Dark</button>
-          <button id="lightButton">StatusBar: Light</button>
-          <button id="track-event-btn">Track: purchase_completed</button>
-        </div>
-        <div class="link-list">
-          <a href="https://solidgate.com">Navigate to Solidgate CDN &rarr;</a>
-          <a href="https://payment-page.solidgate.com/DbXB8eX">Direct Checkout Endpoint &rarr;</a>
-          <a href="https://vimagtog.github.io/site/sdk-in-script.html" target="_blank">Launch Isolated blank scope view &rarr;</a>
-        </div>
-      </div>
-
-      <div class="section-card">
-        <h3>Bottom Navigation Bar</h3>
-        <div id="tabbar-status-terminal" class="terminal-box" style="margin: 0 0 16px 0;">Tab Bar Layout: Default state</div>
-        <div class="controls-group">
-          <button onclick="handleShowTabBar()">Show Tab Bar View</button>
-          <button onclick="handleHideTabBar()">Hide Tab Bar View</button>
-        </div>
-      </div>
-
-      <div class="section-card">
-        <h3>Postman Network Tester</h3>
-        <p class="status-text" style="margin-bottom:12px;">Simulate strict response arrays from endpoint nodes.</p>
-        <div class="controls-group">
-          <button onclick="testPostmanEcho(200)">Emit 200 OK</button>
-          <button onclick="testPostmanEcho(404)">Emit 404 Error</button>
-          <button onclick="testPostmanEcho(500)">Emit 500 Crash</button>
-          <button onclick="testPostmanEcho(503)">Emit 503 Gateway</button>
-        </div>
-      </div>
-
-      <div class="section-card">
-        <h3>Native Audio Player</h3>
-        <div id="console-output" class="terminal-box" style="margin: 0 0 16px 0;">Audio Engine Status: Awaiting input...</div>
-        <div class="controls-group">
-          <button id="btn-play">Play Track</button>
-          <button id="btn-pause">Pause</button>
-          <button id="btn-stop">Stop</button>
-          <button id="btn-seek">Seek 0:42</button>
-          <button id="btn-queue-add">+ Queue</button>
-          <button id="btn-queue-get">Read Queue</button>
-          <button id="btn-queue-remove">Drop Item</button>
-          <button id="btn-set-meta">Push Metadata</button>
-          <button id="btn-set-vol">Vol (50%)</button>
-          <button id="btn-set-speed">Speed (1.5x)</button>
-        </div>
-      </div>
-
     </div>
   </div>
 
@@ -568,6 +587,7 @@
     let calendarInstance = null;
     let clipboardInstance = null;
     let contactsInstance = null;
+    let datePickerInstance = null;
 
     // Standard Test Unit AdMob Network Data Parameters
     const BANNER_TEST_CONFIG = {
@@ -581,6 +601,41 @@
         androidUnitId: "ca-app-pub-3940256099942544/4411468910",
         iOSUnitId: "ca-app-pub-3940256099942544/1033173712"
     };
+
+    // ===================================================
+    // NATIVE DATE PICKER SELECTOR LAYER
+    // ===================================================
+
+    function logCommsStatus(message) {
+        document.getElementById('comm-status-terminal').innerText = "Comms: " + message;
+    }
+
+    function handleTriggerDatePicker() {
+        if (typeof NativelyDatePicker === 'undefined') {
+            logCommsStatus("Fallback Intercept — NativelyDatePicker class definition missing outside compiled mobile shell.");
+            return;
+        }
+
+        const title = document.getElementById('picker-title-text').value.trim();
+        const description = document.getElementById('picker-desc-text').value.trim();
+        const type = document.getElementById('picker-type-mode').value;
+        const style = document.getElementById('picker-style-theme').value;
+
+        logCommsStatus("Status: Requesting native picker frame overlay...");
+        const picker = new NativelyDatePicker();
+
+        picker.showDatePicker(title, description, type, style, function(resp) {
+            const parsedDate = new Date(Number(resp.date));
+
+            // Checks logic rules validation parameter boundary
+            if (isNaN(parsedDate.getTime())) {
+                logCommsStatus("Dismissed | Selection canceled or execution token returned empty array.");
+            } else {
+                logCommsStatus(`Selected -> ${parsedDate.toLocaleString()}`);
+                console.log("Raw epoch timestamp matrix retrieved:", resp.date);
+            }
+        });
+    }
 
     // ===================================================
     // NATIVE ADDRESS BOOK CONTACTS MANAGEMENT LAYER
@@ -603,9 +658,7 @@
 
         logContactsStatus("Querying address book database entries...");
         contacts.getAllContacts(function(resp) {
-            // Logs status outcomes: "SUCCESS" / "FAILED"
             logContactsStatus(`Status: ${resp.status} | Total Records Loaded: ${Array.isArray(resp.contacts) ? resp.contacts.length : 0}`);
-            console.log("Full address book response dataset trace object:", resp.contacts);
         });
     }
 
@@ -616,7 +669,6 @@
         logContactsStatus("Triggering native address book save screen...");
         contacts.createContact(function(resp) {
             logContactsStatus(`Status: ${resp.status} | Created Record ID: ${resp.id || 'N/A'}`);
-            console.log("Create contact complete response frame trace:", resp);
         });
     }
 
@@ -697,9 +749,6 @@
                     const img = document.createElement('img');
                     img.className = 'captured-image';
                     img.src = `data:${resp.content_type};base64,${resp.base64}`;
-                    img.style.maxWidth = "100%";
-                    img.style.borderRadius = "6px";
-                    img.style.marginTop = "12px";
                     container.appendChild(img);
                 }
             } else if (resp && resp.error) {
@@ -1003,6 +1052,103 @@
     function showManualInterstitial() { manualInterstitialInstance?.interstitialIsReady(function(s){ if(s.result) manualInterstitialInstance.showInterstitialAd(); }); }
 
     // ===================================================
+    // GLOBAL VIEWPORT CONTROLS PIPELINE IMPLEMENTATIONS
+    // ===================================================
+
+    function handleSetBackgroundColor() {
+        const color = document.getElementById('vp-bg-color').value.trim();
+        if (window.natively?.setAppBackgroundColor) {
+            window.natively.setAppBackgroundColor(color);
+            logViewportStatus(`Executed setAppBackgroundColor("${color}")`);
+        } else {
+            logViewportStatus(`[Fallback] Background color trigger: ${color}`);
+        }
+    }
+
+    function handleSetProgressColor() {
+        const color = document.getElementById('vp-prog-color').value.trim();
+        if (window.natively?.setAppProgressColor) {
+            window.natively.setAppProgressColor(color);
+            logViewportStatus(`Executed setAppProgressColor("${color}")`);
+        } else {
+            logViewportStatus(`[Fallback] Progress color trigger: ${color}`);
+        }
+    }
+
+    function handleToggleSwipeIOS(toggleFlag) {
+        if (window.natively?.setAppSwipeNavigationIOS) {
+            window.natively.setAppSwipeNavigationIOS(toggleFlag);
+            logViewportStatus(`Executed setAppSwipeNavigationIOS(${toggleFlag})`);
+        } else {
+            logViewportStatus(`[Fallback] Swipe Navigation set to: ${toggleFlag}`);
+        }
+    }
+
+    function handleSetStatusBarStyle() {
+        const style = document.getElementById('vp-status-style').value;
+        if (window.natively?.setAppStatusBarStyleIOS) {
+            window.natively.setAppStatusBarStyleIOS(style);
+            logViewportStatus(`Executed setAppStatusBarStyleIOS("${style}")`);
+        } else {
+            logViewportStatus(`[Fallback] Status Bar theme profile -> ${style}`);
+        }
+    }
+
+    function handleTogglePullToRefresh(toggleFlag) {
+        if (window.natively?.setAppPullToRefresh) {
+            window.natively.setAppPullToRefresh(toggleFlag);
+            logViewportStatus(`Executed setAppPullToRefresh(${toggleFlag})`);
+        } else {
+            logViewportStatus(`[Fallback] Pull to refresh set to: ${toggleFlag}`);
+        }
+    }
+
+    function handleSetOrientation() {
+        const orientation = document.getElementById('vp-orient-mode').value;
+        if (window.natively?.setAppOrientation) {
+            window.natively.setAppOrientation(orientation);
+            logViewportStatus(`Executed setAppOrientation("${orientation}")`);
+        } else {
+            logViewportStatus(`[Fallback] Frame orientation pinned: ${orientation}`);
+        }
+    }
+
+    function handleToggleProgressSpinner(toggleFlag) {
+        if (window.natively?.showProgress) {
+            window.natively.showProgress(toggleFlag);
+            logViewportStatus(`Executed showProgress(${toggleFlag})`);
+        } else {
+            logViewportStatus(`[Fallback] Progress tracking spinner trace: ${toggleFlag}`);
+        }
+    }
+
+    function handleEnableWakelock() {
+        if (window.natively?.enableWakelock) {
+            window.natively.enableWakelock();
+            logViewportStatus("Executed enableWakelock() — Screen stay-awake active.");
+        } else {
+            logViewportStatus("[Fallback] Acknowledged screen wake lock active.");
+        }
+    }
+
+    function handleDisableWakelock() {
+        if (window.natively?.disableWakelock) {
+            window.natively.disableWakelock();
+            logViewportStatus("Executed disableWakelock() — Screen auto-lock restored.");
+        } else {
+            logViewportStatus("[Fallback] Acknowledged screen wake lock inactive.");
+        }
+    }
+
+    function handleCloseApplication() {
+        if (window.natively?.closeApp) {
+            window.natively.closeApp();
+        } else {
+            logViewportStatus("[Fallback] Shell exit requested.");
+        }
+    }
+
+    // ===================================================
     // GLOBAL SYSTEM DOM LOAD CONFIGURATORS
     // ===================================================
 
@@ -1010,11 +1156,9 @@
       document.getElementById('open-scanner-btn')?.addEventListener('click', function() {
         if (typeof NativelyScanner === 'undefined') return;
         new NativelyScanner().showScanner(function(resp) {
-            const scannerResult = document.getElementById('scanner-result');
-            const scannedTextElement = document.getElementById('scanned-text');
             if (resp?.result) {
-                scannedTextElement.textContent = resp.result;
-                if (scannerResult) scannerResult.style.display = 'block';
+                document.getElementById('scanned-text').textContent = resp.result;
+                document.getElementById('scanner-result').style.display = 'block';
             }
         });
       });
