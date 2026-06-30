@@ -124,6 +124,7 @@ p {
   <h1>Welcome to Natively JS SDK</h1>
   <p>This is a sample HTML page that demonstrates Natively library integration.</p>
 
+  <button onclick="runLoadingWorkflow()">Trigger Loading Screen</button>
   <button onclick="redirectToSite()">Go to No-SDK</button>
   <button id="show-toast-btn">Show Toast</button>
   <button id="open-external-url-btn">Open External URL</button>
@@ -1299,6 +1300,37 @@ document.getElementById("whatsapp-btn").addEventListener("click", function() {
       console.log("Setting speed to 1.5...");
       player.setSpeed(1.5, (resp) => console.log("Speed response:", resp));
     });
+
+    // 12. Mock the native bridge window scope structure so it doesn't crash on desktop
+    window.natively = window.natively || {
+        showLoadingScreen: function(autoHide) {
+            console.log("Showing loading screen...");
+            
+            // Look for your loading layout container element
+            const overlay = document.getElementById('loadingScreen');
+            if (overlay) overlay.style.display = 'flex';
+
+            // Handle your autoHide parameter parameter constraint
+            if (autoHide) {
+                setTimeout(() => {
+                    this.hideLoadingScreen();
+                }, 3000); // 3 seconds timeout gate
+            }
+        },
+        hideLoadingScreen: function() {
+            console.log("Hiding loading screen...");
+            const overlay = document.getElementById('loadingScreen');
+            if (overlay) overlay.style.display = 'none';
+        }
+    };
+
+    // 12.1 The explicit function wrapper executed by the button click event tracking
+    function runLoadingWorkflow() {
+        const autoHide = true;
+        
+        // 12.2 Triggers the initial screen view overlay
+        window.natively.showLoadingScreen(autoHide);
+    }
   </script>
 </body>
 </html>
