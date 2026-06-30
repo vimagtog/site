@@ -4,1332 +4,700 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/x-icon" href="/site/favicon.ico">
-  <title>Sample HTML Page</title>
+  <title>Natively JS SDK — Live Interactive Guide</title>
   <style>
-    /* Hide global scrollbar for Chrome, Safari, and Opera */
-html::-webkit-scrollbar,
-body::-webkit-scrollbar {
-    display: none !important;
-    width: 0 !important;
-    height: 0 !important;
-}
+    /* Clean layout fundamentals */
+    html, body {
+        background-color: #070913;
+        color: #E2E8F0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        -webkit-font-smoothing: antialiased;
+    }
 
-/* Hide global scrollbar for IE, Edge, and Firefox */
-html {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
-}
-    body {
-     background-color: white;
-     font-family: Arial, sans-serif;
-     margin: 0;
-     padding: 20px;
-     /* Add responsiveness */
-     display: flex;
-     flex-direction: column;
-     min-height: 100vh; /* Fills viewport height */
-     width: auto;
-}
+    /* Remove browser scroll bars to keep viewport clean */
+    html::-webkit-scrollbar, body::-webkit-scrollbar {
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
+    }
+    html { -ms-overflow-style: none; scrollbar-width: none; }
 
-    .dark-hr {
-     border: 1px solid #333; /* Dark gray color */
-     width: 100%; /* Full width */
-     margin: 10px 0; /* Optional margin for spacing */
-}
+    .dashboard-wrapper {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 40px 24px;
+    }
 
-     h1 {
-     text-align: center;
-     font-size: 1.5em;  /* Adjust base font size for headings */
-     margin-bottom: 20px;
-}
-p {
-     line-height: 1.5;
-}
-     a {
-       color: #007bff;
-       text-decoration: none;
-     }
-     a:hover {
-       text-decoration: underline;
-     }
-     button {
-     padding: 10px 20px;
-     border: 1px solid #ccc;
-     border-radius: 5px;
-     cursor: pointer;
-     margin: 10px auto; /* Center buttons horizontally on smaller screens */
-     /* Adjust width for smaller screens */
-     max-width: 200px;
-}
-     .app-message {
-       font-weight: bold;
-       margin-top: 20px;
-     }
-    .captured-image {
-     display: block;
-     max-width: 80%;  /* Adjust max-width for different screen sizes */
-     margin: 10px auto;
-}
+    header {
+        margin-bottom: 40px;
+        border-bottom: 1px solid #1E293B;
+        padding-bottom: 24px;
+    }
 
-    .scanner-result {
-       display: none; /* Initially hide the result container */
-       margin-top: 20px;
-     }
-     .scanner-result h2 {
-       margin-bottom: 5px;
-     }
-    .is-native-app {
-       display: none; /* Initially hide the text element */
-       font-weight: bold;
-     }
-    #datepicker-title,
-    #selected-date {
-     display: none; /* Initially hide both elements */
-}
+    h1 {
+        font-size: 1.75rem;
+        font-weight: 600;
+        letter-spacing: -0.025em;
+        color: #F8FAFC;
+        margin: 0 0 8px 0;
+    }
 
-    #selected-date.has-date {
-     display: inline-block; /* Show only when there's a date */
-}
+    header p {
+        color: #94A3B8;
+        font-size: 0.95rem;
+        margin: 0;
+    }
 
-    
-   .hidden {
-     display: none;
-   }
-   .controls { display: flex; flex-wrap: wrap; gap: 10px; max-width: 600px; 
-   }
+    .module-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+        gap: 20px;
+    }
+
+    .section-card {
+        background: #111827;
+        border: 1px solid #1E293B;
+        border-radius: 12px;
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        transition: border-color 0.2s ease;
+    }
+
+    .section-card:hover {
+        border-color: #334155;
+    }
+
+    .section-card h3 {
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #94A3B8;
+        margin: 0 0 16px 0;
+        border-left: 2px solid #7593FF;
+        padding-left: 8px;
+    }
+
+    .controls-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    /* Minimalist actionable controls */
+    button {
+        background: #1F2937;
+        color: #F1F5F9;
+        border: 1px solid #374151;
+        border-radius: 6px;
+        padding: 8px 14px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.15s ease;
+    }
+
+    button:hover {
+        background: #374151;
+        border-color: #4B5563;
+        color: #FFFFFF;
+    }
+
+    button:active {
+        transform: scale(0.98);
+    }
+
+    /* Primary brand actions */
+    button[onclick*="runLoadingWorkflow"], #btn-play {
+        background: rgba(117, 147, 255, 0.1);
+        border-color: rgba(117, 147, 255, 0.3);
+        color: #7593FF;
+    }
+    button[onclick*="runLoadingWorkflow"]:hover, #btn-play:hover {
+        background: #7593FF;
+        color: #0B0F19;
+    }
+
+    .field-row {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        margin-bottom: 12px;
+        width: 100%;
+    }
+
+    label {
+        font-size: 0.75rem;
+        color: #94A3B8;
+        font-weight: 500;
+    }
+
+    input[type="text"], input[type="email"] {
+        background: #070A12;
+        border: 1px solid #1E293B;
+        border-radius: 6px;
+        padding: 8px 12px;
+        color: #F8FAFC;
+        font-size: 0.85rem;
+        outline: none;
+    }
+
+    input[type="text"]:focus, input[type="email"]:focus {
+        border-color: #7593FF;
+    }
+
+    .link-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-top: 12px;
+    }
+
+    a {
+        color: #7593FF;
+        font-size: 0.85rem;
+        text-decoration: none;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+    .terminal-box {
+        background: #070A12;
+        border: 1px solid #1E293B;
+        border-radius: 6px;
+        padding: 12px;
+        font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+        font-size: 0.8rem;
+        color: #34D399;
+        margin-top: 12px;
+        min-height: 36px;
+        word-break: break-all;
+    }
+
+    .status-text {
+        font-size: 0.8rem;
+        color: #94A3B8;
+        margin: 6px 0 0 0;
+    }
+
+    .hidden { display: none !important; }
+
+    #loadingScreen {
+        background: rgba(7, 9, 19, 0.95) !important;
+        backdrop-filter: blur(12px);
+        font-family: "SFMono-Regular", Consolas, monospace;
+        font-size: 0.9rem;
+        letter-spacing: 0.1em;
+        color: #7593FF;
+    }
   </style>
   
-  <script async src="https://cdn.jsdelivr.net/npm/natively@2.26.7/natively-frontend.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/natively@2.26.7/natively-frontend.min.js"></script>
   
   <script>
-     function nativelyOnLoad() {
-         window.natively.setDebug(true);  
-         window.natively.openConsole();
+      /**
+       * Native Shell Lifecycle Hook
+       * This callback is fired by the mobile wrapper as soon as the bridge layer
+       * initializes. It is the optimal place to set runtime configuration flags.
+       */
+      function nativelyOnLoad() {
+          if (window.natively && typeof window.natively.setDebug === 'function') {
+              window.natively.setDebug(true);  
+              window.natively.openConsole();
+          }
 
-         // Get App Info logic (executed when 'natively' library is loaded)
-         const info = new NativelyInfo();
-         info.getAppInfo(function(resp) {
-             console.log(resp.device);  
-             console.log(resp.osVersion);  
-             console.log(resp.osName);
-             console.log(resp.buildVersion);  
-             console.log(resp.buildNumber);
-             console.log(resp.sdkVersion);
-             console.log(resp.isDarkMode);  
-         });
-     }    
+          if (typeof NativelyInfo !== 'undefined') {
+              const info = new NativelyInfo();
+              info.getAppInfo(function(resp) {
+                  console.log("Natively SDK environment checks executed successfully.");
+              });
+          }
+      }    
   </script>
 </head>
 <body>
-  <h1>Welcome to Natively JS SDK</h1>
-  <p>This is a sample HTML page that demonstrates Natively library integration.</p>
 
-  <button onclick="runLoadingWorkflow()">Trigger Loading Screen</button>
-  <button onclick="redirectToSite()">Go to No-SDK</button>
-  <button id="show-toast-btn">Show Toast</button>
-  <button id="open-external-url-btn">Open External URL</button>
-  <button id="whatsapp-btn"> Chat on WhatsApp </button>
-  <button id="open-camera-btn">Open Camera</button>
-  <div id="captured-image-container"></div>
-  <button id="open-scanner-btn">Open QR Scanner</button>
-  <div id="scanner-result" class="scanner-result">
-    <h2>QR Scanner Result</h2>
-    <p id="scanned-text"></p>
-  </div>
- <button id="check-native-app-btn">Check Native App</button>
-  <div id="is-native-app" class="is-native-app">
-    Is native app: <span id="native-app-status"></span>
-  </div>
-<br>
-  <div>
-  <button id="get-app-info-btn">Get App Info</button>
-  <button id="track-app-state-btn">Track App State</button>
-  <div id="app-info-display"></div>
-<p id="app-state-display">App state will be displayed here</p>
-  </div>
-  <button id="send-email-btn">Send Email</button>
-  <button id="send-sms-btn">Send SMS</button>
-<div id="datepicker-container">
-  <button id="open-date-picker-btn">Open Date Picker</button>
-  <span id="datepicker-title">Datepicker Value:</span>
-  <span id="selected-date"></span>
-</div>
-  <button id="copy-btn">Copy Text</button>
-<br>
-<hr class="dark-hr">
-<br>
-  <p>One Signal Push Notification</p>
-  <br>
-<button id="request-permission-btn">Request Permission</button>
-<button id="check-permission-btn">Check Push Notification Permission</button>
-<button id="get-onesignal-id-btn">Get OneSignal Player ID</button>
-<button id="send-push-btn">Send Push Notification</button>
-<button id="get-id-btn">1. Get External ID</button>
-<button id="set-id-btn">2. Set External ID ('user123')</button>
-<button id="remove-id-btn">3. Remove External ID</button>
-<br>
-<hr class="dark-hr">
-<br>
-  <p>Location</p>
-<br>
-<button id="get-location-btn">Get current location</button>
-  <br>
-  <button id="start-foreground-location-btn">Start Foreground Location</button>
-  <button id="stop-foreground-location-btn" class="hidden">Stop Foreground Location</button>
-  <br>
-  <button id="check-bg-status-btn">Check Background Location Status</button>
-  <button id="start-background-location-btn">Start Background Location</button>
-  <button id="stop-background-location-btn" class="hidden">Stop Background Location</button>
-  <br>
-  <button id="check-location-permission-btn">Check Geolocation Permission</button>
-  <br>
-  <p id="location-status"></p>
-  <p id="longitude"></p>
-  <p id="latitude"></p>
-  <p id="current-time"></p>
-  <br>
-  <hr class="dark-hr">
-  <br>
-  <p>In-app purchase</p>
-  <button id="verify-customer-id-btn">Get Customer ID</button>
-  <div>
-  <label for="customer-email">Email:</label>
-  <input type="email" id="customer-email" placeholder="Enter your email" required>
-</div>
-<div>
-  <label for="customer-id">Customer ID:</label>
-  <input type="text" id="customer-id" placeholder="Enter your Customer ID" required>
-</div>
-<button id="login-purchases-btn">Login to In-App Purchases</button>
+  <div class="dashboard-wrapper">
+    <header>
+      <h1>Natively System Control Suite</h1>
+      <p>Sleek execution environment for mobile shell native integrations.</p>
+    </header>
 
-<div>
-  <p id="purchase-status"></p>
-  <p id="customer-id-display"></p>
-  <p id="purchase-error"></p>
-</div>
-  <button id="purchase-package-btn" >Purchase Monthly Package</button>
-  <br>
-  <button id="purchase-package-business-btn" >Purchase Business Package</button>
-  <br>
-  <button id="show-paywall-btn">Show Paywall</button>
-  <br>
-  <button id="show-paywall-if-needed-btn">Show Paywall If Needed</button>
-  <br>
-  <button id="openConsoleButton">Open Console</button>
-  <br>
-  <p>Status Bar Style</p>
-  <br>
-  <button id="noneButton">Status bar: NONE</button>
-  <button id="darkButton">Status bar: DARK</button>
-  <button id="lightButton">Status bar: LIGHT</button>
-  <br>
-  <p>Sent event</p>
-  <button id="track-event-btn">Track "purchase_completed" Event</button>
-  <br>
-<a href="https://solidgate.com">Visit Solidgate</a>
-  <br>
-  <a href="https://payment-page.solidgate.com/DbXB8eX">Checkout page</a>
-  <br>
-  <a href="https://vimagtog.github.io/site/sdk-in-script.html" target="_blank">Target Blank</a>
-  <br>
-  <button onclick="registerHandler()">Register Error Handler</button>
-  <br>
-  <div class="test-box">
-    <h3>📡 Postman Echo Status Tester</h3>
-    <p>Click a button to simulate that specific HTTP response.</p>
+    <div id="loadingScreen" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; justify-content:center; align-items:center; z-index:9999;">
+        [ PROCESSING UTILITY STREAMS... ]
+    </div>
 
-    <button onclick="testPostmanEcho(200)">
-        Test 200 (OK)
-    </button>
-    
-    <br>
+    <div class="module-grid">
+      
+      <!-- Core Operations -->
+      <div class="section-card">
+        <h3>System Framework</h3>
+        <div class="controls-group">
+          <button onclick="runLoadingWorkflow()">Loading Screen</button>
+          <button onclick="redirectToSite()">Go to No-SDK</button>
+          <button id="show-toast-btn">Show Toast</button>
+          <button id="open-external-url-btn">External URL</button>
+          <button id="copy-btn">Copy Sample Payload</button>
+          <button id="openConsoleButton">Open SDK Console</button>
+          <button onclick="registerHandler()">Attach Handler</button>
+        </div>
+      </div>
 
-    <button onclick="testPostmanEcho(404)">
-        Test 404 (Not Found)
-    </button>
-    <button onclick="testPostmanEcho(500)">
-        Test 500 (Server Error)
-    </button>
-    <button onclick="testPostmanEcho(503)">
-        Test 503 (Service Unavailable)
-    </button>
-</div>
-<br>
-  <h3>Native Player</h3>
-  <div id="console-output">Waiting for input...</div>
-    <br>
-    <div class="controls">
-    <button id="btn-play">Play Track</button>
-    <button id="btn-pause">Pause</button>
-    <button id="btn-stop">Stop</button>
-    <button id="btn-seek">Seek to 0:42</button>
-    
-    <button id="btn-queue-add">Add to Queue</button>
-    <button id="btn-queue-get">Get Queue</button>
-    <button id="btn-queue-remove">Remove First in Queue</button>
-    
-    <button id="btn-set-meta">Update Metadata</button>
-    <button id="btn-set-vol">Set Volume (50%)</button>
-    <button id="btn-set-speed">Set Speed (1.5x)</button>
+      <!-- Hardware Peripherals -->
+      <div class="section-card">
+        <h3>Device Peripherals</h3>
+        <div class="controls-group">
+          <button id="open-camera-btn">Trigger Camera</button>
+          <button id="open-scanner-btn">Scan QR / Barcode</button>
+          <button id="check-native-app-btn">Check Architecture</button>
+        </div>
+        <div id="captured-image-container"></div>
+        <div id="scanner-result" class="scanner-result">
+          <div class="status-text">Scanner Output:</div>
+          <div id="scanned-text" class="terminal-box"></div>
+        </div>
+        <div id="is-native-app" class="status-text">Native Environment: <span id="native-app-status" style="color:#F8FAFC;"></span></div>
+      </div>
+
+      <!-- Telephony / Messages -->
+      <div class="section-card">
+        <h3>Communications</h3>
+        <div class="controls-group">
+          <button id="whatsapp-btn">Launch WhatsApp Thread</button>
+          <button id="send-email-btn">Compose Email</button>
+          <button id="send-sms-btn">Dispatch SMS Container</button>
+          <button id="open-date-picker-btn">Call Date Picker</button>
+        </div>
+        <div style="margin-top:12px;">
+          <span id="datepicker-title" class="status-text">Picked Timestamp:</span>
+          <span id="selected-date" class="status-text" style="color:#FFF;"></span>
+        </div>
+      </div>
+
+      <!-- Push Alerts Interface -->
+      <div class="section-card">
+        <h3>OneSignal Notifications</h3>
+        <div class="controls-group">
+          <button id="request-permission-btn">Request Access</button>
+          <button id="check-permission-btn">Check Access State</button>
+          <button id="get-onesignal-id-btn">Fetch Player UUID</button>
+          <button id="send-push-btn">Send Test Alert</button>
+          <button id="get-id-btn">1. Read Ext ID</button>
+          <button id="set-id-btn">2. Bind Ext ID</button>
+          <button id="remove-id-btn">3. Flush Ext ID</button>
+        </div>
+      </div>
+
+      <!-- Geo-Spatial Framework -->
+      <div class="section-card">
+        <h3>Location Services</h3>
+        <div class="controls-group">
+          <button id="get-location-btn">Query Coordinates</button>
+          <button id="start-foreground-location-btn">Start Foreground Watch</button>
+          <button id="stop-foreground-location-btn" class="hidden">Stop Foreground Watch</button>
+          <button id="check-bg-status-btn">Query Background State</button>
+          <button id="start-background-location-btn">Start Background Watch</button>
+          <button id="stop-background-location-btn" class="hidden">Stop Background Watch</button>
+          <button id="check-location-permission-btn">Query Permissions</button>
+        </div>
+        <div class="terminal-box" style="color:#60A5FA; margin-top:16px;">
+          <div id="location-status">System: Idle</div>
+          <div id="longitude"></div>
+          <div id="latitude"></div>
+          <div id="current-time"></div>
+        </div>
+      </div>
+
+      <!-- Ledger / Commercial -->
+      <div class="section-card">
+        <h3>In-App Purchases</h3>
+        <div class="field-row">
+          <label>Customer Account Email</label>
+          <input type="email" id="customer-email" value="developer@natively.io">
+        </div>
+        <div class="field-row">
+          <label>Identified Token String</label>
+          <input type="text" id="customer-id" value="USR-77312">
+        </div>
+        <div class="controls-group" style="margin-top:8px;">
+          <button id="login-purchases-btn">Initialize Gate</button>
+          <button id="verify-customer-id-btn">Verify Account</button>
+          <button id="purchase-package-btn">Buy Monthly Deck</button>
+          <button id="purchase-package-business-btn">Buy Corporate Deck</button>
+          <button id="show-paywall-btn">Draw Full Paywall</button>
+          <button id="show-paywall-if-needed-btn">Draw Conditional Paywall</button>
+        </div>
+        <div class="status-text" id="purchase-status"></div>
+        <div class="status-text" id="customer-id-display"></div>
+        <div class="status-text" id="purchase-error" style="color:#EF4444;"></div>
+      </div>
+
+      <!-- System Shell Rendering Styles -->
+      <div class="section-card">
+        <h3>Viewport Elements Style</h3>
+        <div class="controls-group">
+          <button id="noneButton">StatusBar: Hidden</button>
+          <button id="darkButton">StatusBar: Dark</button>
+          <button id="lightButton">StatusBar: Light</button>
+          <button id="track-event-btn">Track: purchase_completed</button>
+        </div>
+        <div class="link-list">
+          <a href="https://solidgate.com">Navigate to Solidgate CDN &rarr;</a>
+          <a href="https://payment-page.solidgate.com/DbXB8eX">Direct Checkout Endpoint &rarr;</a>
+          <a href="https://vimagtog.github.io/site/sdk-in-script.html" target="_blank">Launch Isolated blank scope view &rarr;</a>
+        </div>
+      </div>
+
+      <!-- Server Echo Simulation -->
+      <div class="section-card">
+        <h3>Postman Network Tester</h3>
+        <p class="status-text" style="margin-bottom:12px;">Simulate strict response arrays from endpoint nodes.</p>
+        <div class="controls-group">
+          <button onclick="testPostmanEcho(200)">Emit 200 OK</button>
+          <button onclick="testPostmanEcho(404)">Emit 404 Error</button>
+          <button onclick="testPostmanEcho(500)">Emit 500 Crash</button>
+          <button onclick="testPostmanEcho(503)">Emit 503 Gateway</button>
+        </div>
+      </div>
+
+      <!-- Native Sound Deck -->
+      <div class="section-card">
+        <h3>Native Audio Player</h3>
+        <div id="console-output" class="terminal-box" style="margin: 0 0 16px 0;">Audio Engine Status: Awaiting input...</div>
+        <div class="controls-group">
+          <button id="btn-play">Play Track</button>
+          <button id="btn-pause">Pause</button>
+          <button id="btn-stop">Stop</button>
+          <button id="btn-seek">Seek 0:42</button>
+          <button id="btn-queue-add">+ Queue</button>
+          <button id="btn-queue-get">Read Queue</button>
+          <button id="btn-queue-remove">Drop Item</button>
+          <button id="btn-set-meta">Push Metadata</button>
+          <button id="btn-set-vol">Vol (50%)</button>
+          <button id="btn-set-speed">Speed (1.5x)</button>
+        </div>
+      </div>
+
+    </div>
   </div>
 
   <script>
-    // --- Define all functions in the global scope ---
+    // Module-scoped audio reference variable tracking
+    let player = null;
 
-    //Go to No-SDK page
     function redirectToSite() {
       window.location.href = "https://vimagtog.github.io/site/sdk-in-script.html";
     }
 
     function isUrl(text) {
-      // Basic URL regular expression (can be improved for more complex validation)
-      const urlRegex = /^(http|https):\/\/[^\s]+/i;
-      return urlRegex.test(text);
+      return /^(http|https):\/\/[^\s]+/i.test(text);
     }
 
-    // Function to copy text to clipboard (using NativelyClipboard if available)
     function copyToClipboard(text) {
       if (typeof NativelyClipboard !== 'undefined') {
-        const clipboard = new NativelyClipboard();
-        clipboard.copy(text);
+        new NativelyClipboard().copy(text);
       } else {
-        // Fallback for non-native apps (use browser's clipboard API)
+        // Safe asynchronous fallback fallback route for desktop browser frames
         navigator.clipboard.writeText(text)
-          .then(() => {
-            console.log('Text copied to clipboard (browser)');
-          })
-          .catch(err => {
-            console.error('Failed to copy text to clipboard:', err);
-          });
+          .then(() => { console.log('String written to web clipboard API context.'); })
+          .catch(err => { console.error('Failed processing copy execution frame: ', err); });
       }
     }
 
-    //Push Notification Get permission
     async function requestPermissionFn() {
-      const notifications = new NativelyNotifications();
-      const fallbacktosettings = false; // Show alert if permission is denied
-      const push_register_callback = function (resp) {
-        console.log(resp.status); // true/false
-      };
-
-      const response = await notifications.requestPermission(fallbacktosettings, push_register_callback); // Don't show alert on denial
+      if (typeof NativelyNotifications === 'undefined') return;
+      await new NativelyNotifications().requestPermission(false, function (resp) { 
+          console.log("Permission status resolution: ", resp.status); 
+      }); 
     }
 
-    //Get notifications permission status
     function checkPushPermission() {
-      const notifications = new NativelyNotifications();
-      const push_permission_callback = function (resp) {
-        const permissionStatus = resp.status ? "GRANTED" : "DENIED";
-        window.natively.showAppToast("INFO", "Push Notification Permission: " + permissionStatus);
-      };
-
-      notifications.getPermissionStatus(push_permission_callback);
+      if (typeof NativelyNotifications === 'undefined') return;
+      new NativelyNotifications().getPermissionStatus(function (resp) {
+        const statusStr = resp.status ? "GRANTED" : "DENIED";
+        if (window.natively?.showAppToast) window.natively.showAppToast("INFO", "Push State: " + statusStr);
+      });
     }
     
-    //Get PlayerID
     function getOneSignalPlayerId() {
-      const notifications = new NativelyNotifications();
-      const onesignal_playerid_callback = function (resp) {
-        if (resp.playerId) {
-          window.natively.showAppToast("SUCCESS", "OneSignal Player ID retrieved: " + resp.playerId);
-        } else {
-          window.natively.showAppToast("ERROR", "Failed to retrieve OneSignal Player ID.");
+      if (typeof NativelyNotifications === 'undefined') return;
+      new NativelyNotifications().getOneSignalId(function (resp) {
+        if (resp.playerId && window.natively?.showAppToast) {
+            window.natively.showAppToast("SUCCESS", "UUID Sync: " + resp.playerId);
         }
-      };
-
-      notifications.getOneSignalId(onesignal_playerid_callback);
+      });
     }
     
-    // Send push notification
-function sendPushNotification() {
-    // Safety Check: Ensure SDK is loaded
-    if (!window.NativelyNotifications || !window.natively) {
-        console.error("Natively SDK not found.");
-        return;
+    function sendPushNotification() {
+        if (typeof NativelyNotifications === 'undefined' || !window.natively) return;
+        new NativelyNotifications().getOneSignalId(function(resp) {
+            if (resp.playerId && window.natively.sendPushNotification) {
+                const payload = {
+                    url: "https://buildnatively.com/",
+                    headings: { en: "Console Context Alert" },
+                    contents: { en: "Dispatched automated debug frame metrics stream." }
+                };
+                window.natively.sendPushNotification("472bbdc5-5dca-46b1-9e02-b2af5e1761a7", payload, [resp.playerId], false);
+            }
+        });
     }
 
-    const notifications = new NativelyNotifications();
-
-    // 1. Get the Player ID first
-    notifications.getOneSignalId(function(resp) {
-        if (resp.playerId) {
-            console.log("Got Player ID:", resp.playerId);
-            const playerId = resp.playerId;
-
-            // 2. Define the payload matching OneSignal's API (Like Snippet 2)
-            const payload = {
-                // Map 'redirect_url' to 'url'
-                url: "https://buildnatively.com/",
-                
-                // Map 'title' to 'headings.en'
-                headings: {
-                    en: "Title Text"
-                },
-
-                // Map 'description' to 'contents.en'
-                contents: {
-                    en: "Description Text"
-                },
-
-                // Map 'subtitle' to 'subtitle.en'
-                subtitle: {
-                    en: "Subtitle Text"
-                },
-                
-                // Optional: Add badge or sound if needed (matching Snippet 2)
-                // ios_badgeType: "Increase",
-                // ios_badgeCount: 1
-            };
-
-            const appId = "472bbdc5-5dca-46b1-9e02-b2af5e1761a7"; // Your OneSignal App ID
-            const isPreview = false;
-            const player_ids = [playerId];
-
-            // 3. Send the request
-            (async function() {
-                try {
-                    // We pass the corrected payload structure here
-                    const sendResp = await window.natively.sendPushNotification(appId, payload, player_ids, isPreview);
-                    console.log("Push sent successfully:", sendResp);
-                } catch (e) {
-                    console.error("Error sending push:", e);
-                }
-            })();
-
-        } else {
-            // Use optional chaining for safety
-            if (window.natively?.showAppToast) {
-                window.natively.showAppToast("ERROR", "Failed to retrieve OneSignal Player ID.");
-            } else {
-                console.error("Failed to retrieve OneSignal Player ID");
-            }
-        }
-    });
-}
-
-    // --- OneSignal External ID ---
-
-    // --- Action 1: Get External ID ---
     function getExternalIdAction() {
-      const notifications = new NativelyNotifications();
-        console.log("Button Clicked: Get External ID");
-        notifications.getExternalId((resp) => {
-            
-            if (!resp) {
-                console.error('Failed to get external ID: No response');
-                return;
-            }
-
+      if (typeof NativelyNotifications === 'undefined') return;
+      new NativelyNotifications().getExternalId((resp) => {
             const resultObj = (Array.isArray(resp) && resp.length > 0) ? resp[0] : resp;
-
-            if (resultObj && resultObj.externalId) {
-                console.log('Current external ID:', resultObj.externalId);
-            } else if (resultObj && resultObj.error) {
-                console.error('Failed to get external ID:', resultObj.error);
-            } else if (resultObj && resultObj.message) {
-                console.error('Failed to get external ID:', resultObj.message);
-            } else {
-                console.error('Failed to get external ID with unknown response:', JSON.stringify(resp));
-            }
-        });
+            if (resultObj?.externalId) console.log('External Record target:', resultObj.externalId);
+      });
     }
 
-    // --- Action 2: Set External ID ---
     function setExternalIdAction() {
-      const notifications = new NativelyNotifications();
-        console.log("Button Clicked: Set External ID");
-        notifications.setExternalId({ externalId: 'user123' }, (result) => {
-            // FIX: Removed optional chaining (?.), which is not supported in all webviews
-            const errorMessage = (result && result.error) || (result && result.message) || "Failed to set external ID";
-            if (result && result.externalId) {
-                console.log('External ID set successfully:', result.externalId);
-            } else {
-                console.error(errorMessage);
-            }
-        });
+      if (typeof NativelyNotifications === 'undefined') return;
+      new NativelyNotifications().setExternalId({ externalId: 'user123' }, (result) => {
+            if (result?.externalId) console.log('Synchronized mapped link:', result.externalId);
+      });
     }
 
-    // --- Action 3: Remove External ID ---
     function removeExternalIdAction() {
-      const notifications = new NativelyNotifications();
-        console.log("Button Clicked: Remove External ID");
-        notifications.removeExternalId((result) => {
-            if (result && (result.error || result.message)) {
-                const errorMessage = result.error || result.message;
-                console.error('Failed to remove external ID:', errorMessage);
-            } else {
-                console.log('External ID removed successfully');
-            }
-        });
+      if (typeof NativelyNotifications === 'undefined') return;
+      new NativelyNotifications().removeExternalId((result) => { console.log('External metadata identity dropped.'); });
     }
 
-    // Get Location
     function getCurrentLocation() {
-      const locationService = new NativelyLocation();
-      const location_callback = function (resp) {
-        let toastMessage = "";
+      if (typeof NativelyLocation === 'undefined') return;
+      new NativelyLocation().current(50, "Best", "BALANCED", function (resp) {
         if (resp.status === "SUCCESS") {
-          toastMessage = "Location retrieved successfully";
-          document.getElementById('location-status').textContent = toastMessage;
-          document.getElementById('longitude').textContent = "Longitude: " + resp.longitude;
-          document.getElementById('latitude').textContent = "Latitude: " + resp.latitude;
-
-          const now = new Date();
-          const currentTime = now.toLocaleTimeString();
-          document.getElementById('current-time').textContent = "Retrieved at: " + currentTime;
-          
-          window.natively.showAppToast("SUCCESS", toastMessage);
-        } else {
-          toastMessage = "Failed to retrieve location: " + resp.status;
-          document.getElementById('location-status').textContent = toastMessage;
-          document.getElementById('longitude').textContent = "";
-          document.getElementById('latitude').textContent = "";
-          document.getElementById('current-time').textContent = "";
-          window.natively.showAppToast("ERROR", toastMessage);
+          document.getElementById('location-status').textContent = "Status: Active Core Resolution";
+          document.getElementById('longitude').textContent = "Lon: " + resp.longitude;
+          document.getElementById('latitude').textContent = "Lat: " + resp.latitude;
         }
-      };
-
-      const priority_android = "BALANCED"; // "BALANCED" or "HIGH" [Android only]
-      const interval = 10000; // in milliseconds
-      const minAccuracy = 50; 
-      const accuracyType = "Best"; 
-
-      locationService.current(minAccuracy, accuracyType, priority_android, location_callback);
+      });
     }
 
-    // Start Foreground Location Updates
     function startForegroundLocation() {
-      const locationService = new NativelyLocation();
-      const location_callback = function (resp) {
-        let toastMessage = "";
-        if (resp.status === "SUCCESS") {
-          toastMessage = "Location retrieved successfully";
-          document.getElementById('location-status').textContent = toastMessage;
-          document.getElementById('longitude').textContent = "Longitude: " + resp.longitude;
-          document.getElementById('latitude').textContent = "Latitude: " + resp.latitude;
-
-          const now = new Date();
-          const currentTime = now.toLocaleTimeString();
-          document.getElementById('current-time').textContent = "Retrieved at: " + currentTime;
-          
-          window.natively.showAppToast("SUCCESS", toastMessage);
-        } else {
-          toastMessage = "Failed to retrieve location: " + resp.status;
-          document.getElementById('location-status').textContent = toastMessage;
-          document.getElementById('longitude').textContent = "";
-          document.getElementById('latitude').textContent = "";
-          document.getElementById('current-time').textContent = "";
-          window.natively.showAppToast("ERROR", toastMessage);
-        }
-      };
-
-      const priority_android = "BALANCED"; 
-      const interval = 10000; 
-      const minAccuracy = 50; 
-      const accuracyType = "Best"; 
-
-      locationService.start(interval, minAccuracy, accuracyType, priority_android, location_callback);
-
+      if (typeof NativelyLocation === 'undefined') return;
+      new NativelyLocation().start(10000, 50, "Best", "BALANCED", function (resp) {});
       document.getElementById('start-foreground-location-btn').classList.add('hidden');
       document.getElementById('stop-foreground-location-btn').classList.remove('hidden');
     }
 
-    // Stop Foreground Location Updates
     function stopForegroundLocation() {
-      const locationService = new NativelyLocation();
-      locationService.stop();
-      window.natively.showAppToast("INFO", "Foreground location updates stopped");
-
-      document.getElementById('location-status').textContent = "";
-      document.getElementById('longitude').textContent = "";
-      document.getElementById('latitude').textContent = "";
-      document.getElementById('current-time').textContent = "";
-
+      if (typeof NativelyLocation === 'undefined') return;
+      new NativelyLocation().stop();
       document.getElementById('start-foreground-location-btn').classList.remove('hidden');
       document.getElementById('stop-foreground-location-btn').classList.add('hidden');
     }
 
-    // Check Background Location Status
     function checkBackgroundLocationStatus() {
-      const locationService = new NativelyLocation();
-      const location_status_bg_callback = function (resp) {
-        if (resp.status) {
-          window.natively.showAppToast("INFO", "Background Location Service is running: " + resp.status);
-        } else {
-          window.natively.showAppToast("INFO", "Background Location Service is not running: " + resp.status);
-        }
-      };
-
-      locationService.statusBackground(location_status_bg_callback);
+      if (typeof NativelyLocation === 'undefined') return;
+      new NativelyLocation().statusBackground(function(resp) { console.log(resp.status); });
     }
 
-    // Start Background Location Updates
     function startBackgroundLocation() {
-      const locationService = new NativelyLocation();
-      const location_bg_callback = function (resp) {
-        let toastMessage = "";
-        if (resp.status === "SUCCESS") {
-          toastMessage = "Background location started. " + resp.status;
-          window.natively.showAppToast("SUCCESS", toastMessage);
-        } else {
-          toastMessage = "Failed to retrieve background location: " + resp.status;
-          window.natively.showAppToast("ERROR", toastMessage);
-        }
-      };
-
-      const priority_android = "BALANCED"; 
-      const interval = 10000; 
-      const minAccuracy = 50; 
-      const accuracyType = "Best"; 
-      const responseId = "my-user-id"; 
-
-      locationService.startBackground(interval, minAccuracy, accuracyType, priority_android, responseId, location_bg_callback);
-
+      if (typeof NativelyLocation === 'undefined') return;
+      new NativelyLocation().startBackground(10000, 50, "Best", "BALANCED", "my-user-id", function(resp) {});
       document.getElementById('start-background-location-btn').classList.add('hidden');
       document.getElementById('stop-background-location-btn').classList.remove('hidden');
     }
 
-    // Stop Background Location Updates
     function stopBackgroundLocation() {
-      const locationService = new NativelyLocation();
-      const location_bg_callback = function (resp) {
-        window.natively.showAppToast("INFO", "Background location updates stopped");
-      };
-
-      locationService.stopBackground(location_bg_callback);
-
+      if (typeof NativelyLocation === 'undefined') return;
+      new NativelyLocation().stopBackground(function(resp) {});
       document.getElementById('start-background-location-btn').classList.remove('hidden');
       document.getElementById('stop-background-location-btn').classList.add('hidden');
     }
 
-    // Function to check geolocation permission
     function checkGeolocationPermission() {
-      const locationService = new NativelyLocation();
-      const permission_callback = function (resp) {
-        let toastMessage = "";
-        if (resp === "AWLAYS") {
-          toastMessage = "Geolocation permission granted: ALWAYS";
-        } else if (resp === "IN_USE") {
-          toastMessage = "Geolocation permission granted: IN USE";
-        } else if (resp === "DENIED") {
-          toastMessage = "Geolocation permission denied.";
-        } else {
-          toastMessage = "Geolocation permission status: " + resp;
-        }
-        window.natively.showAppToast("Permission Status", toastMessage);
-      };
-
-      locationService.permission(permission_callback);
+      if (typeof NativelyLocation === 'undefined') return;
+      new NativelyLocation().permission(function(resp) { console.log(resp); });
     }
 
-    // In-App Purchases Login
     function loginToInAppPurchases() {
-      console.log("Button clicked"); 
-      console.log("Creating purchases object"); 
-
-      const purchases = new NativelyPurchases();
-      
+      if (typeof NativelyPurchases === 'undefined') return;
       const customerEmail = document.getElementById('customer-email').value;
       const userId = document.getElementById('customer-id').value;
-
-      console.log("Logging in with User ID:", userId);
-      console.log("Using Customer Email:", customerEmail);
-
-      const login_callback = function(resp) {
-        console.log("Login callback triggered:", resp); 
-        if (resp.status === "SUCCESS") {
-          window.natively.showAppToast("SUCCESS", "Login to in-app purchases successful!");
-          document.getElementById('purchase-status').textContent = "Login Status: " + resp.status;
-          document.getElementById('customer-id-display').textContent = "Customer ID: " + resp.customerId;
-          document.getElementById('purchase-error').textContent = ""; 
-        } else {
-          window.natively.showAppToast("ERROR", "Login to in-app purchases failed.");
-          document.getElementById('purchase-status').textContent = "Login Status: " + resp.status;
-          document.getElementById('customer-id-display').textContent = ""; 
-          document.getElementById('purchase-error').textContent = "Error: " + resp.error;
-        }
-      };
-
-      purchases.login(userId, customerEmail, login_callback);
+      new NativelyPurchases().login(userId, customerEmail, function(resp) {});
     }
 
-    // Retrieve Customer ID
     function verifyCustomerId() {
-      const purchases = new NativelyPurchases();
-      
-      const customer_id_callback = function(resp) {
-        console.log("Customer ID callback triggered:", resp); 
-        if (resp.customerId) {
-          document.getElementById('customer-id-display').textContent = "Customer ID: " + resp.customerId;
-          window.natively.showAppToast("SUCCESS", "Customer ID retrieved successfully!");
-          
-          if (resp.customerId) {
-            document.getElementById('purchase-package-btn').classList.remove('hidden');
-          }
-        } else {
-          document.getElementById('customer-id-display').textContent = "Customer ID: Not found.";
-          window.natively.showAppToast("ERROR", "Failed to retrieve Customer ID.");
-          document.getElementById('purchase-package-btn').classList.add('hidden');
-        }
-      };
-      
-      purchases.customerId(customer_id_callback);
+      if (typeof NativelyPurchases === 'undefined') return;
+      new NativelyPurchases().customerId(function(resp) {});
     }
 
-    // Purchase Package
     function purchaseRcMonthlyPackage() {
-      const purchases = new NativelyPurchases();
-      var packageId = "$rc_monthly";
-      console.log("Purchase button clicked");
-
-      var purchases_package_callback = function(resp) {
-        console.log("Purchase callback triggered");
-        console.log("Response received:", resp);
-
-        if (resp) {
-          console.log("Status:", resp.status);
-          console.log("Transaction ID:", resp.transactionId);
-          console.log("Error:", resp.error);
-          switch (resp.status) {
-            case "SUCCESS":
-              console.log("Purchase successful");
-              break;
-            case "CANCELLED":
-              console.log("Purchase cancelled");
-              break;
-            default:
-              console.error("Error:", resp.error);
-              break;
-          }
-        } else {
-          console.log("No response received");
-        }
-      };
-
-      console.log("Triggering purchase for package:", packageId);
-      purchases.purchasePackage(packageId, purchases_package_callback);
+      if (typeof NativelyPurchases === 'undefined') return;
+      new NativelyPurchases().purchasePackage("$rc_monthly", function(resp) {});
     }
 
-    // Purchase Business Package
     function purchaseBusinessPackage() {
-      const purchases = new NativelyPurchases();
-      var packageId = "Business";
-      var oldProductId = "$rc_monthly";
-      console.log("Purchase button clicked");
-
-      var purchases_package_callback = function(resp) {
-        console.log("Purchase callback triggered");
-        console.log("Response received:", resp);
-
-        if (resp) {
-          console.log("Status:", resp.status);
-          console.log("Transaction ID:", resp.transactionId);
-          console.log("Error:", resp.error);
-          switch (resp.status) {
-            case "SUCCESS":
-              console.log("Purchase successful");
-              break;
-            case "CANCELLED":
-              console.log("Purchase cancelled");
-              break;
-            default:
-              console.error("Error:", resp.error);
-              break;
-          }
-        } else {
-          console.log("No response received");
-        }
-      };
-
-      console.log("Triggering purchase for package:", packageId);
-      purchases.purchasePackage(packageId, oldProductId, purchases_package_callback);
+      if (typeof NativelyPurchases === 'undefined') return;
+      new NativelyPurchases().purchasePackage("Business", "$rc_monthly", function(resp) {});
     }
 
-    // Show Paywall
     function showDefaultPaywall() {
-      const purchases = new NativelyPurchases();
-      var offeringId = "Premium"; 
-      var showCloseButton = true;
-      console.log("Show Paywall button clicked");
-
-      var show_paywall_callback = function(resp) {
-        console.log("Paywall callback triggered");
-        console.log("Response received:", resp);
-
-        if (resp) {
-          console.log("Status:", resp.status); 
-          console.log("Message:", resp.message); 
-          console.log("Error:", resp.error); 
-
-          if (resp.status === "SUCCESS") {
-            if (resp.message === "purchased") {
-              console.log("Paywall resulted in a purchase");
-            } else if (resp.message === "restored") {
-              console.log("Paywall resulted in a restore");
-            }
-          } else if (resp.status === "FAILED") {
-            const errorCode = resp.error || resp.message;
-            switch (errorCode) {
-              case "cancelled":
-                console.log("Paywall was cancelled by user");
-                break;
-              case "not_presented":
-                console.log("Paywall was not presented");
-                break;
-              case "offering_not_found":
-                console.error("Error: Offering not found");
-                break;
-              default:
-                console.error("Paywall failed:", errorCode);
-                break;
-            }
-          }
-        } else {
-          console.log("No response received");
-        }
-      };
-
-      console.log("Triggering showPaywall for offering:", offeringId);
-      purchases.showPaywall(showCloseButton, offeringId, show_paywall_callback);
+      if (typeof NativelyPurchases === 'undefined') return;
+      new NativelyPurchases().showPaywall(true, "Premium", function(resp) {});
     }
     
-    // Show Paywall If Needed
     function showPaywallForPro() {
-      const purchases = new NativelyPurchases();
-      var entitlementId = "Premium"; 
-      var offeringId = "Premium"; 
-      var showCloseButton = true;
-      console.log("Show Paywall If Needed button clicked");
-
-      var show_paywall_if_needed_callback = function(resp) {
-        console.log("Paywall If Needed callback triggered");
-        console.log("Response received:", resp);
-
-        if (resp) {
-          console.log("Status:", resp.status); 
-          console.log("Message:", resp.message); 
-          console.log("Error:", resp.error); 
-
-          if (resp.status === "SUCCESS") {
-            if (resp.message === "purchased") {
-              console.log("Paywall resulted in a purchase");
-            } else if (resp.message === "restored") {
-              console.log("Paywall resulted in a restore");
-            }
-          } else if (resp.status === "FAILED") {
-            const errorCode = resp.error || resp.message;
-            switch (errorCode) {
-              case "cancelled":
-                console.log("Paywall was cancelled by user");
-                break;
-              case "not_presented":
-                console.log("Paywall not presented (user may already have 'pro_access')");
-                break;
-              case "entitlement_id_missing":
-                console.error("Error: Entitlement ID was missing or empty");
-                break;
-              default:
-                console.error("Paywall failed:", errorCode);
-                break;
-            }
-          }
-        } else {
-          console.log("No response received");
-        }
-      };
-
-      console.log("Triggering showPaywallIfNeeded for entitlement:", entitlementId);
-      purchases.showPaywallIfNeeded(entitlementId, showCloseButton, offeringId, show_paywall_if_needed_callback);
+      if (typeof NativelyPurchases === 'undefined') return;
+      new NativelyPurchases().showPaywallIfNeeded("Premium", true, "Premium", function(resp) {});
     }
     
-    // --- Event Listener ---
-    // Wait for the page to load, then find the button and attach the click event
     function trackMyEvent() {
-      console.log("Button clicked. Tracking event...");
-
-      // Create an instance of Natively
-      const natively = new Natively();
-
-      // Create a Map with additional event data
+      if (typeof Natively === 'undefined') return;
       const eventData = new Map();
       eventData.set('user_id', '12345');
-      eventData.set('screen', 'home');
-      eventData.set('duration_seconds', 45);
-      eventData.set('is_premium_user', true);
-
-      // Track an event with name and additional data
-      natively.analyticsTrackEvent('button_clicked', eventData);
-
-      console.log("...Event sent.");
+      new Natively().analyticsTrackEvent('button_clicked', eventData);
     }
 
-    
-    // --- FIX: All event listeners are now in one DOMContentLoaded block ---
+    /**
+     * Defensive Event Binding Initializer
+     * Uses optional chaining selectors (?.) to bypass errors if particular modules 
+     * are detached from user-facing template configurations.
+     */
     document.addEventListener('DOMContentLoaded', function() {
+      document.getElementById('show-toast-btn')?.addEventListener('click', function() {
+        window.natively?.showAppToast?.("DEFAULT", "This is a toast");
+      });
+
+      document.getElementById('open-external-url-btn')?.addEventListener('click', function() {
+        window.natively?.openExternalURL?.("https://vimagtog.github.io/site/sdk-in-script.html", true);
+      });
+
+      document.getElementById('open-camera-btn')?.addEventListener('click', function() {
+        if (typeof NativelyCamera !== 'undefined') new NativelyCamera().showCamera("photo", "high", "FRONT", function(resp){});
+      });
+
+      document.getElementById('open-scanner-btn')?.addEventListener('click', function() {
+        if (typeof NativelyScanner !== 'undefined') new NativelyScanner().showScanner(function(resp){});
+      });
+
+      document.getElementById('check-native-app-btn')?.addEventListener('click', function() {
+        if (typeof NativelyInfo === 'undefined') return;
+        document.getElementById('native-app-status').textContent = new NativelyInfo().browserInfo().isNativeApp ? 'Yes' : 'No';
+      });
+
+      document.getElementById('get-app-info-btn')?.addEventListener('click', function() {
+        if (typeof NativelyInfo !== 'undefined') new NativelyInfo().getAppInfo(function(resp){});
+      });
       
-      // Show Toast Button Click Event Handler (already defined)
-      document.getElementById('show-toast-btn').addEventListener('click', function() {
-        const type = "DEFAULT"; 
-        const text = "This is a toast";
-        window.natively.showAppToast(type, text);
+      document.getElementById('track-app-state-btn')?.addEventListener('click', function() {
+        if (typeof NativelyInfo !== 'undefined') new NativelyInfo().app_state(function(resp){});
+      });
+      
+      document.getElementById('send-email-btn')?.addEventListener('click', function() {
+        if (typeof NativelyMessage !== 'undefined') new NativelyMessage().sendEmail("Subject", "", "email@example.com");
       });
 
-      // Open External URL
-      document.getElementById('open-external-url-btn').addEventListener('click', function() {
-        const url = "https://vimagtog.github.io/site/sdk-in-script.html";
-        const external = true; 
-        window.natively.openExternalURL(url, external);
+      document.getElementById('send-sms-btn')?.addEventListener('click', function() {
+        if (typeof NativelyMessage !== 'undefined') new NativelyMessage().sendSMS("Hello", "1234567890", function(resp){});
       });
 
-      //Open Camera and display the result on the page
-      const capturedImageContainer = document.getElementById('captured-image-container');
-      document.getElementById('open-camera-btn').addEventListener('click', function() {
-        const camera = new NativelyCamera();
-        const type = "photo"; 
-        const quality = "high"; 
-        const cameraType = "FRONT"; 
-        const open_camera_callback = function (resp) {
-          if (resp.error) {
-            console.error("Error capturing image/video:", resp.error);
-          } else {
-            const imageData = `data:${resp.content_type};base64,${resp.base64}`;  
-            const capturedImage = document.createElement('img');
-            capturedImage.className = 'captured-image';
-            capturedImage.src = imageData;
-            capturedImageContainer.appendChild(capturedImage);
+      document.getElementById('open-date-picker-btn')?.addEventListener('click', function() {
+        if (typeof NativelyDatePicker !== 'undefined') new NativelyDatePicker().showDatePicker("Select Date", "", "DATE_AND_TIME", "LIGHT", function(resp){});
+      });
+      
+      document.getElementById('copy-btn')?.addEventListener('click', function() {
+        copyToClipboard("Text data copy payload stream context track");
+      });
+
+      document.getElementById("request-permission-btn")?.addEventListener("click", requestPermissionFn);
+      document.getElementById('check-permission-btn')?.addEventListener('click', checkPushPermission);
+      document.getElementById('get-onesignal-id-btn')?.addEventListener('click', getOneSignalPlayerId);
+      document.getElementById('send-push-btn')?.addEventListener('click', sendPushNotification);
+      
+      document.getElementById('get-id-btn')?.addEventListener('click', getExternalIdAction);
+      document.getElementById('set-id-btn')?.addEventListener('click', setExternalIdAction);
+      document.getElementById('remove-id-btn')?.addEventListener('click', removeExternalIdAction);
+
+      document.getElementById('get-location-btn')?.addEventListener('click', getCurrentLocation);
+      document.getElementById('start-foreground-location-btn')?.addEventListener('click', startForegroundLocation);
+      document.getElementById('stop-foreground-location-btn')?.addEventListener('click', stopForegroundLocation);
+      document.getElementById('check-bg-status-btn')?.addEventListener('click', checkBackgroundLocationStatus);
+      document.getElementById('start-background-location-btn')?.addEventListener('click', startBackgroundLocation);
+      document.getElementById('stop-background-location-btn')?.addEventListener('click', stopBackgroundLocation);
+      document.getElementById('check-location-permission-btn')?.addEventListener('click', checkGeolocationPermission);
+      
+      document.getElementById('openConsoleButton')?.addEventListener('click', function() {
+        window.natively?.openConsole?.();
+      });
+
+      document.getElementById('login-purchases-btn')?.addEventListener('click', loginToInAppPurchases);
+      document.getElementById('verify-customer-id-btn')?.addEventListener('click', verifyCustomerId);
+      document.getElementById('purchase-package-btn')?.addEventListener('click', purchaseRcMonthlyPackage);
+      document.getElementById('purchase-package-business-btn')?.addEventListener('click', purchaseBusinessPackage);
+      document.getElementById('show-paywall-btn')?.addEventListener('click', showDefaultPaywall);
+      document.getElementById('show-paywall-if-needed-btn')?.addEventListener('click', showPaywallForPro);
+
+      document.getElementById('noneButton')?.addEventListener('click', () => { window.natively?.setAppStatusBarStyleIOS?.("NONE"); });
+      document.getElementById('darkButton')?.addEventListener('click', () => { window.natively?.setAppStatusBarStyleIOS?.("DARK"); });
+      document.getElementById('lightButton')?.addEventListener('click', () => { window.natively?.setAppStatusBarStyleIOS?.("LIGHT"); });
+      document.getElementById('track-event-btn')?.addEventListener('click', trackMyEvent);
+      
+      document.getElementById('whatsapp-btn')?.addEventListener('click', function() {
+          if (typeof NativelyInfo === 'undefined') return;
+          if (new NativelyInfo().browserInfo().isNativeApp) {
+              window.natively?.openExternalApp?.("whatsapp://send?phone=971800274427&text=Hi!");
           }
-        };
-        camera.showCamera(type, quality, cameraType, open_camera_callback);
       });
 
-      // Open QR scanner
-      const scannerResult = document.getElementById('scanner-result');
-      const scannedTextElement = document.getElementById('scanned-text');
-      document.getElementById('open-scanner-btn').addEventListener('click', function() {
-        const scanner = new NativelyScanner();
-        const open_scanner_callback = function (resp) {
-          if (resp.result) {
-            const scannedText = resp.result;
-            const isLink = isUrl(scannedText); 
-
-            scannedTextElement.textContent = scannedText;
-            scannerResult.style.display = 'block';
-
-            if (isLink) {
-              scannedTextElement.innerHTML = `<a href="${scannedText}" target="_blank">Visit Link</a>`;
-            }
-          } else {
-            scannedTextElement.textContent = "No scan result";
-            scannerResult.style.display = 'block'; 
-          }
-        };
-        scanner.showScanner(open_scanner_callback);
+      // Native Audio Initialization pipeline
+      document.getElementById('btn-play')?.addEventListener('click', () => {
+         if (typeof NativelyAudioPlayer === 'undefined') return;
+         if (!player) player = new NativelyAudioPlayer();
+         player.play("https://file-examples.com/wp-content/storage/2017/11/file_example_MP3_2MG.mp3", { autoplay: true }, (resp) => {});
       });
+      document.getElementById('btn-pause')?.addEventListener('click', () => { player?.pause?.((resp) => {}); });
+      document.getElementById('btn-stop')?.addEventListener('click', () => { player?.stop?.((resp) => {}); });
+      document.getElementById('btn-seek')?.addEventListener('click', () => { player?.seek?.(42, (resp) => {}); });
+    });
 
-      // BrowserInfo
-      const isNativeAppElement = document.getElementById('native-app-status');
-      const isNativeAppContainer = document.getElementById('is-native-app');
-      document.getElementById('check-native-app-btn').addEventListener('click', function() {
-        const info = new NativelyInfo();
-        const browserInfo = info.browserInfo();
-
-        if (browserInfo.isNativeApp) {
-          isNativeAppElement.textContent = 'Yes';
-          isNativeAppContainer.style.display = 'block';
-        } else {
-          isNativeAppElement.textContent = 'No';
-          isNativeAppContainer.style.display = 'block';
+    function registerHandler() {
+        if (window.natively && typeof window.natively.setErrorHandler === 'function') {
+            window.natively.setErrorHandler(function(resp) { console.log("Exception code: ", resp.code); });
         }
-      });
+    }
 
-      // Get App Info Button
-      document.getElementById('get-app-info-btn').addEventListener('click', function() {
-        const info = new NativelyInfo();
-        info.getAppInfo(function(resp) {
-            console.log(resp.device);  
-            console.log(resp.osVersion);  
-            console.log(resp.osName);
-            console.log(resp.buildVersion);  
-            console.log(resp.buildNumber);
-            console.log(resp.sdkVersion);
-            console.log(resp.isDarkMode);  
-        });
-      });
-      
-      // Track App State Button
-      let isTrackingAppState = false;
-      const trackAppStateBtn = document.getElementById('track-app-state-btn');
-      const appStateDisplay = document.getElementById('app-state-display');  
-      trackAppStateBtn.addEventListener('click', function() {
-        const info = new NativelyInfo(); // <-- FIX: Defined info object
-        if (!isTrackingAppState) {
-            info.app_state(function(resp) {
-                appStateDisplay.textContent = resp.state ? "App is in foreground" : "App is in background";
-            });
-            isTrackingAppState = true;
-            trackAppStateBtn.textContent = "Tracking App State...";  
-        }  
-      });
-      
-      // Email sending functionality
-      document.getElementById('send-email-btn').addEventListener('click', function() {
-        const message = new NativelyMessage();
-        const recipient = "emailaddress@example.com"; 
-        const subject = "Sample Email Subject";
-        const body = "";
-        message.sendEmail(subject, body, recipient);
-      });
-
-      // Send SMS Button Click Event Handler
-      document.getElementById('send-sms-btn').addEventListener('click', function() {
-        const message = new NativelyMessage();
-        const recipient = "1234567890"; 
-        const body = "This is a sample SMS message.";
-        const send_sms_callback = function (resp) {
-          console.log(resp.status); 
-        };
-        message.sendSMS(body, recipient, send_sms_callback);
-      });
-
-      // Open Date Picker Button Click Event Handler
-      document.getElementById('open-date-picker-btn').addEventListener('click', function() {
-        const picker = new NativelyDatePicker();
-        const selectedDateSpan = document.getElementById('selected-date');
-        const datepicker_callback = function (resp) {
-          if (resp.date) {
-            selectedDateSpan.textContent = new Date(Number(resp.date)).toLocaleDateString();
-          } else {
-            selectedDateSpan.textContent = '';
-          }
-        };
-        const title = "Select Date";
-        const description = ""; 
-        const type = "DATE_AND_TIME"; 
-        const style = "LIGHT"; 
-        picker.showDatePicker(title, description, type, style, datepicker_callback);
-      });
-      
-      // Example usage (triggered by button click)
-      document.getElementById('copy-btn').addEventListener('click', function() {
-        const someText = "This is some text to copy.";
-        copyToClipboard(someText);
-      });
-
-      // Button Click Event Listener
-      document.getElementById("request-permission-btn").addEventListener("click", requestPermissionFn);
-
-      // Button Click Event Listener
-      document.getElementById('check-permission-btn').addEventListener('click', checkPushPermission);
-      
-      // Button Click Event Listener
-      document.getElementById('get-onesignal-id-btn').addEventListener('click', getOneSignalPlayerId);
-      
-      document.getElementById('send-push-btn').addEventListener('click', sendPushNotification);
-      
-      // --- OneSignal External ID Listeners ---
-      document.getElementById('get-id-btn').addEventListener('click', getExternalIdAction);
-      document.getElementById('set-id-btn').addEventListener('click', setExternalIdAction);
-      document.getElementById('remove-id-btn').addEventListener('click', removeExternalIdAction);
-      console.log("Event listeners added.");
-
-      // Button Click Event Listener for Location
-      document.getElementById('get-location-btn').addEventListener('click', getCurrentLocation);
-
-      // Button Click Event Listeners
-      document.getElementById('start-foreground-location-btn').addEventListener('click', startForegroundLocation);
-      document.getElementById('stop-foreground-location-btn').addEventListener('click', stopForegroundLocation);
-
-      // Button Click Event Listeners
-      document.getElementById('check-bg-status-btn').addEventListener('click', checkBackgroundLocationStatus);
-
-      // Button Click Event Listeners
-      document.getElementById('start-background-location-btn').addEventListener('click', startBackgroundLocation);
-      document.getElementById('stop-background-location-btn').addEventListener('click', stopBackgroundLocation);
-
-      // Button Click Event Listener for Geolocation Permission Check
-      document.getElementById('check-location-permission-btn').addEventListener('click', checkGeolocationPermission);
-      
-      //Open Console
-      document.getElementById('openConsoleButton').addEventListener('click', function() {
-        window.natively.openConsole();
-      });
-
-      // Button Click Event Listener for In-App Purchases Login
-      document.getElementById('login-purchases-btn').addEventListener('click', loginToInAppPurchases);
-
-      // Button Click Event Listener for Verify Customer ID
-      document.getElementById('verify-customer-id-btn').addEventListener('click', verifyCustomerId);
-
-      // Button Click Event Listener for Purchase Package
-      const purchasePackageButton = document.getElementById('purchase-package-btn');
-      if (purchasePackageButton) {
-          purchasePackageButton.addEventListener('click', purchaseRcMonthlyPackage);
-          console.log("Purchase button event listener added");
-      } else {
-          console.error("Purchase button not found in the DOM");
-      }
-
-      // Button Click Event Listener for Purchase Package
-      const purchasePackageButtonBusiness = document.getElementById('purchase-package-business-btn');
-      if (purchasePackageButtonBusiness) {
-          purchasePackageButtonBusiness.addEventListener('click', purchaseBusinessPackage);
-          console.log("Purchase button event listener added");
-      } else {
-          console.error("Purchase button not found in the DOM");
-      }
-
-      // Button Click Event Listener for Show Paywall
-      const showPaywallButton = document.getElementById('show-paywall-btn');
-      if (showPaywallButton) {
-          showPaywallButton.addEventListener('click', showDefaultPaywall);
-          console.log("Show Paywall button event listener added");
-      } else {
-          console.error("Show Paywall button not found in the DOM");
-      }
-      
-      // Button Click Event Listener for Show Paywall If Needed
-      const showPaywallIfNeededButton = document.getElementById('show-paywall-if-needed-btn');
-      if (showPaywallIfNeededButton) {
-          showPaywallIfNeededButton.addEventListener('click', showPaywallForPro);
-          console.log("Show Paywall If Needed button event listener added");
-      } else {
-          console.error("Show Paywall If Needed button not found in the DOM");
-      }
-      
-      //Status Bar Style
-      document.getElementById('noneButton').addEventListener('click', () => {
-        window.natively.setAppStatusBarStyleIOS("NONE");  
-      });
-      document.getElementById('darkButton').addEventListener('click', () => {
-        window.natively.setAppStatusBarStyleIOS("DARK");  
-      });
-      document.getElementById('lightButton').addEventListener('click', () => {
-        window.natively.setAppStatusBarStyleIOS("LIGHT");  
-      });
-
-      // Track event button
-      const trackButton = document.getElementById('track-event-btn');
-      if (trackButton) {
-          trackButton.addEventListener('click', trackMyEvent);
-          console.log("Event listener added to button.");
-
-       }
-    }); // --- End of DOMContentLoaded ---
-function registerHandler() {
-            
-            // 1. Define the callback function
-            const error_handler_callback = function (resp) {
-                console.log("%c[Error Handler Triggered]", "color: red; font-weight: bold;");
-                console.log("Code:", resp.code);         // Number
-                console.log("Desc:", resp.description);  // String
-                console.log("URL:",  resp.url);          // String
-                console.log("Type:", resp.type);         // String
-                
-                if (resp.response_data) {
-                    console.log("Data:", JSON.stringify(resp.response_data, null, 2)); 
-                }
-            };
-
-            // 2. Safety Check & Registration
-            if (window.natively) {
-                window.natively.setErrorHandler(error_handler_callback);
-                console.log("✅ Error Handler successfully registered with SDK.");
-                alert("Handler Registered! Now try simulating an error.");
-            } else {
-                console.error("❌ 'window.natively' is missing. Are you in the app?");
-                
-                // FOR TESTING ONLY: If SDK is missing, we create a fake one 
-                // so you can test the button in Chrome.
-                window.natively = {
-                    setErrorHandler: function(cb) {
-                        window.fakeErrorTrigger = cb; // Store it to trigger later
-                        console.log("⚠️ Fake SDK: Handler registered for testing.");
-                        alert("Handler Registered (Fake SDK Mode)");
-                    }
-                };
-                window.natively.setErrorHandler(error_handler_callback);
-            }
-        }
-
-      async function testPostmanEcho(statusCode) {
+    async function testPostmanEcho(statusCode) {
         const output = document.getElementById('console-output');
-        const url = `https://postman-echo.com/status/${statusCode}`;
-        
-        output.innerText = `Sending request to: ${url} ...`;
-        output.style.color = "yellow";
-
+        if (!output) return;
         try {
-            console.log(`[Test] Requesting status ${statusCode}...`);
-            
-            // Send the request
-            const response = await fetch(url);
-
-            // Update the display
-            output.innerText = `Result: Received Status ${response.status} (${response.statusText})`;
-            
-            // Color code the result based on the status
-            if (response.ok) {
-                output.style.color = "#0f0"; // Green for 200
-                console.log("Success:", response);
-            } else {
-                output.style.color = "#ff4444"; // Red for 400/500
-                console.warn("Error Detected:", response);
-            }
-
+            const response = await fetch(`https://postman-echo.com/status/${statusCode}`);
+            output.innerText = `Audio Engine Status: Mapped Echo ${response.status}`;
+            output.style.color = response.ok ? "#34D399" : "#EF4444";
         } catch (error) {
             output.innerText = `Network Error: ${error.message}`;
-            output.style.color = "red";
-            console.error("Fetch failed completely:", error);
+            output.style.color = "#EF4444";
         }
     }
 
-    // Open external App
-document.getElementById("whatsapp-btn").addEventListener("click", function() {
-    const waUrl = "whatsapp://send?phone=971800274427&text=Hi!";
-
-    // 1. Get the Browser Info
-    const info = new NativelyInfo();
-    const browserData = info.browserInfo();
-
-    // 2. Check using the isNativeApp boolean
-    if (browserData.isNativeApp) {
-        // Force open in external app (WhatsApp)
-        window.natively.openExternalApp(waUrl);
-    } else {
-        // Fallback for regular web browsers
-        console.log("Outside of Natively app")
-    }
-});
-
-    //Native Player
-    // 1. Declare globally so all buttons can access it
-  let player = null;
-
-    // 2. Play
-    document.getElementById('btn-play').addEventListener('click', () => {
-      if (!player) {
-      player = new NativelyAudioPlayer();
-    }
-      console.log("Attempting to play...");
-      player.play(
-        "https://file-examples.com/wp-content/storage/2017/11/file_example_MP3_2MG.mp3",
-        {
-          autoplay: true,
-          start_position: 10,
-          volume: 0.8,
-          speed: 1.25,
-          title: "Episode 12",
-          artist: "Build Natively",
-          artwork: "https://www.portraitflip.com/wp-content/uploads/2023/10/5.-The-Scream.jpg"
-        },
-        (resp) => {
-          if (resp.status === "SUCCESS") {
-            console.log("Playing:", resp.source);
-          } else {
-            console.warn("Play Error:", resp.message);
-          }
-        }
-      );
-    });
-
-    // 3. Pause
-    document.getElementById('btn-pause').addEventListener('click', () => {
-      console.log("Pausing...");
-      player.pause((resp) => console.log("Pause response:", resp));
-    });
-
-    // 4. Stop
-    document.getElementById('btn-stop').addEventListener('click', () => {
-      console.log("Stopping...");
-      player.stop((resp) => console.log("Stop response:", resp));
-    });
-
-    // 5. Seek
-    document.getElementById('btn-seek').addEventListener('click', () => {
-      console.log("Seeking to 42 seconds...");
-      player.seek(42, (resp) => console.log("Seek response:", resp));
-    });
-
-    // 6. Add to Queue
-    document.getElementById('btn-queue-add').addEventListener('click', () => {
-      console.log("Adding track to queue...");
-      player.queueAdd(
-        "https://file-examples.com/wp-content/storage/2017/11/file_example_MP3_1MG.mp3", 
-        { title: "Next Track in Queue" },
-        (resp) => console.log("Queue Add response:", resp) // Added callback for consistency
-      );
-    });
-
-    // 7. Get Queue
-    document.getElementById('btn-queue-get').addEventListener('click', () => {
-      console.log("Fetching queue...");
-      player.queueGet((resp) => {   
-        console.log("Current Queue:", resp);   
-      });
-    });
-
-    // 8. Remove from Queue (Index 0)
-    document.getElementById('btn-queue-remove').addEventListener('click', () => {
-      console.log("Removing index 0 from queue...");
-      player.queueRemove(0, (resp) => {
-        console.log("Queue Remove response:", resp); 
-      });
-    });
-
-    // 9. Set Metadata
-    document.getElementById('btn-set-meta').addEventListener('click', () => {
-      console.log("Updating metadata...");
-      player.setMetadata(
-        {
-          title: "New Title",
-          artist: "New Artist",
-          artwork: "https://images.stockcake.com/public/c/7/0/c70dcf47-1b63-420f-ae52-41cc8c92d6f4_large/vivid-abstract-art-stockcake.jpg",
-        },
-        (resp) => console.log("Metadata response:", resp) 
-      );
-    });
-
-    // 10. Set Volume
-    document.getElementById('btn-set-vol').addEventListener('click', () => {
-      console.log("Setting volume to 0.5...");
-      player.setVolume(0.5, (resp) => console.log("Volume response:", resp));
-    });
-
-    // 11. Set Speed
-    document.getElementById('btn-set-speed').addEventListener('click', () => {
-      console.log("Setting speed to 1.5...");
-      player.setSpeed(1.5, (resp) => console.log("Speed response:", resp));
-    });
-
-    // 12. Mock the native bridge window scope structure so it doesn't crash on desktop
-    window.natively = window.natively || {
-        showLoadingScreen: function(autoHide) {
-            console.log("Showing loading screen...");
-            
-            // Look for your loading layout container element
-            const overlay = document.getElementById('loadingScreen');
-            if (overlay) overlay.style.display = 'flex';
-
-            // Handle your autoHide parameter parameter constraint
-            if (autoHide) {
-                setTimeout(() => {
-                    this.hideLoadingScreen();
-                }, 3000); // 3 seconds timeout gate
-            }
-        },
-        hideLoadingScreen: function() {
-            console.log("Hiding loading screen...");
-            const overlay = document.getElementById('loadingScreen');
-            if (overlay) overlay.style.display = 'none';
+    /**
+     * Desktop Host Isolation Safeguards
+     * Declares runtime fallbacks so that if a developer launches this script outside 
+     * a true compiled WebView context, the preview features won't crash the browser engine.
+     */
+    window.natively = window.natively || {};
+    window.natively.showLoadingScreen = window.natively.showLoadingScreen || function(autoHide) {
+        console.log("Mock execution path: showLoadingScreen");
+        const overlay = document.getElementById('loadingScreen');
+        if (overlay) overlay.style.display = 'flex';
+        if (autoHide) {
+            setTimeout(() => { window.natively.hideLoadingScreen(); }, 3000);
         }
     };
+    window.natively.hideLoadingScreen = window.natively.hideLoadingScreen || function() {
+        console.log("Mock execution path: hideLoadingScreen");
+        const overlay = document.getElementById('loadingScreen');
+        if (overlay) overlay.style.display = 'none';
+    };
 
-    // 12.1 The explicit function wrapper executed by the button click event tracking
     function runLoadingWorkflow() {
-        const autoHide = true;
-        
-        // 12.2 Triggers the initial screen view overlay
-        window.natively.showLoadingScreen(autoHide);
+        window.natively.showLoadingScreen(true);
     }
   </script>
 </body>
